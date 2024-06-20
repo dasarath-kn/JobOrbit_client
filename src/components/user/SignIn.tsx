@@ -23,8 +23,8 @@ const SignIn: React.FC<props> = ({ role }) => {
   const navigate =useNavigate()
 
   return (
-    <div className='flex flex-col lg:flex-row justify-center items-center min-h-screen p-4'>
-      <div className='mt-8 lg:mt-0 bg-white w-full lg:w-1/3 h-auto lg: border shadow-xl flex flex-col p-8'>
+    <div className='flex flex-col  lg:flex-row justify-center items-center min-h-screen p-4'>
+      <div className='mt-8 lg:mt-0 bg-white w-full md:w-1/2 lg:w-1/3 h-auto lg: border shadow-xl flex flex-col p-8'>
         <span className='text-2xl font-semibold mb-8'>{`${role} Login`}</span>
         <div className='flex flex-col'>
           <label className='font-medium mb-2'>{field}:</label>

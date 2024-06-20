@@ -22,7 +22,7 @@ const SignUp: React.FC<props> = ({ role }) => {
   }, [role])
   const navigate = useNavigate()
   return (
-    <div className='flex flex-col  min-h-screen lg:justify-center items-center  p-11'>
+    <div className='flex flex-col  min-h-screen lg:justify-center items-center   p-11'>
       <div className=' mt-8 lg:mt-0  w-full h-auto lg:w-1/3 border  '>
         <span className='text-2xl font-semibold mb-8'>SignUp</span>
 
