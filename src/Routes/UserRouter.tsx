@@ -1,18 +1,24 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom'
-import SignIn from '../components/user/SignIn'
-import Homepage from '../pages/user/Homepage';
-import SignUp from '../components/user/SignUp';
+const SignIn =lazy(()=> import( '../components/user/SignIn'));
+const Homepage =lazy(()=> import( '../pages/user/Homepage'));
+const SignUp =lazy(()=>import('../components/user/SignUp'));
+const Otp =lazy(()=>import('../components/user/Otp'));
+const MainNav =lazy(()=> import( '../components/common/MainNav'));
+import Loading from '../components/common/Loadings';
 const UserRouter = () => {
-    console.log("hello");
-
     return (
         <>
+        <Suspense fallback={<Loading/>}>
             <Routes>
+
                 <Route path='/' element={<Homepage />} />
+                <Route path='/home' element={<MainNav/>} />
                 <Route path='/signin' element={<SignIn role='User' />} />
-                <Route path='/signup' element={<SignUp role='User' />} />
+                <Route path='/signup' element={<SignUp/>} />
+                <Route path='/otp' element={<Otp/>}/>
             </Routes>
+        </Suspense>
 
         </>
     )

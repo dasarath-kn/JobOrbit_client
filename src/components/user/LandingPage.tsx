@@ -97,48 +97,60 @@ const LandingPage = () => {
           <h1 className='text-black font-medium text-2xl lg:text-3xl'>Find Your Job Here</h1>
         </div>
         <div className='mt-7 flex flex-wrap justify-evenly'>
-          <div className='p-6 w-full lg:w-80 h-40 rounded-md border mb-6 lg:mb-0'>
+          <div className='sm:w-40 p-6  lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 shadow-xl'>
             <h2 className='font-medium text-xl'>Fullstack Developer</h2>
             <p>Codex Technologies</p>
-            <FaMapMarkerAlt className='text-gray-400' />
-            <p>Bengaluru</p>
+            <div className="flex items-center text-gray-400">
+            <FaMapMarkerAlt />
+        <p className="ml-2 text-black">Bengaluru</p>
+      </div>
+            <button className=' rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
+          </div>
+          <div className='p-6 sm:w-40 lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 shadow-xl'>
+            <h2 className='font-medium text-xl'>Fullstack Developer</h2>
+            <p>Codex Technologies</p>
+            <div className="flex items-center text-gray-400">
+        <FaMapMarkerAlt />
+        <p className="ml-2 text-black">Bengaluru</p>
+      </div>
             <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
           </div>
-          <div className='p-6 w-full lg:w-80 h-40 rounded-md border mb-6 lg:mb-0'>
+          <div className='p-6 sm:w-40 lg:w-80 h-40 rounded-md border shadow-xl'>
             <h2 className='font-medium text-xl'>Fullstack Developer</h2>
             <p>Codex Technologies</p>
-            <FaMapMarkerAlt className='text-gray-400' />
-            <p>Bengaluru</p>
-            <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
-          </div>
-          <div className='p-6 w-full lg:w-80 h-40 rounded-md border'>
-            <h2 className='font-medium text-xl'>Fullstack Developer</h2>
-            <p>Codex Technologies</p>
-            <FaMapMarkerAlt className='text-gray-400' />
-            <p>Bengaluru</p>
+            <div className="flex items-center text-gray-400">
+        <FaMapMarkerAlt />
+        <p className="ml-2 text-black">Bengaluru</p>
+      </div>
             <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
           </div>
         </div>
         <div className='mt-7 flex flex-wrap justify-evenly'>
-          <div className='p-6 w-full lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 hidden lg:block'>
+          <div className='p-6 w-full lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 hidden lg:block shadow-xl'>
             <h2 className='font-medium text-xl'>Fullstack Developer</h2>
             <p>Codex Technologies</p>
-            <FaMapMarkerAlt className='text-gray-400' />
-            <p>Bengaluru</p>
+            <div className="flex items-center text-gray-400">
+        <FaMapMarkerAlt />
+        <p className="ml-2 text-black">Bengaluru</p>
+      </div>
             <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
           </div>
-          <div className='p-6 w-full lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 hidden lg:block'>
+          <div className='p-6 w-full lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 hidden lg:block shadow-xl'>
             <h2 className='font-medium text-xl'>Fullstack Developer</h2>
             <p>Codex Technologies</p>
-            <FaMapMarkerAlt className='text-gray-400' />
-            <p>Bengaluru</p>
+            <div className="flex items-center text-gray-400">
+        <FaMapMarkerAlt />
+        <p className="ml-2 text-black">Bengaluru</p>
+      </div>
             <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
           </div>
-          <div className='p-6 w-full lg:w-80 h-40 rounded-md border hidden lg:block'>
+          <div className='p-6 w-full lg:w-80 h-40 rounded-md border hidden lg:block shadow-xl'>
             <h2 className='font-medium text-xl'>Fullstack Developer</h2>
             <p>Codex Technologies</p>
-            <FaMapMarkerAlt className='text-gray-400' />
-            <p>Bengaluru</p>
+            <div className="flex items-center text-gray-400">
+        <FaMapMarkerAlt />
+        <p className="ml-2 text-black">Bengaluru</p>
+      </div>
             <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
           </div>
         </div>
@@ -148,7 +160,10 @@ const LandingPage = () => {
         <div className='px-8 lg:px-44 mt-5'>
           <h1 className='text-black font-medium text-2xl lg:text-3xl'>Our Client Reviews</h1>
         </div>
-        {/* Add your Review Carousel here */}
+        
+
+
+
       </div>
     </>
   )

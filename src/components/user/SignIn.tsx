@@ -40,17 +40,36 @@ const SignIn: React.FC<props> = ({ role }) => {
     
     onSubmit:async(Data)=>{
       try {
-        let response
         if(role =="User"){
-           response = await userLogin(Data as UserLogin)
-       
-        }else{
-           response =await companyLogin(Data as CompanyLogin)
-         
+           let response = await userLogin(Data as UserLogin)
+           if(response?.data){
+            let {userExistdata} =response.data
+            if(!userExistdata.is_verified){
+              navigate('/otp',{state:{email:userExistdata.email}})
+            }
+             else{
+                console.log("ssdsds");
+                
+                navigate('/')
+              }
+            }
         }
-        if(response?.data){          
-          navigate('/')
+        else{ 
+          let response =await companyLogin(Data as CompanyLogin)
+          if(response?.data){
+            let {companyData} = response.data             
+            if(!companyData.is_verified){
+              navigate('/company/otp',{state:{email:companyData.email}})
+
+            }else{
+
+              navigate('/')
+            }
+          }
         }
+        
+                              
+        
         
       } catch (error) {
         console.error(error);
@@ -63,11 +82,14 @@ const SignIn: React.FC<props> = ({ role }) => {
     <div className='flex flex-col  lg:flex-row justify-center items-center min-h-screen p-4'>
    
       <div className='mt-8 lg:mt-0 bg-white w-full md:w-1/2 lg:w-1/3 h-auto lg: border shadow-xl flex flex-col p-8'>
-        <span className='text-2xl font-semibold mb-8'>{`${role} Login`}</span>
+      <span className="text-2xl font-extrabold mb-4">JobOrbit</span>
+        <span className='text-2xl font-semibold mb-4'>{`${role} Login`}</span>
         <div className='flex flex-col'>
       <form onSubmit={handleSubmit}>
           <label className='font-medium mb-2'>{field}:</label>
           <input name="email" type="text" onChange={handleChange} onBlur={handleBlur} className='bg-black w-full h-12 p-3 rounded-xl text-white mb-4' placeholder={`Enter ${field.toLowerCase()}`} />
+          {errors.email && touched.email && <p className='text-sm text-red-500'>{errors.email}</p>}
+
           <label className='font-medium mb-2'>Password:</label>
           <div className='relative'>
             <input name="password" onChange={handleChange}  onBlur={handleBlur} type={showpassword ? 'text' : 'password'} className='bg-black w-full h-12 p-3 rounded-xl text-white mb-4' placeholder='Enter password' />

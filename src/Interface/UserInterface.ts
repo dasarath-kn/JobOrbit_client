@@ -1,3 +1,5 @@
+import { string } from "yup"
+
  export interface UserLogin {
    
     email:string,
@@ -12,6 +14,7 @@ export interface User{
     lastname:string,
     email:string,
     password:string,
+    confirmpassword?:string,
     phonenumber:number | string,
     field:string,
     location:string,
@@ -26,4 +29,7 @@ export interface User{
     qualification?:[string]
     experience?:[object]
 
+}
+export interface otp {
+    otp:string
 }

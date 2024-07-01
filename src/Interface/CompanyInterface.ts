@@ -10,6 +10,7 @@ export interface Company {
     companyname:string,
     email:string,
     password:string,
+    confirmpassword?:string
     phonenumber:number|string,
     industry:string,
     state:string,

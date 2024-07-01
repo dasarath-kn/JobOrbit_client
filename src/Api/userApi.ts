@@ -29,3 +29,29 @@ export const userSignup =async(userData:User)=>{
         
     }
 }
+
+export const verifyOtp =async(otp:string)=>{
+    try {
+    let Otp ={otp:otp}
+   
+        let response = await axiosInstance.post('/otp',Otp)
+        return response
+        
+    } catch (error:any) {
+        console.log(error.response.data.message);
+        toast.error(error.response.data.message)
+        
+    }
+}
+
+    export const resendOtp =async(email:string)=>{
+        try {
+            let Email ={email:email}
+            let response = await axiosInstance.post('/resendotp',Email)
+            return response
+        } catch (error:any) {
+            console.log(error);
+            toast.error(error.response.data.message)
+            
+        }
+    }

@@ -2,7 +2,14 @@ import toast from "react-hot-toast";
 import axiosInstance from "../Config/AxiosInstance";
 import { Company, CompanyLogin } from "../Interface/CompanyInterface";
 
-
+axiosInstance.interceptors.response.use(
+    (response)=>{
+        return response
+    },
+    (error)=>{
+        toast.error(error.response.data.message)
+    }
+)
 export  const companyLogin =async(companyData:CompanyLogin)=>{
     try {
         let response = await axiosInstance.post('/company/login',companyData)
@@ -25,6 +32,17 @@ export const companySignup = async(companyData:Company)=>{
         
     } catch (error:any) {
         console.log(error.response.data.message);
+        toast.error(error.response.data.message)
+        
+    }
+}
+export const verifyOtp = async(otp:string)=>{
+    try {
+        let Otp ={otp:otp}
+        let response = await axiosInstance.post('/company/otp',Otp)
+        return response
+    } catch (error) {
+        console.log(error);
         
     }
 }
