@@ -8,9 +8,9 @@ const Footer = () => {
     <>
     <div className='bg-black w-full flex-col md:flex-row md:h-64 flex justify-evenly md:items-center '>
     <div className='mb:8 md:mb:0'>
-        <span className='self-center px-3 text-2xl font-semibold whitespace-nowrap dark:text-white'>JobOrbit</span>
+        <span className='self-center  text-2xl font-semibold whitespace-nowrap dark:text-white'>JobOrbit</span>
         <div >
-        <span className=' px-4 text-white font-light'>Make your dreams come true with us.</span>
+        <span className='  text-white font-light'>Make your dreams come true with us.</span>
         </div>
     </div>
 

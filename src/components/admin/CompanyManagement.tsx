@@ -1,13 +1,11 @@
-import React from 'react';
-import Sidebar from './SideBar';
-import Nav from './Nav';
+import React from 'react'
+import SideBar from './SideBar'
 
-const UserManagement: React.FC = () => {
+const CompanyManagement = () => {
   return (
-    <>
-      {/* <Nav/> */}
-      <div className="flex flex-row">
-        <Sidebar />
+   <>
+     <div className="flex flex-row">
+        <SideBar />
         <div className="w-4/5 ml-8 border-black flex-col justify-center shadow-2xl p-6">
          
         
@@ -20,7 +18,7 @@ const UserManagement: React.FC = () => {
                     No.
                 </th>
                 <th scope="col" className="px-6 py-9">
-                    UserDetails
+                    CompanyDetails
                 </th>
                 <th scope="col" className="px-6 py-3">
                     Details
@@ -28,6 +26,10 @@ const UserManagement: React.FC = () => {
                 <th scope="col" className="px-6 py-3">
                     Status
                 </th>
+                <th scope="col" className="px-6 py-3">
+                    Verification
+                </th>
+                
                 <th scope="col" className="px-6 py-3">
                     Block/Unblock
                 </th>
@@ -44,13 +46,18 @@ const UserManagement: React.FC = () => {
                     Dasarath
                 </td>
                 <td className="px-6 py-6 ">
-                    <button className='h-14 w-20 text-white rounded-xl' style={{backgroundColor:'#033431'}}>
+                    <button className='h-14 w-20 text-white rounded-xl' style={{backgroundColor:'#48126A'}}>
                       Details
                     </button>
                 </td>
                 <td className="px-6 py-6">
                     Active
                 </td>
+                <td className="px-6 py-6">
+                <button className='h-14 w-20 text-white rounded-xl bg-green-500' >
+                      Verify
+                    </button>        
+                            </td>
                 <td className="px-6 py-6">
                 <button className='h-14 w-20 text-white rounded-xl bg-green-500' >
                       Block
@@ -65,8 +72,8 @@ const UserManagement: React.FC = () => {
 
         </div>
       </div>
-    </>
-  );
-};
+   </>
+  )
+}
 
-export default UserManagement;
+export default CompanyManagement

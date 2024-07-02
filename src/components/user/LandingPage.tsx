@@ -11,12 +11,12 @@ const LandingPage = () => {
   };
   return (
     <>
-      <div id='main1' className='bg-black flex flex-col lg:flex-row justify-evenly p-8 '>
-        <div className='text-white flex-1 content-center lg:ml-9 '>
-          <h1 className='text-white text-4xl lg:text-6xl mb-4'>Find Your Job With <br /> JobOrbit.</h1>
-          <p className='mb-6'>Our platform connects job seekers with a diverse range of job <br /> openings from top companies across various industries.</p>
+      <div id='main1' className='bg-black h-screen flex flex-col lg:flex-row justify-evenly p-8 '>
+        <div className='text-white flex-1 content-center lg:ml-32 '>
+          <h1 className='text-white text-4xl lg:text-6xl mb-8'>Find Your Job With <br /> JobOrbit.</h1>
+          <p className='mb-10'>Our platform connects job seekers with a diverse range of job <br /> openings from top companies across various industries.</p>
           <button className='border px-6 py-2 mb-10 rounded-2xl hover:bg-white hover:text-black hover:border'>Learn More</button>
-          <ul className='flex flex-col lg:flex-row   space-y-4 lg:space-y-0 lg:space-x-12 text-xs text-gray-400'>
+          <ul className='flex flex-col lg:flex-row lg:mt-11  space-y-4 lg:space-y-0 lg:space-x-12 text-xs text-gray-400'>
             <li>
               <p>Users</p>
               <p>50 k+ Users</p>
@@ -31,7 +31,7 @@ const LandingPage = () => {
             </li>
           </ul>
         </div>
-        <div className='mt-8 lg:mt-0 flex-1'>
+        <div className='lg:mt-8 lg:justify-center content-center flex-1'>
           <img src="public/landingpage1.png" alt="Landing page illustration" className="w-full h-auto  "  />
         </div>
       </div>

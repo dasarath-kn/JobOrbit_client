@@ -1,15 +1,20 @@
 import React from 'react'
-import Nav from '../../components/common/Nav'
-import LandingPage from '../../components/user/LandingPage'
+import MainNav from '../../components/common/MainNav'
+import Dashboard from '../../components/user/Dashboard'
+import Post from '../../components/user/Post'
 import Footer from '../../components/common/Footer'
+
 const Homepage = () => {
   return (
-   <>
-   <Nav/>
-   <LandingPage/>
-   <Footer/>
-   
-   </>
+    <>
+   <div className='sticky top-0 z-50'>
+
+    <MainNav/>
+    </div>
+    <Post/>
+    <Footer/>
+
+    </>
   )
 }
 
