@@ -55,3 +55,14 @@ export const verifyOtp =async(otp:string)=>{
             
         }
     }
+
+    export const getUserdata =async(user_id:string)=>{
+        try {
+            let response =await axiosInstance.get(`/getuserdata?user_id=${user_id}`)
+            return response
+        } catch (error :any) {
+            console.error(error.response.data.message);
+            toast.error(error.response.data.message)
+            
+        }
+    }

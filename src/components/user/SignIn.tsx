@@ -48,9 +48,8 @@ const SignIn: React.FC<props> = ({ role }) => {
               navigate('/otp',{state:{email:userExistdata.email}})
             }
              else{
-                console.log("ssdsds");
-                
-                navigate('/')
+                localStorage.setItem("token",response.data.token)
+                navigate('/home',)
               }
             }
         }

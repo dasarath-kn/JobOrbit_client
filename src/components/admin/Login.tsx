@@ -3,7 +3,7 @@ import loginValidation from '../../Validations/User/Loginvalidation'
 import { useNavigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import { useFormik, validateYupSchema } from 'formik'
+import { useFormik } from 'formik'
 import { adminLogin } from '../../Api/adminApi'
 import { AdminLogin } from '../../Interface/AdminInterface'
 
@@ -17,16 +17,20 @@ const Login = () => {
     initialValues:{
         email:'',
         password:''},
-        validateYupSchema:loginValidation,
-        onsubmit:async(Data)=>{
+        validationSchema:loginValidation,
+        onSubmit:async(Data:AdminLogin)=>{
             try {
-                let response = await adminLogin(Data as AdminLogin)
-            } catch (error) {
+              let response = await adminLogin(Data as AdminLogin)
+              if(response?.data){
+                
+                navigate('/admin/usermanagement')              
+              }
+              } catch (error) {
                 console.log(error);
                 
             }
         }
-    }
+    
 
   })
  
@@ -40,7 +44,7 @@ const Login = () => {
      <div className='flex flex-col'>
    <form onSubmit={handleSubmit}>
        <label className='font-medium mb-2 text-white'>Email:</label>
-       <input name="email" onChange={handleChange} onBlur={handleBlur} type="text"  className='bg-white  w-full h-12 p-3 rounded-xl text-white mb-4' placeholder="Enter email" />
+       <input name="email" onChange={handleChange} onBlur={handleBlur} type="text"  className='bg-white  w-full h-12 p-3 rounded-xl  mb-4 text-black' placeholder="Enter email" />
        {errors.email && touched.email && <p className='text-sm text-red-500'>{errors.email}</p>}
 
        <label className='font-medium mb-2 text-white'>Password:</label>

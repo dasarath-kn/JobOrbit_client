@@ -12,3 +12,51 @@ export const adminLogin = async(adminData:AdminLogin)=>{
             
         }
 }
+export const getUsers = async()=>{
+    try {
+        let response = await axiosInstance.get('/admin/userdata')
+        return response
+        
+    } catch (error:any) {
+        console.error(error.response.data.message);
+        toast.error(error.response.data.message)
+        
+    }
+}
+export const getCompanies =async()=> {
+    try {
+        let response = await axiosInstance.get('/admin/companydata')
+        return response
+    } catch (error:any) {
+        console.error(error.response.data.message);
+        toast.error(error.response.data.message) 
+    }
+}
+export const userBlockUnblock = async(id:string,status:string)=>{
+    try {
+        
+        let response = await axiosInstance.patch(`/admin/userblockunblock?user_id=${id}&status=${status}`)
+        console.log(response);
+        
+        return response        
+        
+    } catch (error:any) {
+        console.error(error.response.data.message);
+        toast.error(error.response.data.message)
+
+        
+    }
+}
+
+export const companyBlockUnblock =async(id:string,status:string)=>{
+    try {
+        let response = await axiosInstance.patch(`/admin/companyblockunblock?company_id=${id}&status=${status}`)        
+        return response
+        
+        
+    } catch (error:any) {
+        console.error(error.response.data.message);
+        toast.error(error.response.data.message)
+        
+    }
+}

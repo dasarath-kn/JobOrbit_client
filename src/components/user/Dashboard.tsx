@@ -1,6 +1,10 @@
 import React from 'react'
+import {  useNavigate } from 'react-router-dom'
+
 
 const Dashboard = () => {
+  console.log(localStorage.getItem("token"));
+  
   return (
     <div className='flex flex-row'>
         <div className='flex flex-col items-center border-8 mt-40 w-80 ml-14 h-96 rounded-2xl shadow-2xl'>

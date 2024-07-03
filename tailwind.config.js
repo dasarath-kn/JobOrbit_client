@@ -13,5 +13,8 @@ export default {
   textColor:{
     default:'#000'
   },
-  plugins: [],
+  plugins: [
+    
+
+  ],
 }
