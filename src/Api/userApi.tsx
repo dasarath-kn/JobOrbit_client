@@ -4,9 +4,7 @@ import { User, UserLogin } from "../Interface/UserInterface";
 
 export const userLogin = async (userData:UserLogin)=> {
     try {
-        let response = await axiosInstance.post('/login',userData)
-        console.log(response);
-        
+        let response = await axiosInstance.post('/login',userData)        
         return response
     } catch (error :any) {
         console.log(error.response.data.message);
@@ -18,9 +16,7 @@ export const userLogin = async (userData:UserLogin)=> {
 
 export const userSignup =async(userData:User)=>{
     try {
-        let response = await axiosInstance.post('/signup',userData)
-        console.log(response);
-        
+        let response = await axiosInstance.post('/signup',userData)        
         return response
         
     } catch (error :any) {
@@ -30,11 +26,11 @@ export const userSignup =async(userData:User)=>{
     }
 }
 
-export const verifyOtp =async(otp:string)=>{
+export const userverifyOtp =async(otp:string)=>{
     try {
     let Otp ={otp:otp}
    
-        let response = await axiosInstance.post('/otp',Otp)
+        let response = await axiosInstance.post('/otp',Otp)        
         return response
         
     } catch (error:any) {
@@ -56,9 +52,14 @@ export const verifyOtp =async(otp:string)=>{
         }
     }
 
-    export const getUserdata =async(user_id:string)=>{
+    export const getUserdata =async()=>{
         try {
-            let response =await axiosInstance.get(`/getuserdata?user_id=${user_id}`)
+            const token = localStorage.getItem("Usertoken")
+            
+            let response =await axiosInstance.get("/getuserdata",{headers:{
+                "Authorization":token
+            }})
+            
             return response
         } catch (error :any) {
             console.error(error.response.data.message);

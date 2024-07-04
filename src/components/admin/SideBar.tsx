@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
-
+import { useNavigate } from 'react-router-dom'
 
 const SideBar = () => {
     let [status,setStatus] =useState(false)
     const toggleMenu=()=>{
         setStatus(!status)
+    }
+    const navigate = useNavigate()
+    const handlelogout =()=>{
+        localStorage.removeItem("Admintoken")
+        navigate('/admin/login')   
     }
   return (
     <>
@@ -51,6 +56,11 @@ const SideBar = () => {
             <li className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
                 <a href="">
                     Category
+                </a>
+            </li>
+            <li className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
+                <a onClick={handlelogout}>
+                    Logout
                 </a>
             </li>
            

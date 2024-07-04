@@ -22,7 +22,7 @@ const Login = () => {
             try {
               let response = await adminLogin(Data as AdminLogin)
               if(response?.data){
-                
+                localStorage.setItem("Admintoken",response.data.token)
                 navigate('/admin/usermanagement')              
               }
               } catch (error) {

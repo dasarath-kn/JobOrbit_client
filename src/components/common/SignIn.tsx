@@ -42,14 +42,16 @@ const SignIn: React.FC<props> = ({ role }) => {
       try {
         if(role =="User"){
            let response = await userLogin(Data as UserLogin)
+           
+           
            if(response?.data){
             let {userExistdata} =response.data
             if(!userExistdata.is_verified){
               navigate('/otp',{state:{email:userExistdata.email}})
             }
              else{
-                localStorage.setItem("token",response.data.token)
-                navigate('/home',)
+                localStorage.setItem("Usertoken",response.data.token)
+                navigate('/dashboard',)
               }
             }
         }
@@ -58,17 +60,15 @@ const SignIn: React.FC<props> = ({ role }) => {
           if(response?.data){
             let {companyData} = response.data             
             if(!companyData.is_verified){
+
               navigate('/company/otp',{state:{email:companyData.email}})
 
             }else{
-
-              navigate('/')
+              localStorage.setItem("Companytoken",response.data.token)
+              navigate('/company/profile')
             }
           }
         }
-        
-                              
-        
         
       } catch (error) {
         console.error(error);

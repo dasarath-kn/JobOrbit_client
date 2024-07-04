@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import otpValidation from '../../Validations/User/Otp'
-import { verifyOtp } from '../../Api/companyApi'
-import { resendOtp } from '../../Api/userApi'
+import { verifyOtp, } from '../../Api/companyApi'
+import { resendOtp, userverifyOtp } from '../../Api/userApi'
 import toast, { Toaster } from 'react-hot-toast'
 import { useLocation, useNavigate } from 'react-router-dom'
-
-const Otp:React.FC = () => {
+interface Props{
+  role:string
+}
+const Otp:React.FC<Props> = ({role}) => {
   const navigate=useNavigate()
   let [count,setCount]=useState<number>(59)
   let [resend,setResend] =useState<boolean>(false)
@@ -32,22 +34,35 @@ const Otp:React.FC = () => {
     validationSchema:otpValidation,
     onSubmit:async(Data)=>{
       try {
+        if(role=="Company"){
         let response = await verifyOtp(Data.otp)
         if(response?.data){
-          navigate('/')
-        }        
+          localStorage.setItem("Companytoken",response.data.token)
+          navigate('/company/profile')
+        }
+      }else{
+        let response = await userverifyOtp(Data.otp)
+        
+        console.log(response);
+        if(response?.data){
+          
+          localStorage.setItem("Usertoken",response.data.token)
+          navigate('/dashboard')
+        }
+      }        
       } catch (error) {
         console.log(error);
         
       }
     }
   })
-  const otpResend =async()=>{    
+  const otpResend =async()=>{  
+    
     let response =await resendOtp(email)
     toast.success(response?.data.message)
     setCount(59)
     setResend(!resend)
-         
+    
   }
   return (
     <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen">

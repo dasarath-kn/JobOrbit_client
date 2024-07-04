@@ -49,7 +49,7 @@ const LandingPage = () => {
 
       <div className='flex flex-col lg:flex-row lg:ml-16 justify-evenly py-16'>
         <div className='flex-1'>
-          <img src="public/landingpage2.png" alt="Connection illustration" className="w-full h-auto" />
+          <img src="/landingpage2.png" alt="Connection illustration" className="w-full h-auto" />
         </div>
         <div className='flex-1 flex flex-col mt-8 lg:mt-0 lg:ml-8 justify-center items-center content-center'>
           <h1 className='my-7 font-bold text-2xl lg:text-4xl text-center'>Build Your Connections.</h1>

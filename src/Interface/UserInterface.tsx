@@ -18,6 +18,7 @@ export interface User{
     phonenumber:number | string,
     field:string,
     location:string,
+    img_url?:string
     about?:string,
     is_verified?:boolean,
     is_blocked?:boolean,
