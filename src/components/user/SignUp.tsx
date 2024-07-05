@@ -6,6 +6,7 @@ import  { userInitialValues, userValidationSchema } from '../../Validations/User
 import { User } from '../../Interface/UserInterface';
 import { userSignup } from '../../Api/userApi';
 import { Toaster, toast } from 'react-hot-toast';
+import GoogleAuth from '../common/GoogleAuth';
 
 const SignUp:React.FC = () => {
   let [showpassword, setShowpassword] = useState<boolean>(false)
@@ -53,13 +54,13 @@ const SignUp:React.FC = () => {
         <div className='flex  flex-col md:flex-row space-x-0 md:space-y-0 md:space-x-4 space-y-4 mt-6 '>
           <div className='flex flex-col   w-full md:w-1/2 '>
             <label className='font-medium mb-2 '>Firstname:</label>
-            <input name='firstname' value={values.firstname} onChange={handleChange} onBlur={handleBlur} type="text" className='bg-black w-full h-12 rounded-xl p-3 text-white' placeholder="Enter firstname" />
+            <input name='firstname' value={values.firstname} onChange={handleChange} onBlur={handleBlur} type="text" className='border-2  border-gray-700/70 w-full h-12 rounded-xl p-3 text-black' placeholder="Enter firstname" />
             {errors.firstname && touched.firstname && <p className='text-sm text-red-500'>{errors.firstname}</p>}
 
           </div>
           <div className='flex flex-col md:w-1/2'>
             <label className='font-medium mb-2'>Lastname:</label>
-            <input name='lastname' value={values.lastname} type="text" onChange={handleChange} onBlur={handleBlur} className='bg-black w-full h-12 rounded-xl p-3 text-white' placeholder="Enter lastname" />
+            <input name='lastname' value={values.lastname} type="text" onChange={handleChange} onBlur={handleBlur} className='border-2  border-gray-700/70 w-full h-12 rounded-xl p-3 text-black' placeholder="Enter lastname" />
             {errors.lastname && touched.lastname && <p className='text-sm text-red-500'>{errors.lastname}</p>}
 
           </div>
@@ -67,13 +68,13 @@ const SignUp:React.FC = () => {
         <div className='flex  flex-col md:flex-row space-x-0 md:space-y-0 md:space-x-4 space-y-4 mt-6 '>
           <div className='flex flex-col md:w-1/2'>
             <label className='font-medium mb-2 '>Email:</label>
-            <input name='email' value={values.email} type="text"onChange={handleChange} onBlur={handleBlur} className='bg-black w-full h-12 rounded-xl p-3 text-white' placeholder="Enter email" />
+            <input name='email' value={values.email} type="text"onChange={handleChange} onBlur={handleBlur} className='border-2  border-gray-700/70 w-full h-12 rounded-xl p-3 text-black' placeholder="Enter email" />
             {errors.email && touched.email && <p className='text-sm text-red-500'>{errors.email}</p>}
 
           </div>
           <div className='flex flex-col md:w-1/2'>
             <label className='font-medium mb-2 '>Phonenumber</label>
-            <input name="phonenumber" value={values.phonenumber} type="text" onChange={handleChange} onBlur={handleBlur} className='bg-black w-full h-12 rounded-xl p-3 text-white' placeholder="Enter phonenumber" />
+            <input name="phonenumber" value={values.phonenumber} type="text" onChange={handleChange} onBlur={handleBlur} className='border-2  border-gray-700/70  w-full h-12 rounded-xl p-3 text-black' placeholder="Enter phonenumber" />
             {errors.phonenumber && touched.phonenumber && <p className='text-sm text-red-500'>{errors.phonenumber}</p>}
 
           </div>
@@ -83,7 +84,7 @@ const SignUp:React.FC = () => {
           <div className='flex flex-col md:w-1/2'>
             <label className='font-medium mb-2 '>Password:</label>
             <div className='relative '>
-              <input name='password' value={values.password} type={showpassword ? 'text' : 'password'} onChange={handleChange} onBlur={handleBlur}className='bg-black w-full h-12 rounded-xl p-3 text-white' placeholder='Enter password' />
+              <input name='password' value={values.password} type={showpassword ? 'text' : 'password'} onChange={handleChange} onBlur={handleBlur}className='border-2  border-gray-700/70 w-full h-12 rounded-xl p-3 text-black' placeholder='Enter password' />
               {errors.password && touched.password && <p className='text-sm text-red-500'>{errors.password}</p>}
 
               <div className='absolute right-3 top-3' onClick={passwordvisibility}>
@@ -94,7 +95,7 @@ const SignUp:React.FC = () => {
           <div className='flex flex-col md:w-1/2'>
             <label className='font-medium mb-2 '>Confirm password:</label>
             <div className='relative'>
-              <input type={confirmpassword ? 'text' : 'password'} value={values.confirmpassword} name='confirmpassword' onChange={handleChange} onBlur={handleBlur} className='bg-black w-full h-12 rounded-xl p-3 text-white' placeholder='Enter confirm password' />
+              <input type={confirmpassword ? 'text' : 'password'} value={values.confirmpassword} name='confirmpassword' onChange={handleChange} onBlur={handleBlur} className='border-2  border-gray-700/70 w-full h-12 rounded-xl p-3 text-black' placeholder='Enter confirm password' />
               {errors.confirmpassword && touched.confirmpassword && <p className='text-sm text-red-500'>{errors.confirmpassword}</p>}
 
               <div className='absolute right-3 top-3' onClick={confirmpasswordvisibility}>
@@ -107,13 +108,13 @@ const SignUp:React.FC = () => {
         <div className='flex  flex-col md:flex-row space-x-0 md:space-y-0 md:space-x-4 space-y-4 mt-6 '>
           <div className='flex flex-col  md:w-1/2'>
             <label className='font-medium mb-2 '>Field:</label>
-            <input name="field" value={values.field} type="text" onChange={handleChange} onBlur={handleBlur} className='bg-black w-full h-12 rounded-xl p-3 text-white' placeholder="Select field of interest" />
+            <input name="field" value={values.field} type="text" onChange={handleChange} onBlur={handleBlur} className='border-2  border-gray-700/70 w-full h-12 rounded-xl p-3 text-black' placeholder="Select field of interest" />
             {errors.field && touched.field && <p className='text-sm text-red-500'>{errors.field}</p>}
 
           </div>
           <div className='flex flex-col md:w-1/2'>
             <label className='font-medium mb-2 '>Location:</label>
-            <input name="location" value={values.location} type="text" onChange={handleChange} onBlur={handleBlur} className='bg-black w-full h-12 rounded-xl p-3 text-white' placeholder="Enter your location" />
+            <input name="location" value={values.location} type="text" onChange={handleChange} onBlur={handleBlur} className='border-2  border-gray-700/70 w-full h-12 rounded-xl p-3 text-black' placeholder="Enter your location" />
             {errors.location && touched.location && <p className='text-sm text-red-500'>{errors.location}</p>}
 
           </div>
@@ -135,7 +136,8 @@ const SignUp:React.FC = () => {
 
         <div className='flex justify-center'>
           <div className='w-1/2 mt-6 '>
-            <button className='border w-full bg-black    h-12 text-white  rounded-xl hover:bg-white hover:text-black '>SignUp With Google</button>
+          <GoogleAuth role={"User"}/>
+            {/* <button className='border w-full bg-black    h-12 text-white  rounded-xl hover:bg-white hover:text-black '>SignUp With Google</button> */}
           </div>
 
         </div>

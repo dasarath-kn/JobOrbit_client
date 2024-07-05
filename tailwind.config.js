@@ -11,7 +11,7 @@ export default {
     body: ['Poppins', 'sans-serif']
   },
   textColor:{
-    default:'#000'
+    default:'#0000'
   },
   plugins: [
     

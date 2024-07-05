@@ -10,7 +10,7 @@ const ProfilePage = () => {
     <NavBar/>
         </div>
         <Profile/>
-        {/* <Footer/> */}
+        <Footer/>
 
     </>
   )

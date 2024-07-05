@@ -1,6 +1,8 @@
 import axiosInstance from "../Config/AxiosInstance";
 import toast from "react-hot-toast";
 import { User, UserLogin } from "../Interface/UserInterface";
+import GoogleauthToken from "../Interface/GoogleauthToken";
+import GoogleAuth from "../Interface/GoogleauthToken";
 
 export const userLogin = async (userData:UserLogin)=> {
     try {
@@ -64,6 +66,17 @@ export const userverifyOtp =async(otp:string)=>{
         } catch (error :any) {
             console.error(error.response.data.message);
             toast.error(error.response.data.message)
+            
+        }
+    }
+
+    export const googleSignup =async(userdata:GoogleAuth)=>{
+        try {
+            let response = await axiosInstance.post("/googlesignup",userdata)
+            return response
+            
+        } catch (error:any) {
+            console.error(error.response.data.message);
             
         }
     }

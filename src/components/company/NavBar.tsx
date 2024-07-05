@@ -5,12 +5,20 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const [modal,setModal]=useState(false)
+    const navigate = useNavigate()
+  const handlemodal =()=>{
+    setModal(!modal)
+  }
+  const handleLogout =()=>{
+    localStorage.removeItem("Companytoken")
+    navigate('/')
+  }
     const toggleMenu = () => {
       setIsOpen(!isOpen);
     };
-    const navigate = useNavigate()
   return (
+    <>
     <nav className="bg-black">
     <div className="max-w-screen-xl flex flex-wrap  justify-between  lg:mx-36 p-8">
         {/* <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" /> */}
@@ -38,8 +46,18 @@ const NavBar = () => {
           <li>
             <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Profile</a>
           </li>
-          <li  className=''>
-                <img src="public/landingpage2.png" className='rounded-lg  w-14 ' alt="" />
+          <li  className='' id="dropdownDefaultButton" onClick={handlemodal} data-dropdown-toggle="dropdown">
+                <img src="/user06.png" className='rounded-lg  w-9  ' alt="" />
+          {modal &&
+<div id="dropdown" aria-hidden="true" className="z-10  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-400">
+    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+      <li>
+        <a href="#" onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Logout</a>
+      </li>
+     
+    </ul>
+</div>}
+                
           </li>
           <li>
           <IoIosNotificationsOutline className='text-white w-11 h-8' />
@@ -51,6 +69,12 @@ const NavBar = () => {
       </div>
     </div>
   </nav>
+  
+
+
+
+  </>
+  
 
   )
 }

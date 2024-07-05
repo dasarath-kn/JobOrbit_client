@@ -11,8 +11,8 @@ export const userValidationSchema = Yup.object().shape({
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     confirmpassword: Yup.string().min(6, 'Confirm password must be at least 6 characters').required('Confirmpassword is required'),
     phonenumber: Yup.string().matches(phoneNumberRegex, 'Phone number must be exactly 10 digits').typeError('Phone number must be a number').required('Phone number is required'),
-    field: Yup.string().required('Field is required'),
-    location: Yup.string().matches(addressRegex,"Invalid").required('Location is required'),
+    field: Yup.string().matches(addressRegex,"Field should not contain numbers").required('Field is required'),
+    location: Yup.string().matches(addressRegex,"Address should not contain numbers").required('Location is required'),
   });
   
  export const userInitialValues:User = {
@@ -26,3 +26,4 @@ export const userValidationSchema = Yup.object().shape({
     confirmpassword:''
   };
   
+set

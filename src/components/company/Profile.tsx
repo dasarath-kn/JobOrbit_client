@@ -5,7 +5,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className='w-screen h-1/2 flex flex-col justify-center sm:justify-center sm:w-auto items-center  '>
+      <div className='w-screen h-screen flex  flex-col justify-center sm:justify-center sm:w-auto items-center  '>
         <div className='bg-black text-white flex flex-row s:w-auto lg:w-3/4 1/2 h-auto mt-20 rounded-2xl  '>
           <div className='lg:w-1/2 h-auto lg:content-center sm:w-1/2 sm:h-1/2  md:content-center'>
 

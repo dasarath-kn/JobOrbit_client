@@ -34,7 +34,7 @@ const Dashboard = () => {
   }
   return (
     <div className='flex flex-row'>
-      <div className='flex flex-col items-center border-8 mt-40 w-80 ml-14 h-fit rounded-2xl shadow-2xl'>
+      <div className='flex flex-col items-center  mt-40 w-80 ml-14 h-fit rounded-2xl shadow-2xl border-8'>
         <ul className='mt-5'>
           <li>
             {data?.img_url ?
