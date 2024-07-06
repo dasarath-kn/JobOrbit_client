@@ -57,3 +57,18 @@ export const companyGooglesignup = async (companydata: GoogleAuth) => {
 
     }
 }
+
+export const getCompanydata =async ()=>{
+    try {
+        console.log("ccccccccccc");
+        
+        const token =localStorage.getItem("Companytoken")
+        const response =await axiosInstance.get("/company/getcompanydata",{headers:{
+            "Authorization":token
+        }})
+        return response
+    } catch (error:any) {
+        console.error(error.response.data.message);
+        
+    }
+}

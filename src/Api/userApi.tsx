@@ -69,6 +69,16 @@ export const userverifyOtp =async(otp:string)=>{
             
         }
     }
+    export const verifyUser =async(email:string)=>{
+        try {
+            
+            let response =await axiosInstance.post('/verfiyuser',email)
+            return response
+        } catch (error:any) {
+            console.error(error.response.data.message);
+            toast.error(error.response.data.message)
+        }
+    }
 
     export const googleSignup =async(userdata:GoogleAuth)=>{
         try {

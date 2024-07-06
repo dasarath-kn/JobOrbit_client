@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from './SideBar';
 import Nav from './Nav';
 import toast, { Toaster } from 'react-hot-toast'
-import { getUsers,userBlockUnblock } from '../../Api/adminApi';
+import { getUsers, userBlockUnblock } from '../../Api/adminApi';
 import { User } from '../../Interface/UserInterface';
 import 'flowbite';
 
 const UserManagement: React.FC = () => {
     const [users, setUsers] = useState<User[] | null>([]);
     const [showmodal, setShowmodal] = useState<boolean>(false)
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
 
     useEffect(() => {
         let Userdata = async () => {
@@ -24,13 +26,13 @@ const UserManagement: React.FC = () => {
         Userdata()
 
     }, [users])
-    const handlemodal = () => {
+    const handlemodal = (user: User) => {
+        setSelectedUser(user)
         setShowmodal(!showmodal)
-        console.log(showmodal);
 
     }
-    const BlockUnblock = async(userid:string,status:string) => {               
-        let response = await userBlockUnblock(userid,status)        
+    const BlockUnblock = async (userid: string, status: string) => {
+        let response = await userBlockUnblock(userid, status)
         toast.success(response?.data.message)
     }
     return (
@@ -78,11 +80,11 @@ const UserManagement: React.FC = () => {
                                                 {val.firstname}
                                             </td>
                                             <td className="px-6 py-6 ">
-                                                <button data-modal-target="default-modal" data-modal-toggle="default-modal" className="h-14 w-20 text-white rounded-xl" onClick={handlemodal} style={{ backgroundColor: '#033431' }} type="button">
+                                                <button data-modal-target="default-modal" data-modal-toggle="default-modal" className="h-14 w-20 text-white rounded-xl" onClick={() => handlemodal(val)} style={{ backgroundColor: '#033431' }} type="button">
                                                     Details
                                                 </button>
 
-                                                {showmodal && (
+                                                {showmodal && selectedUser && (
                                                     <div
                                                         id="default-modal"
                                                         className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50"
@@ -94,7 +96,7 @@ const UserManagement: React.FC = () => {
                                                                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                                                                         Userdetails
                                                                     </h3>
-                                                                    <button type="button" onClick={handlemodal} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
+                                                                    <button type="button" onClick={() => handlemodal(val)} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
                                                                         <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                                                         </svg>
@@ -103,26 +105,26 @@ const UserManagement: React.FC = () => {
                                                                 </div>
                                                                 <div className="p-4 md:p-5 space-y-4">
                                                                     <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                        Firstname:{val.firstname}
+                                                                        Firstname:{selectedUser.firstname}
                                                                     </p>
                                                                     <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                        Lastname:{val.lastname}
+                                                                        Lastname:{selectedUser.lastname}
                                                                     </p>
                                                                     <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                        Email:{val.email}
+                                                                        Email:{selectedUser.email}
                                                                     </p>
                                                                     <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                        PhoneNumber:{val.phonenumber}
+                                                                        PhoneNumber:{selectedUser.phonenumber}
                                                                     </p>
                                                                     <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                        Field:{val.field}
+                                                                        Field:{selectedUser.field}
                                                                     </p>
                                                                     <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                        Location:{val.location}
+                                                                        Location:{selectedUser.location}
                                                                     </p>
                                                                 </div>
                                                                 <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                                                    <button data-modal-hide="default-modal" onClick={handlemodal} type="button" className="text-white bg-red-500 hover:bg-red-500    focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Close</button>
+                                                                    <button data-modal-hide="default-modal" onClick={() => handlemodal(val)} type="button" className="text-white bg-red-500 hover:bg-red-500    focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Close</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -134,10 +136,10 @@ const UserManagement: React.FC = () => {
                                             </td>
                                             <td className="px-6 py-6">
                                                 {val.is_blocked ?
-                                                    <button className='h-14 w-20 text-white rounded-xl bg-green-500' onClick={()=>BlockUnblock(val._id as string,"unblock")} >
+                                                    <button className='h-14 w-20 text-white rounded-xl bg-green-500' onClick={() => BlockUnblock(val._id as string, "unblock")} >
                                                         UnBlock
                                                     </button> :
-                                                    <button className='h-14 w-20 text-white rounded-xl bg-red-500' onClick={()=>BlockUnblock(val._id as string,"block")} >
+                                                    <button className='h-14 w-20 text-white rounded-xl bg-red-500' onClick={() => BlockUnblock(val._id as string, "block")} >
                                                         Block
                                                     </button>
                                                 }

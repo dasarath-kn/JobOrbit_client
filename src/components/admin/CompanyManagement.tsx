@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast'
 const CompanyManagement = () => {
     const [company, setCompany] = useState<Company[] | null>([])
     const [showmodal, setShowmodal] = useState<boolean>(false)
+    const [selectedcompany,setSelectedcompany] =useState<Company>()
 
     useEffect(() => {
         const companyData = async () => {
@@ -21,10 +22,9 @@ const CompanyManagement = () => {
         }
         companyData()
     }, [company])
-    const handlemodal = () => {
+    const handlemodal = (val :Company) => {
         setShowmodal(!showmodal)
-        console.log(showmodal);
-
+        setSelectedcompany(val)
     }
     const BlockUnblock =async(company_id:string,status:string)=>{
         let response = await companyBlockUnblock(company_id,status)
@@ -83,7 +83,7 @@ const CompanyManagement = () => {
                                                     {val.companyname}
                                                 </td>
                                                 <td className="px-6 py-6 ">
-                                                    <button data-modal-target="default-modal" data-modal-toggle="default-modal" className="h-14 w-20 text-white rounded-xl" onClick={handlemodal} style={{ backgroundColor: '#033431' }} type="button">
+                                                    <button data-modal-target="default-modal" data-modal-toggle="default-modal" className="h-14 w-20 text-white rounded-xl" onClick={()=>handlemodal(val)} style={{ backgroundColor: '#033431' }} type="button">
                                                         Details
                                                     </button>
 
@@ -101,7 +101,7 @@ const CompanyManagement = () => {
                                                                         <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                                                                             Userdetails
                                                                         </h3>
-                                                                        <button type="button" onClick={handlemodal} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
+                                                                        <button type="button" onClick={()=>handlemodal(val)} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">
                                                                             <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                                                                             </svg>
@@ -110,32 +110,32 @@ const CompanyManagement = () => {
                                                                     </div>
                                                                     <div className="p-4 md:p-5 space-y-4">
                                                                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                            Companyname:{val.companyname}
+                                                                            Companyname:{selectedcompany?.companyname}
                                                                         </p>
                                                                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                            Email:{val.email}
+                                                                            Email:{selectedcompany?.email}
                                                                         </p>
                                                                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                            PhoneNumber:{val.phonenumber}
+                                                                            PhoneNumber:{selectedcompany?.phonenumber}
                                                                         </p>
                                                                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                            Industry:{val.industry}
+                                                                            Industry:{selectedcompany?.industry}
                                                                         </p>
                                                                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                            State:{val.state}
+                                                                            State:{selectedcompany?.state}
                                                                         </p>
                                                                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                            City:{val.city}
+                                                                            City:{selectedcompany?.city}
                                                                         </p>
                                                                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                            Adreess:{val.address}
+                                                                            Adreess:{selectedcompany?.address}
                                                                         </p>
                                                                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                                                            About:{val.about}
+                                                                            About:{selectedcompany?.about}
                                                                         </p>
                                                                     </div>
                                                                     <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                                                        <button data-modal-hide="default-modal" onClick={handlemodal} type="button" className="text-white bg-red-500 hover:bg-red-500    focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Close</button>
+                                                                        <button data-modal-hide="default-modal" onClick={()=>handlemodal(val)} type="button" className="text-white bg-red-500 hover:bg-red-500    focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Close</button>
                                                                     </div>
                                                                 </div>
                                                             </div>

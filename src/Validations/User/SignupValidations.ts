@@ -26,4 +26,3 @@ export const userValidationSchema = Yup.object().shape({
     confirmpassword:''
   };
   
-set

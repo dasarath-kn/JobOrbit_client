@@ -7,6 +7,7 @@ const Otp =lazy(()=>import('../components/common/Otp'));
 import Loading from '../components/common/Loadings';
 import UserLoginAuth from '../Authentication/User/UserLoginAuth';
 import UserLogoutAuth from '../Authentication/User/UserLogoutAuth';
+import Emailverify from '../components/common/Emailverify';
 const Homepage = lazy(()=> import('../pages/user/HomePage'));
 const UserRouter = () => {
     return (
@@ -21,6 +22,7 @@ const UserRouter = () => {
                 <Route path='/otp' element={<Otp role={"User"}/>}/>
                 <Route path='/signin' element={<SignIn role='User' />} />
                 <Route path='/signup' element={<SignUp/>} />
+                <Route path='/verify' element={<Emailverify role={"User"}/>} />
                 </Route>
             </Routes>
         </Suspense>

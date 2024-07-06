@@ -8,7 +8,6 @@ const Dashboard = () => {
   let [data, setData] = useState<User>()
   let token = localStorage.getItem("Usertoken")
   const navigate = useNavigate()
-  console.log(localStorage.getItem("Usertoken"));
 
   useEffect(() => {
     const userData = async () => {

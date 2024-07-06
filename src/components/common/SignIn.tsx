@@ -62,7 +62,6 @@ const SignIn: React.FC<props> = ({ role }) => {
           if (response?.data) {
             let { companyData } = response.data
             if (!companyData.is_verified) {
-
               navigate('/company/otp', { state: { email: companyData.email } })
 
             } else {
@@ -99,7 +98,7 @@ const SignIn: React.FC<props> = ({ role }) => {
                 {showpassword ? <FaEyeSlash className='text-black' /> : < FaEye className='text-black' />}
               </div>
             </div>
-            <span className='font-normal self-end mb-4 text-right'>Forget Password?</span>
+            <span onClick={()=>navigate('/verify')} className='font-normal self-end mb-4 text-right'>Forget Password?</span>
             <button className='bg-white border-2 font-medium w-full h-12  rounded-lg hover:bg-black hover:text-white' type='submit'>SignIn</button>
           </form>
           <span className=''>Don't Have an account? <a className='text-blue-500 hover:underline' onClick={() => { role == 'User' ? navigate('/signup') : navigate('/company/signup') }}>SignUp</a></span>

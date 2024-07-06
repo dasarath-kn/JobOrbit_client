@@ -35,9 +35,7 @@ export const getCompanies =async()=> {
 export const userBlockUnblock = async(id:string,status:string)=>{
     try {
         
-        let response = await axiosInstance.patch(`/admin/userblockunblock?user_id=${id}&status=${status}`)
-        console.log(response);
-        
+        let response = await axiosInstance.patch(`/admin/userblockunblock?user_id=${id}&status=${status}`)       
         return response        
         
     } catch (error:any) {

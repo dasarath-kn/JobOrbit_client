@@ -1,7 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaMapMarkerAlt } from 'react-icons/fa'
+import { getCompanydata } from '../../Api/companyApi'
+import { Company } from '../../Interface/CompanyInterface'
 
 const Profile = () => {
+  let [data,setData] =useState<Company>()
+  useEffect(()=>{
+    const companyData =async()=>{
+      try {
+         let response = await getCompanydata()
+         if(response?.data.success){
+          console.log(response.data);
+          
+          setData(response?.data.companydata)
+         }
+      } catch (error) {
+        console.error(error);
+        
+      }
+    }
+    companyData()
+  },[])
+console.log(data);
 
   return (
     <>
@@ -13,16 +33,16 @@ const Profile = () => {
           </div>
           <div className='border-7 ml-28 '>
             <ul className='space-y-6 '>
-              <li className='text-2xl font-bold mt-8'>Codex Technologies</li>
-              <li className='flex flex-row'> <FaMapMarkerAlt  />   : sdf </li>
-              <li>Industry</li>
+              <li className='text-2xl font-bold mt-8'>{data?.companyname}</li>
+              <li className='flex flex-row'> <FaMapMarkerAlt  />   : {data?.city} </li>
+              <li>{data?.industry}</li>
              
-              <li>Address:</li>
-              <li>About:</li>
-              <li >Address:dssssssssssss</li>
-              <li>Gmail:</li>
-              <li>Phone:</li>
-              <li>Website:</li>
+              <li>Address:{data?.address}</li>
+              <li>About:{data?.about}</li>
+              {/* <li >Address:dssssssssssss</li> */}
+              <li>Gmail:{data?.email}</li>
+              <li>Phone:{data?.phonenumber}</li>
+              <li>Website:{data?.website_url}</li>
             </ul>
           </div>
         </div>
