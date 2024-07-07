@@ -90,3 +90,13 @@ export const userverifyOtp =async(otp:string)=>{
             
         }
     }
+    export const resetPassword =async(userdata:User)=>{
+        try {
+            let response = await axiosInstance.patch('/resetpassword',userdata)
+            return response
+            
+        } catch (error:any) {
+            console.error(error.response.data.message);
+  
+        }
+    }

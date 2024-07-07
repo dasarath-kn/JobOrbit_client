@@ -72,3 +72,24 @@ export const getCompanydata =async ()=>{
         
     }
 }
+export const verifyCompany =async(email:string)=>{
+    try {
+        
+        let response =await axiosInstance.post('/company/verfiyuser',email)
+        return response
+    } catch (error:any) {
+        console.error(error.response.data.message);
+        toast.error(error.response.data.message)
+    }
+}
+
+export const companyresetPassword =async(userdata:Company)=>{
+    try {
+        let response = await axiosInstance.patch('/company/resetpassword',userdata)
+        return response
+        
+    } catch (error:any) {
+        console.error(error.response.data.message);
+
+    }
+}

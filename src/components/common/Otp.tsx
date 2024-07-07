@@ -14,6 +14,7 @@ const Otp:React.FC<Props> = ({role}) => {
   let [resend,setResend] =useState<boolean>(false)
   const location =useLocation()
   const {email} =location.state ||{}
+  const {mes}=location.state||{}
   
   useEffect(()=>{
     let timer:number
@@ -37,8 +38,12 @@ const Otp:React.FC<Props> = ({role}) => {
         if(role=="Company"){
         let response = await verifyOtp(Data.otp)
         if(response?.data){
+          if(mes=="Resetpassword"){
+            navigate('/resetpassword',{state:{email:email}})
+          }else{
           localStorage.setItem("Companytoken",response.data.token)
           navigate('/company/profile')
+          }
         }
       }else{
         let response = await userverifyOtp(Data.otp)
@@ -46,8 +51,13 @@ const Otp:React.FC<Props> = ({role}) => {
         console.log(response);
         if(response?.data){
           
-          localStorage.setItem("Usertoken",response.data.token)
-          navigate('/dashboard')
+          if(mes =="Resetpassword"){
+            navigate('/resetpassword',{state:{email:email}})
+          }else{
+            
+            localStorage.setItem("Usertoken",response.data.token)
+            navigate('/dashboard')
+          }
         }
       }        
       } catch (error) {

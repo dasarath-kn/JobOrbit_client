@@ -8,6 +8,7 @@ import Loading from '../components/common/Loadings';
 import UserLoginAuth from '../Authentication/User/UserLoginAuth';
 import UserLogoutAuth from '../Authentication/User/UserLogoutAuth';
 import Emailverify from '../components/common/Emailverify';
+import ResetPassword from '../components/common/ResetPassword';
 const Homepage = lazy(()=> import('../pages/user/HomePage'));
 const UserRouter = () => {
     return (
@@ -23,6 +24,7 @@ const UserRouter = () => {
                 <Route path='/signin' element={<SignIn role='User' />} />
                 <Route path='/signup' element={<SignUp/>} />
                 <Route path='/verify' element={<Emailverify role={"User"}/>} />
+                <Route path='/resetpassword' element={<ResetPassword role={"User"}/>} />
                 </Route>
             </Routes>
         </Suspense>

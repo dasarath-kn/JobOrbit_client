@@ -10,14 +10,14 @@ import { string } from "yup"
 
 export interface User{
     _id?:string,
-    firstname:string,
-    lastname:string,
-    email:string,
-    password:string,
+    firstname?:string,
+    lastname?:string,
+    email?:string,
+    password?:string,
     confirmpassword?:string,
-    phonenumber:number | string,
-    field:string,
-    location:string,
+    phonenumber?:number | string,
+    field?:string,
+    location?:string,
     img_url?:string
     about?:string,
     is_verified?:boolean,

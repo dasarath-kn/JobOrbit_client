@@ -10,3 +10,7 @@ const loginValidation = Yup.object({
   export const emailValidation = Yup.object({
     email: Yup.string().matches(emailRegex,"Invalid email format").email('Invalid email address').required('Email is required'),
   });
+  export const passwordValidation =Yup.object({
+    password: Yup.string().required('Password is required'),
+ 
+  })

@@ -8,6 +8,8 @@ import Loading from '../components/common/Loadings'
 import ProfilePage from '../pages/Company/ProfilePage';
 import CompanyLoginAuth from '../Authentication/User/Company/CompanyLoginAuth';
 import CompanyLogoutAuth from '../Authentication/User/Company/CompanyLogoutAuth';
+import ResetPassword from '../components/common/ResetPassword';
+import Emailverify from '../components/common/Emailverify';
 const CompanyRouter = () => {
   return (
     <>
@@ -19,6 +21,8 @@ const CompanyRouter = () => {
         <Route path='/signin' element={<SignIn role={"Company"}/>}/>
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/otp' element={<Otp role={"Company"}/>}/>
+        <Route path='/verify' element={<Emailverify role={"Company"}/>}/>
+        <Route path='/resetpassword' element={<ResetPassword role={"Company"}/>}/>
         </Route>
         <Route path='' element={<CompanyLogoutAuth/>}>
 

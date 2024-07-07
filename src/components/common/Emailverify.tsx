@@ -4,6 +4,8 @@ import  { emailValidation } from '../../Validations/User/Loginvalidation'
 import { Toaster } from 'react-hot-toast'
 import { verifyUser } from '../../Api/userApi'
 import { useNavigate } from 'react-router-dom'
+import { User } from '../../Interface/UserInterface'
+import { verifyCompany } from '../../Api/companyApi'
 interface props{
     role:string
 }
@@ -17,12 +19,21 @@ const Emailverify:React.FC<props> = ({role}) => {
             
             try {              
                 if(role =="User"){                  
-                    const response = await verifyUser(Data)
+                    const response = await verifyUser(Data )
                     if(response?.data.success){
                         let {Userdata}= response.data
-                        navigate('/otp',{state:{email:Userdata.email}})
+                        navigate('/otp',{state:{email:Userdata.email,mes:"Resetpassword"}})
                     }
                 }else{
+                  const response = await verifyCompany(Data)
+                  console.log(response?.data);
+                  
+                  if(response?.data.success){
+                    console.log("huhhih");
+                    
+                      let {companyData}= response.data
+                      navigate('/otp',{state:{email:companyData.email,mes:"Resetpassword"}})
+                  }
 
                 }
             } catch (error) {
