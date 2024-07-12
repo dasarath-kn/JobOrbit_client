@@ -12,9 +12,9 @@ export const adminLogin = async(adminData:AdminLogin)=>{
             
         }
 }
-export const getUsers = async()=>{
+export const getUsers = async(page:number)=>{
     try {
-        let response = await axiosInstance.get('/admin/userdata')
+        let response = await axiosInstance.get(`/admin/userdata?page=${page}`)
         return response
         
     } catch (error:any) {
@@ -23,9 +23,12 @@ export const getUsers = async()=>{
         
     }
 }
-export const getCompanies =async()=> {
+export const getCompanies =async(page:number)=> {
     try {
-        let response = await axiosInstance.get('/admin/companydata')
+        
+        let response = await axiosInstance.get(`/admin/companydata?page=${page}`)
+       console.log(response.data);
+       
         return response
     } catch (error:any) {
         console.error(error.response.data.message);

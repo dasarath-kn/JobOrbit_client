@@ -158,7 +158,7 @@ const LandingPage = () => {
 
       <div className=''>
         <div className='px-8 lg:px-44 mt-5'>
-          <h1 className='text-black font-medium text-2xl lg:text-3xl'>Our Client Reviews</h1>
+          {/* <h1 className='text-black font-medium text-2xl lg:text-3xl'>Our Client Reviews</h1> */}
         </div>
         
 

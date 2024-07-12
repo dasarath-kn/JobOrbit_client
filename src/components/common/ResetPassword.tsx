@@ -40,7 +40,7 @@ const ResetPassword:React.FC<props> = ({role}) => {
                         let companydata ={email,password}
                         let response = await companyresetPassword(companydata as Company) 
                         if(response?.data.success){
-                            navigate('company/signin')
+                            navigate('/company/signin')
                         }                       
                     }
                 }else{

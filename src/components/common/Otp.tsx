@@ -35,11 +35,12 @@ const Otp:React.FC<Props> = ({role}) => {
     validationSchema:otpValidation,
     onSubmit:async(Data)=>{
       try {
+        
         if(role=="Company"){
         let response = await verifyOtp(Data.otp)
         if(response?.data){
           if(mes=="Resetpassword"){
-            navigate('/resetpassword',{state:{email:email}})
+            navigate('/company/resetpassword',{state:{email:email}})
           }else{
           localStorage.setItem("Companytoken",response.data.token)
           navigate('/company/profile')

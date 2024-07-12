@@ -71,8 +71,10 @@ export const userverifyOtp =async(otp:string)=>{
     }
     export const verifyUser =async(email:string)=>{
         try {
-            
-            let response =await axiosInstance.post('/verfiyuser',email)
+            const Email={
+                email:email
+            }
+            let response =await axiosInstance.post('/verfiyuser',Email)
             return response
         } catch (error:any) {
             console.error(error.response.data.message);
@@ -99,4 +101,30 @@ export const userverifyOtp =async(otp:string)=>{
             console.error(error.response.data.message);
   
         }
+
     }
+
+    export const editProfile = async (userdata:User,token:string) => {
+        try {
+          let response = await axiosInstance.post('/editprofile', userdata, {
+            headers: {
+              'Content-Type': 'multipart/form-data', 
+              "Authorization":token
+            },
+          });
+          return response;
+        } catch (error:any) {
+          console.error(error);
+          
+        }
+      };
+
+      export const getJobs =async()=>{
+        try {
+            let response = await axiosInstance.get('/jobs')
+            return response
+        } catch (error:any) {
+            console.error(error);
+            
+          }
+      }

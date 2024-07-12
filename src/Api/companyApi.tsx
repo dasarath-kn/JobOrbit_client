@@ -1,16 +1,9 @@
 import toast from "react-hot-toast";
 import axiosInstance from "../Config/AxiosInstance";
-import { Company, CompanyLogin } from "../Interface/CompanyInterface";
+import { Company, CompanyLogin, jobdata } from "../Interface/CompanyInterface";
 import GoogleAuth from "../Interface/GoogleauthToken";
 
-axiosInstance.interceptors.response.use(
-    (response) => {
-        return response
-    },
-    (error) => {
-        toast.error(error.response.data.message)
-    }
-)
+
 export const companyLogin = async (companyData: CompanyLogin) => {
     try {
         let response = await axiosInstance.post('/company/login', companyData)
@@ -43,7 +36,7 @@ export const verifyOtp = async (otp: string) => {
         let response = await axiosInstance.post('/company/otp', Otp)
         return response
     } catch (error) {
-        console.log(error);
+        console.error(error);
 
     }
 
@@ -58,36 +51,93 @@ export const companyGooglesignup = async (companydata: GoogleAuth) => {
     }
 }
 
-export const getCompanydata =async ()=>{
+export const getCompanydata = async () => {
     try {
-        console.log("ccccccccccc");
-        
-        const token =localStorage.getItem("Companytoken")
-        const response =await axiosInstance.get("/company/getcompanydata",{headers:{
-            "Authorization":token
-        }})
+        const token = localStorage.getItem("Companytoken")
+        const response = await axiosInstance.get("/company/getcompanydata", {
+            headers: {
+                "Authorization": token
+            }
+        })
         return response
-    } catch (error:any) {
+    } catch (error: any) {
         console.error(error.response.data.message);
-        
+
     }
 }
-export const verifyCompany =async(email:string)=>{
+export const verifyCompany = async (email: string) => {
     try {
-        
-        let response =await axiosInstance.post('/company/verfiyuser',email)
+        const Email = {
+            email: email
+        }
+
+        let response = await axiosInstance.post('/company/verfiyuser', Email)
         return response
-    } catch (error:any) {
+    } catch (error: any) {
         console.error(error.response.data.message);
         toast.error(error.response.data.message)
     }
 }
 
-export const companyresetPassword =async(userdata:Company)=>{
+export const companyresetPassword = async (userdata: Company) => {
     try {
-        let response = await axiosInstance.patch('/company/resetpassword',userdata)
+        let response = await axiosInstance.patch('/company/resetpassword', userdata)
         return response
+
+    } catch (error: any) {
+        console.error(error.response.data.message);
+
+    }
+}
+export const postJob = async (jobData: jobdata) => {
+    try {
+        let token = localStorage.getItem('Companytoken')
+        let response = await axiosInstance.post('/company/addjob', jobData, {
+            headers: {
+                "Authorization": token
+            }
+        })
+        return response
+    } catch (error: any) {
+        console.error(error.response.data.message);
+    }
+}
+
+export const getJob = async () => {
+    try {
+        let token = localStorage.getItem('Companytoken')
+        let response = await axiosInstance.get('/company/getjobdata', {
+            headers: {
+                "Authorization": token
+            }
+        })
+        return response
+    } catch (error: any) {
+        console.error(error.response.data.message);
+
+    }
+
+}
+export const removeJob=async(id:string)=>{
+    try {
+        let response = await axiosInstance.delete(`/company/deletejob?id=${id}`)
+        return response
+    } catch (error: any) {
+        console.error(error.response.data.message);
+
+    }
+}
+export const editProfile =async(companydata:Company,token:string)=>{
+    try {
+        console.log(companydata);
         
+        let response =await axiosInstance.post('/company/editprofile',companydata,{
+            headers:{
+                'Content-Type':'multipart/form-data',
+                "Authorization":token
+            }
+        })
+        return response
     } catch (error:any) {
         console.error(error.response.data.message);
 

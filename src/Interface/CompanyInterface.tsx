@@ -1,3 +1,5 @@
+import { string } from "yup"
+
 export interface CompanyLogin{
    
     email:string,
@@ -9,7 +11,7 @@ export interface Company {
     _id?:string,
     companyname:string,
     email:string,
-    password:string,
+    password?:string,
     confirmpassword?:string
     phonenumber:number|string,
     industry:string,
@@ -22,4 +24,17 @@ export interface Company {
     website_url?:string,
     is_verified?:boolean,
     admin_verified?:boolean
+}
+
+export interface jobdata {
+    _id: string;
+  jobtitle: string;
+  company_id: {
+    companyname: string;
+    state: string;
+  };
+  type: string;
+  location: string;
+  description: string;
+  time: string;
 }

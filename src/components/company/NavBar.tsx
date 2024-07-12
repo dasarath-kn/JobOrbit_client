@@ -1,17 +1,21 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { IoIosNotificationsOutline } from "react-icons/io";
+import { useDispatch } from 'react-redux';
+import { logoutCompany } from '../../Redux/CompanySlice';
 
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [modal,setModal]=useState(false)
     const navigate = useNavigate()
+    const dispatch =useDispatch()
   const handlemodal =()=>{
     setModal(!modal)
   }
   const handleLogout =()=>{
     localStorage.removeItem("Companytoken")
+    dispatch(logoutCompany())
     navigate('/')
   }
     const toggleMenu = () => {
@@ -34,8 +38,8 @@ const NavBar = () => {
           <li>
             <a href='/' className="block py-2 px-3 text-white bg-black rounded md:bg-transparent md:text-white md:p-0 dark:text-white md:dark:text-white" aria-current="page">Post</a>
           </li>
-          <li>
-            <a href="#" className="block py-2 px-3 text-whi rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-400 md:p-0 dark:text-white md:dark:hover:text-white-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"> JOb    </a>
+          <li onClick={()=>navigate('/company/job')}>
+            <a href=""  className="block py-2 px-3 text-whi rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-400 md:p-0 dark:text-white md:dark:hover:text-white-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"> JOb    </a>
           </li>
           <li>
             <a href="#" className="block py-2 px-3 text-whi rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-400 md:p-0 dark:text-white md:dark:hover:text-white-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Schedule    </a>
@@ -43,7 +47,7 @@ const NavBar = () => {
           <li>
             <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Inbox</a>
           </li>
-          <li>
+          <li onClick={()=>navigate('/company/profile')}>
             <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Profile</a>
           </li>
           <li  className='' id="dropdownDefaultButton" onClick={handlemodal} data-dropdown-toggle="dropdown">

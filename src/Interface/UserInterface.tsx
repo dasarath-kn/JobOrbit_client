@@ -27,7 +27,7 @@ export interface User{
     portfolio_url?:string,
     resume_url?:string,
     skills?:[string],
-    qualification?:[string]
+    qualification?:string,
     experience?:[object]
 
 }

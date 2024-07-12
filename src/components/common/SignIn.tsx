@@ -12,8 +12,6 @@ import { GoogleLogin } from '@react-oauth/google';
 import GoogleAuth from './GoogleAuth';
 
 
-
-
 interface props {
   role: string
 }

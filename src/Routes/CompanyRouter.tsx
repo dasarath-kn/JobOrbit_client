@@ -5,11 +5,12 @@ const SignIn = lazy(()=> import( '../components/common/SignIn'));
 const SignUp = lazy(()=> import( '../components/company/SignUp'));
 const Otp =lazy(()=> import('../components/common/Otp'));
 import Loading from '../components/common/Loadings'
-import ProfilePage from '../pages/Company/ProfilePage';
+const ProfilePage =lazy(()=> import('../pages/Company/ProfilePage'));
 import CompanyLoginAuth from '../Authentication/User/Company/CompanyLoginAuth';
 import CompanyLogoutAuth from '../Authentication/User/Company/CompanyLogoutAuth';
 import ResetPassword from '../components/common/ResetPassword';
 import Emailverify from '../components/common/Emailverify';
+const JobPage =lazy(()=> import( '../pages/Company/JobPage'));
 const CompanyRouter = () => {
   return (
     <>
@@ -27,6 +28,7 @@ const CompanyRouter = () => {
         <Route path='' element={<CompanyLogoutAuth/>}>
 
         <Route path='/profile' element={<ProfilePage/>}/>
+        <Route path='/job' element={<JobPage/>}/>
         </Route>
     </Routes>
     </Suspense>
