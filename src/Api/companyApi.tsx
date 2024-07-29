@@ -1,8 +1,9 @@
 import toast from "react-hot-toast";
 import axiosInstance from "../Config/AxiosInstance";
-import { Company, CompanyLogin, jobdata } from "../Interface/CompanyInterface";
+import jobShedule, { Company, CompanyLogin, jobdata, post } from "../Interface/CompanyInterface";
 import GoogleAuth from "../Interface/GoogleauthToken";
-
+import { MdSchedule } from "react-icons/md";
+const token =localStorage.getItem('Companytoken')
 
 export const companyLogin = async (companyData: CompanyLogin) => {
     try {
@@ -128,9 +129,7 @@ export const removeJob=async(id:string)=>{
     }
 }
 export const editProfile =async(companydata:Company,token:string)=>{
-    try {
-        console.log(companydata);
-        
+    try {        
         let response =await axiosInstance.post('/company/editprofile',companydata,{
             headers:{
                 'Content-Type':'multipart/form-data',
@@ -143,3 +142,84 @@ export const editProfile =async(companydata:Company,token:string)=>{
 
     }
 }
+
+export const addPost = async(postData:post,token:string)=>{
+try {
+    let response = await axiosInstance.post('/company/addpost',postData,{headers:{
+        "Content-Type":'multipart/form-data',
+        "Authorization":token
+    }})
+    return response
+} catch (error:any) {
+    console.error(error.response.data.message);
+
+}
+}
+
+export const posts =async(token:string)=>{
+    try {
+        let response = await axiosInstance.get('/company/posts',{headers:{
+            "Authorization":token
+        }})
+        return response
+    } catch (error:any) {
+        console.error(error.response.data.message);
+    }
+    }
+
+    export const uploadDocument =async(Data:Company)=>{
+        try {
+            let response = await axiosInstance.patch('/company/uploaddocument',Data,{headers:{
+                "Authorization":token
+            }})
+            return response
+        } catch (error:any) {
+            console.error(error.response.data.message);
+        }
+    }
+
+    export const deletePost = async (id:string)=>{
+        try {
+            let response = await axiosInstance.delete(`/company/deletepost?id=${id}`,{headers:{"Authorization":token}})
+            return response
+        } catch (error:any) {
+            console.error(error.response.data.message);
+        }
+    }
+
+    export const getApplicants = async(job_id:string)=>{
+        try {
+            const response = await axiosInstance.get(`/company/applicants?job_id=${job_id}`,{headers:{"Authorization":token}})
+            return response
+        } catch (error:any) {
+                console.error(error.response.data.message);
+            }
+        
+    }
+
+    export const saveScheduledjob =async(scheduleData:jobShedule)=>{
+        try {
+            const response = await axiosInstance.post('/company/schedulejob',scheduleData,{headers:{"Authorization":token}})
+            return response 
+        } catch (error:any) {
+            console.error(error.response.data.message);
+        }
+    }
+
+    export const getScheduledJobs = async(job_id:string)=>{
+        try {
+            const response = await axiosInstance.get(`/company/schedulejob?job_id=${job_id}`,{headers:{"Authorization":token}})
+            return response
+            
+        } catch (error:any) {
+            console.error(error.response.data.message);
+        }
+    }
+    export const schedulejobs =async()=>{
+        try {
+            const response =await axiosInstance.get('/company/findschedulejob',{headers:{"Authorization":token}})
+            return response
+        } catch (error:any) {
+            console.error(error.response.data.message);
+        }
+    }

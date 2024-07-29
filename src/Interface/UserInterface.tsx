@@ -27,10 +27,44 @@ export interface User{
     portfolio_url?:string,
     resume_url?:string,
     skills?:[string],
+    percentage:string,
     qualification?:string,
-    experience?:[object]
+    plan_id:string,
+    jobapplied_Count:number|string,
+    experience:[{
+        experiencefield:string,
+        duration:number,
+        responsibilities:string
+        length:number
+    }]
 
 }
 export interface otp {
     otp:string
 }
+
+export interface savedPost{
+    user_id:string,
+    post_id:string
+}
+
+export interface comment {
+    user_id:string,
+    post_id:string,
+    message:string,
+    like:number
+}
+export interface experienceData{
+    experiencefield:string,
+        duration:string,
+        responsibilities:string
+        percentage:string
+}
+export interface postreport {
+    post_id:string,
+    user_id:string,
+    report_message:String,
+    date:Date
+
+}
+

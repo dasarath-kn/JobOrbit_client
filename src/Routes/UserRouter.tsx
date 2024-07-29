@@ -11,6 +11,13 @@ import Emailverify from '../components/common/Emailverify';
 import ResetPassword from '../components/common/ResetPassword';
 import ProfilePage from '../pages/user/ProfilePage';
 import JobPage from '../pages/user/JobPage';
+import JobDetailsPage from '../pages/user/JobDetailsPage';
+import SubscriptionPlanPage from '../pages/user/SubscriptionPlanPage';
+import Success from '../components/common/Success';
+import DocumentViewer from '../components/common/DocumentViewer';
+import ConnectionPage from '../pages/user/ConnectionPage';
+import CompanyProfilePage from '../pages/user/CompanyProfilePage';
+import ViewUsersprofilepage from '../pages/user/ViewUsersprofilepage';
 const Homepage = lazy(()=> import('../pages/user/HomePage'));
 const UserRouter = () => {
     return (
@@ -19,9 +26,16 @@ const UserRouter = () => {
             <Routes>
                 <Route path='/' element={<LandingPage />} />
                 <Route path='' element={<UserLogoutAuth/>}>
-                <Route path='/dashboard' element={<Homepage/>} />
+                <Route path='/post' element={<Homepage/>} />
                 <Route path='/profile' element={<ProfilePage/>} />
                 <Route path='/job' element={<JobPage/>}/>
+                <Route path='/jobdetails' element={<JobDetailsPage/>}/>
+                <Route path='/viewplan' element={<SubscriptionPlanPage/>}/>
+                <Route path='/paymentsuccess' element={<Success/>}/>
+                <Route path='/resume' element={<DocumentViewer/>}/>
+                <Route path='/connections' element={<ConnectionPage/>}/>
+                <Route path='/companyprofile' element={<CompanyProfilePage/>}/>
+                <Route path='/userprofile' element={<ViewUsersprofilepage/>}/>
 
                 </Route>
                 <Route path='' element={<UserLoginAuth/>} >

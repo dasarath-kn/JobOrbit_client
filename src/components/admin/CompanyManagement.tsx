@@ -14,21 +14,23 @@ const CompanyManagement = () => {
     const [page,setPage]=useState<number>(0)
     const[pagecount,setPagecount] =useState<number>(0)
     const [block,setBlock]=useState<boolean>(false)
-
+    const [updated,setUpdated]=useState<boolean>(false)
     useEffect(() => {
         const companyData = async () => {
             try {
                 let response = await getCompanies(page)
                 let data = response?.data.companyDatas
                 setCompany(data)
-                setPagecount(response?.data.count+1)
+                setPagecount(response?.data.count   )
             } catch (error) {
                 console.error(error);
 
             }
         }        
         companyData()
-    }, [block,page])
+    }, [block,page,updated])
+    console.log(pagecount,"ppp");
+    
     const handlemodal = (val: Company) => {
         setShowmodal(!showmodal)
         setSelectedcompany(val)
@@ -38,6 +40,7 @@ const CompanyManagement = () => {
         
         let response = await companyBlockUnblock(company_id, status)
         console.log(response?.data);
+        setUpdated(!updated)
         
         toast.success(response?.data.message)
 
@@ -103,6 +106,9 @@ const CompanyManagement = () => {
                                         Details
                                     </th>
                                     <th scope="col" className="px-6 py-3">
+                                        Document
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
                                         Status
                                     </th>
                                     <th scope="col" className="px-6 py-3">
@@ -117,11 +123,11 @@ const CompanyManagement = () => {
                             </thead>
                             <tbody>
 
-                                {company && company.map((val, index) => {
+                                {company && company?.length>0 ? (company.map((val, index) => {
                                     return (
                                         <>
 
-                                            <tr className=" text-black font-medium text-xl">
+                                            <tr key={val._id}  className=" text-black font-medium text-xl">
 
                                                 <td className="px-6 py-6">
                                                     {index + 1}
@@ -187,6 +193,14 @@ const CompanyManagement = () => {
                                                         </div>)}
                                                 </td>
                                                 <td className="px-6 py-6">
+                                                    <button onClick={()=>{
+                                                        if(val.document_url){
+                                                            window.open(val.document_url, '_blank');
+  
+                                                        }
+                                                    }} className='underline hover:text-blue-500'>Document</button>
+                                                </td>
+                                                <td className="px-6 py-6">
                                                     {val.is_blocked ? "Blocked" : "Active"}
                                                 </td>
                                                 <td className="px-6 py-6 flex mt-4 ">
@@ -235,7 +249,13 @@ const CompanyManagement = () => {
                                             </tr>
                                         </>
                                     )
-                                })}
+                                    
+                                })):(<tr>
+                                    <td colSpan={7} className="text-center">
+                                      Companies not found
+                                    </td>
+                                  </tr>
+                            )}
 
 
                             </tbody>
@@ -250,9 +270,21 @@ const CompanyManagement = () => {
       <a href="#"  onClick={()=>handlePage("prev")}  className=" flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-700 hover:font-bold  dark:hover:text-black">Previous</a>
     </li>
     {Array(pagecount).fill(null).map((_, index) => (
-      <li>
-      <a href="#" onClick={()=>handlePagination(index)} className="flex items-center justify-center px-4 h-10 leading-tight rounded-3xl hover:font-bold  text-white " style={{ backgroundColor: '#033431' }} >{index+1}</a>
-    </li>
+        <li>
+        <a
+          href="#"
+          onClick={() => handlePagination(index)}
+          className={`flex items-center justify-center px-4 h-10 leading-tight rounded-3xl hover:font-bold ${index === page ? 'text-white' : 'text-black'}`}
+          style={{
+            backgroundColor: index === page ? '#033431' : 'transparent',
+            borderColor: index !== page ? '#033431' : 'transparent',
+            borderWidth: index !== page ? '1px' : '0',
+            borderStyle: index !== page ? 'solid' : 'none'
+          }}
+        >
+          {index + 1}
+        </a>
+      </li> 
       ))}
   <li>
       <a href="#"  onClick={()=>handlePage("next")} className="flex items-center justify-center px-4 h-10 ms-0 leading-tight  text-gray-700 hover:font-bold    dark:hover:text-black">Next</a>

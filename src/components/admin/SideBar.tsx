@@ -31,33 +31,30 @@ const SideBar = () => {
                 </a>
             </li>
            
-            <li className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold ' >
-                <a href="/admin/usermanagement">
+            <li onClick={()=>navigate("/admin/usermanagement")} className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold ' >
+             
                     Users
-                </a>
+              
             </li>
            
-            <li className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
-                <a href="">
-                    Subscriptions
-                </a>
+            <li onClick={()=>navigate('/admin/subscriptionplans')} className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
+              
+                    Subscriptions Plans
+               
             </li>
            
-            <li className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
-                <a href="/admin/companymanagement">
-                    Companies
-                </a>
+            <li onClick={()=>navigate("/admin/companymanagement")} className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
+               
+                Company 
             </li>
-            <li className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
-                <a href="">
-                    Jobs
-                </a>
+            <li onClick={()=>navigate("/admin/reportpost")} className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
+                    Reported Posts
             </li>
-            <li className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
+            {/* <li className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
                 <a href="">
                     Category
                 </a>
-            </li>
+            </li> */}
             <li className='hover:rounded-xl hover:bg-white w-full hover:text-violet-800 hover:text-center hover:font-bold '>
                 <a onClick={handlelogout}>
                     Logout

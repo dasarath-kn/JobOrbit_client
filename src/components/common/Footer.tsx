@@ -6,7 +6,7 @@ const Footer = () => {
   return (
 
     <>
-    <div className='bg-black w-full flex-col md:flex-row md:h-64 flex justify-evenly md:items-center '>
+    <div className='bg-black w-full flex-col  md:flex-row md:h-64 flex justify-evenly md:items-center '>
     <div className='mb:8 md:mb:0'>
         <span className='self-center  text-2xl font-semibold whitespace-nowrap dark:text-white'>JobOrbit</span>
         <div >

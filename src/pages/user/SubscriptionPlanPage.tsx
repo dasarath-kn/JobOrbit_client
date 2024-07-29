@@ -1,18 +1,18 @@
 import React from 'react'
-import Profile from '../../components/user/Profile'
 import MainNav from '../../components/common/MainNav'
+import SubscriptionPlans from '../../components/user/SubscriptionPlans'
 import Footer from '../../components/common/Footer'
 
-const ProfilePage = () => {
+const SubscriptionPlanPage = () => {
   return (
-    <>
+   <>
     <div className='sticky top-0 z-50'>
     <MainNav/>
-    </div>
-    <Profile/>
+    <SubscriptionPlans/>
     <Footer/>
-    </>
+    </div>
+   </>
   )
 }
 
-export default ProfilePage
+export default SubscriptionPlanPage

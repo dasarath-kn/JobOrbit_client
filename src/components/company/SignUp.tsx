@@ -78,11 +78,31 @@ const SignUp:React.FC = () => {
 
           </div>
           <div className='flex flex-col md:w-1/2'>
-            <label className='font-medium mb-2 '>Industry:</label>
-            <input name="industry" type="text" value={values.industry} onChange={handleChange} onBlur={handleBlur} className='border-2  border-gray-700/70 w-full h-12 rounded-xl p-3 text-black' placeholder="Enter industry" />
-            {errors.industry && touched.industry && <p className='text-sm text-red-500'>{errors.industry}</p>}
+  <label className='font-medium mb-2'>Industry:</label>
+  <div className="relative">
+    <select
+      name="industry"
+      value={values.industry}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      className='border-2 border-gray-700/70 w-full h-12 rounded-xl p-3 text-black'
+    >
+      <option value="">Select an industry</option>
+      <option value="IT">IT</option>
+      <option value="Finance">Finance</option>
+      <option value="Healthcare">Healthcare</option>
+      <option value="Education">Education</option>
+      {/* Add more options as needed */}
+    </select>
+    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </div>
+  </div>
+  {errors.industry && touched.industry && <p className='text-sm text-red-500'>{errors.industry}</p>}
+</div>
 
-          </div>
 
         </div>
         <div className='flex  flex-col md:flex-row space-x-0 md:space-y-0 md:space-x-4 space-y-4 mt-6 '>

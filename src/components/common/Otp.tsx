@@ -57,6 +57,7 @@ const Otp:React.FC<Props> = ({role}) => {
           }else{
             
             localStorage.setItem("Usertoken",response.data.token)
+            localStorage.setItem("UserRefreshtoken",response.data.refreshtoken)
             navigate('/dashboard')
           }
         }
