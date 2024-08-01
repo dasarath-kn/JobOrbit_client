@@ -13,8 +13,15 @@ const JobDetails = () => {
   const location = useLocation();
   const { job_id } = location.state;
  const userDatas: User = useSelector((state: RootState) => state.user);
+ const {_id}=userDatas
+ console.log(_id);
+ 
+ interface Applicant {
+  _id: string;
+}
+const applicant: Applicant = { _id:_id };
  const [updated,setUpdated] =useState(false)
- const [limit,setLimit]=useState<Number>()
+ const [limit,setLimit]=useState<Number>(0)
 
   useEffect(() => {
     const Jobdetails = async () => {
@@ -54,7 +61,7 @@ const JobDetails = () => {
   };  
   return (
     <>
-      <div className='w-screen h-auto lg:m-12 flex flex-col items-center'>
+      <div className='w-full min-h-screen lg:m-11 mb-11 flex flex-col items-center  '>
         <div className='w-full flex flex-col md:flex-row'>
           <div className='flex justify-center md:ml-40 mb-5 md:mb-0'>
             {job?.company_id.img_url ? (
@@ -63,7 +70,7 @@ const JobDetails = () => {
               <img src='/imgadd.jpg' className='w-96 h-auto' alt='' />
             )}
           </div>
-          <div className='space-y-3 text-center ml-7 md:text-left'>
+          <div className='space-y-3 w-full text-center lg:ml-7  md:text-left'>
             <p className='text-3xl font-bold'>{job?.jobtitle}</p>
             <p className='text-xl font-semibold'>{job?.company_id.companyname}</p>
             <div className='flex items-center  justify-center md:justify-start text-gray-400'>
@@ -84,7 +91,7 @@ const JobDetails = () => {
             </div>
           </div>
         </div>
-        <div className='w-full lg:ml-96 sm:ml-4 md:ml-16 mt-10 space-y-6'>
+        <div className="w-full lg:w-3/4 sm:w-4/5 md:w-3/4 mt-10 space-y-6 px-4 md:px-0">
           <div>
             <p className='text-lg font-medium'>About Us:</p>
             <p>{job?.company_id.about}</p>

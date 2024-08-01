@@ -92,7 +92,7 @@ const Post = () => {
 
     return (
         <>
-            <div className='h-auto flex justify-center pb-9'>
+            <div className='h-auto min-h-screen flex justify-center pb-9'>
                 <div className='w-3/4 h-auto rounded-2xl flex flex-col justify-center m-5'>
                     <div className='mt-9 sm:ml-4 ml-16 '>
                         <button className='text-black border-2 hover:bg-black hover:text-white border-black w-28 rounded-xl' data-modal-target="crud-modal" data-modal-toggle="crud-modal" onClick={() => setPostmodal(!postmodal)}>Share Post</button>

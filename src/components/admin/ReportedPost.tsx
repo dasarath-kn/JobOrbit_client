@@ -1,110 +1,110 @@
 import React, { useEffect, useState } from 'react'
 import SideBar from './SideBar'
 import { postreport, User } from '../../Interface/UserInterface'
-import { getPostreportdata } from '../../Api/adminApi'
+import { getPostreportdata, removePost } from '../../Api/adminApi'
 import { FaRegHeart } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import { post } from '../../Interface/CompanyInterface'
+import { format, formatDistanceToNow } from 'date-fns'
+import toast, { Toaster } from 'react-hot-toast'
 
 const ReportedPost = () => {
-    const [reportData,setReportData] =useState<postreport>()
-    const [postData,setPostData] =useState<post>([])
-    const [userData,setUserData] =useState<User>([])
-    // const [postdata, setPostdata] = useState<post[]>([]);
-
-    useEffect(()=>{
-        const data = async ()=>{
+    const [reportData, setReportData] = useState<postreport[]>()
+    const [updated,setUpdated]=useState<boolean>(false)
+    useEffect(() => {
+        const data = async () => {
             try {
                 let response = await getPostreportdata()
-                if(response?.data.success){                                        
+                if (response?.data.success) {
                     setReportData(response.data.postReportData)
-                    let post = response.data.postReportData?.map((val)=>{
-                        return val.post_id
-                       })
-                       setPostData(post)
-                       const user =response.data.postReportData.map((val)=>{
-                        return val.user_id
-                       })
-                       setUserData(user)
+
                 }
             } catch (error) {
                 console.error(error);
-                
+
             }
         }
         data()
-    },[])
-    console.log(userData,"user");
-    
-    console.log(postData,"uuu");
-    
-    const goToSlide = (postId: string, index: number) => {
-        setPostData(prevData =>
-            prevData.map(post =>
-                post._id === postId ? { ...post, currentIndex: index } : post
-            )
-        );
-    };
-    
-  return (
-    <>
-    <div className='flex flex-row'>
-        <SideBar/>
-        <div className='h-auto flex justify-center pb-9'>
-                <div className='w-3/4 h-auto rounded-2xl flex flex-col justify-center m-5'>
-                   
-                    { postData && postData.length > 0 ? postData.map((val) => (
-                        <div key={val._id} className='m-11 w-4/5 h-fit'>
-                            <div className='flex flex-row justify-between items-center p-3'>
-                                <div className='flex items-center space-x-3'>
-                                    {val.img_url ? <img src='/landingpage1.png' className='w-12' alt='Company Logo' /> :
-                                        <img src={val.img_url} className='w-12' alt='Company Logo' />
-                                    }                                    <p>{val.companyname}</p>
-                                </div>
-                                <div className=''>
-                                    {/* <MdDelete onClick={() => handleDeletePost(val._id)} /> */}
-                                    {/* <p>{formatDistanceToNow(new Date(val.time), { addSuffix: true })}</p> */}
-                                </div>
-                            </div>
-                            <p className='p-9 font-medium'>{val.description}</p>
-                            <div className="relative w-full max-w-4xl mx-auto">
-                                <div className="overflow-hidden relative w-full h-96">
-                                    {val.images.map((img) => (
-                                        <img
-                                            // key={index}
-                                            src={img}
-                                            // alt={`Slide ${index + 1}`}
-                                            // className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === val.currentIndex ? 'opacity-100' : 'opacity-0'}`}
-                                        />
-                                    ))}
-                                </div>
-                                {/* <div className="absolute bottom-0 left-0 right-0 flex justify-center mb-4">
-                                    {val.images.map((_, index) => (
-                                        <button
-                                            key={index}
-                                            onClick={() => goToSlide(val._id, index)}
-                                            className={`w-4 h-4 mx-1 rounded-full ${index === val.currentIndex ? 'bg-black' : 'bg-gray-300'}`}
-                                        />
-                                    ))}
-                                </div> */}
-                            </div>
-                            <div className='m-6 flex flex-row space-x-12'>
+    }, [updated])
 
-                                <FaRegHeart className='w-7 h-9' />
-                                {/* <FaRegComment className='w-7 h-9' /> */}
-                            </div>
-                            <p className='font-medium ml-6'>{val.like.length} like</p>
 
-                        </div>
-                    )) : <>
-                        <div className='flex justify-center'>
-                            <p className='text-black font-semibold text-2xl'>No Posts Found </p>
-                        </div></>}
+const handleDelete = async(id:string)=>{
+    try {
+        const response = await removePost(id as string)
+        if(response?.data.success){
+            setUpdated(!updated)
+            toast.success(response.data.message)
+        }
+    } catch (error) {
+        console.error(error);
+        
+    }
+}
+
+    return (
+        <>
+            <div className='flex flex-row'>
+                <SideBar />
+
+                <div className='ml-7 grid w-4/5  mb-12'>
+                    <p className='text-2xl font-medium m-8'>Reported Posts</p>
+                    {reportData && reportData.length > 0 ? reportData.map((values: any) => {
+                        return (<>
+                            <div className='m-7'>
+                                <div className='w-full h-auto m-4'>
+
+                                    <p>{values.post_id.description}</p>
+
+                                </div>
+                                <div className='grid grid-cols-2 w-full h-auto  shadow-lg '>
+                                    <div className='grid grid-cols-2 w-full '>
+                                        {values.post_id.images.map((val: string, index: number) => {
+                                            return (<><div key={index} className='w-full h-40'>
+                                                <img src={val} alt="" className='w-3/4 h-full ' />
+                                            </div>
+                                            </>)
+                                        })}
+                                    </div>
+                                    <div className='space-y-3'>
+                                            <button onClick={()=>handleDelete(values.post_id._id)} className='  bg-red-500 w-28 rounded-xl text-white h-12'>RemovePost</button>
+                                        <div className='flex flex-row items-center'>
+                                            <p className='font-medium'>Reported Users</p>
+                                        </div>
+                                        <div className='max-h-80 overflow-y-auto'>
+                                            {values.user_datas.map((val: any, index: number) => (
+                                                <div key={index} className='flex items-center space-x-4 py-2'>
+                                                    <p className='w-6'>{index + 1}</p>
+                                                    {val.user_id.img_url ? (
+                                                        <img src={val.user_id.img_url} alt="" className='w-11 h-11 rounded-full' />
+                                                    ) : (
+                                                        <img src="/user06.png" alt="" className='w-11 h-11' />
+                                                    )}
+                                                    <p className='flex-1'>{val.user_id.firstname}</p>
+                                                    <p className='flex-1'>{val.report_message}</p>
+                                                    <p className='w-40'>{format(new Date(val.date), 'MMMM dd, yyyy')}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </>)
+                    }) : <>
+                    <div>
+                    <p className="text-center text-black text-2xl">No reported posts available.</p>
+                        </div></>
+
+                    }
                 </div>
+                <Toaster
+  position="top-center"
+  reverseOrder={false}
+/>
             </div>
-    </div>
-    </>
-  )
+
+        </>
+    )
 }
 
 export default ReportedPost

@@ -31,6 +31,9 @@ export interface Company {
 export interface jobdata {
     _id: string;
   jobtitle: string;
+  applicants_id:[{
+   _id:string
+  }]
   company_id: {
     companyname: string;
     state: string;

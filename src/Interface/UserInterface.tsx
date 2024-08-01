@@ -9,7 +9,7 @@ import { string } from "yup"
 } 
 
 export interface User{
-    _id?:string,
+    _id:string,
     firstname?:string,
     lastname?:string,
     email?:string,
@@ -33,9 +33,11 @@ export interface User{
     jobapplied_Count:number|string,
     experience:[{
         experiencefield:string,
-        duration:number,
+        mode:string,
         responsibilities:string
-        length:number
+        length:number,
+        start_date:Date,
+        end_date:Date
     }]
 
 }
@@ -56,7 +58,9 @@ export interface comment {
 }
 export interface experienceData{
     experiencefield:string,
-        duration:string,
+        mode:string,
+        startdate:Date,
+        enddate:Date
         responsibilities:string
         percentage:string
 }
@@ -67,4 +71,18 @@ export interface postreport {
     date:Date
 
 }
+export interface reviews {
+    rating_count:Number,
+    review:String,
+    user_id:string,
+    date:string
+}
 
+ export interface FormData {
+    experienceField: string;
+    mode: string;
+    startDate: string;
+    endDate: string;
+    responsibilities: string;
+  }
+  

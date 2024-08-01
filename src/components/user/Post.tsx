@@ -25,6 +25,7 @@ const Post = () => {
   const [menu, setMenu] = useState<boolean>(false)
   const [reportModal, setReportModal] = useState<boolean>(false)
   const [selectedValue, setSelectedValue] = useState('');
+  const [selectedPostid,setSelectedpostid]=useState('')
 
   useEffect(() => {
     const posts = async () => {
@@ -149,9 +150,11 @@ const Post = () => {
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
-  const handleReport =async(id:string)=>{
+  const handleReport =async()=>{
   try {
-     let postreportData ={post_id:id,report_message:selectedValue}
+     let postreportData ={post_id:selectedPostid,report_message:selectedValue}
+     console.log(postreportData,"data");
+     
       let response = await reportPost(postreportData as postreport) 
       if(response?.data.success){
         toast.success(response.data.message)
@@ -162,6 +165,10 @@ const Post = () => {
     
   }
     
+  }
+  const handleMenu =(id:string)=>{
+    setMenu(!menu)
+    setSelectedpostid(id)
   }
   return (
     <div className='flex justify-center flex-row lg:m-9 min-h-screen'>
@@ -179,7 +186,7 @@ const Post = () => {
                 <p>{val.company_id.companyname}</p>
               </div>
               <div className="relative inline-block">
-                <IoMdMore onClick={() => setMenu(!menu)} className="w-7 h-7 cursor-pointer" />
+                <IoMdMore onClick={() => handleMenu(val._id)} className="w-7 h-7 cursor-pointer" />
                 {
                   menu && (
                     <div className="absolute right-0 w-48 z-50 bg-white border border-gray-200 rounded-lg  dark:text-white mt-2">
@@ -290,7 +297,7 @@ const Post = () => {
                              {/* Add more radio options here if needed */}
                            </ul>
                            <button 
-                           onClick={()=>handleReport(val._id)}
+                           onClick={handleReport}
                              type="button"
                              className="text-white inline-flex w-full justify-center bg-black hover:bg-gray-800 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                            >

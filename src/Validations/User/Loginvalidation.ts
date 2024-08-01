@@ -14,3 +14,15 @@ const loginValidation = Yup.object({
     password: Yup.string().required('Password is required'),
  
   })
+
+  export const ProfileSchema = Yup.object({
+    
+    firstname: Yup.string().required('First name is required'),
+    lastname: Yup.string().required('Last name is required'),
+    field: Yup.string().required('Field is required'),
+    location: Yup.string().required('Location is required'),
+    github_url: Yup.string().required('GitHub URL is required'),
+    portfolio_url: Yup.string().required('Portfolio URL is required'),
+    about: Yup.string().required('About is required'),
+    qualification: Yup.string().required('Education is required'),
+  });

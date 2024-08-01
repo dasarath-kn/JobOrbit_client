@@ -51,7 +51,7 @@ const SignIn: React.FC<props> = ({ role }) => {
             }
             else {
               localStorage.setItem("Usertoken", response.data.token)
-              navigate('/dashboard',)
+              navigate('/post',)
             }
           }
         }

@@ -149,3 +149,13 @@ export const getPostreportdata =async ()=>{
         toast.error(error.response.data.message) 
     }
 }
+export const removePost =async (post_id:string)=>{
+    try {
+        const response = await axiosInstance.delete(`/admin/removepost?id=${post_id}`,{headers:{"Authorization":token}})
+        return response
+    }
+     catch (error:any) {
+        console.error(error.response.data.message);
+        toast.error(error.response.data.message) 
+    }
+}
