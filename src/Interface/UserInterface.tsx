@@ -1,4 +1,5 @@
 import { string } from "yup"
+import { Company, post } from "./CompanyInterface";
 
  export interface UserLogin {
    
@@ -6,7 +7,23 @@ import { string } from "yup"
     password:string,
    
 
-} 
+} export interface Experience {
+    experiencefield: string;
+    mode: string;
+    responsibilities: string;
+    length: number;
+    start_date: Date;
+    end_date: Date;
+}
+
+export interface Connection {
+    connection_id:User;
+    _id: string;
+    status: boolean;
+}
+export interface Companies{
+    company_id:Company
+}
 
 export interface User{
     _id:string,
@@ -30,52 +47,57 @@ export interface User{
     percentage:string,
     qualification?:string,
     plan_id:string,
+    online:string,
     jobapplied_Count:number|string,
-    experience:[{
-        experiencefield:string,
-        mode:string,
-        responsibilities:string
-        length:number,
-        start_date:Date,
-        end_date:Date
-    }]
+    experience:Experience[]
+    connections:Connection[]
+    companies:Companies[]
 
 }
+
 export interface otp {
     otp:string
 }
 
 export interface savedPost{
+    _id:string
     user_id:string,
-    post_id:string
+    post_id:post,
+    company_id:Company
+    currentIndex:number
 }
 
 export interface comment {
-    user_id:string,
+    _id:string
+    user_id:User,
     post_id:string,
+    company_id:Company,
     message:string,
     like:number
+    reply:string
+    replied:boolean
 }
 export interface experienceData{
-    experiencefield:string,
-        mode:string,
-        startdate:Date,
-        enddate:Date
-        responsibilities:string
-        percentage:string
+    experiencefield?:string,
+        mode?:string,
+        startdate?:Date|string,
+        enddate?:Date|string
+        responsibilities?:string
+        percentage?:string
 }
 export interface postreport {
     post_id:string,
-    user_id:string,
+    user_id?:string,
     report_message:String,
-    date:Date
+    date?:Date
 
 }
 export interface reviews {
-    rating_count:Number,
+    rating_count:number,
     review:String,
-    user_id:string,
-    date:string
+    user_id?:User,
+    time?:string
+    company_id?:Company
 }
 
  export interface FormData {
@@ -85,4 +107,47 @@ export interface reviews {
     endDate: string;
     responsibilities: string;
   }
-  
+  export interface connection {
+    connection_id?: string;
+    company_id?: string;
+  }
+  export interface connectionData {
+    connection_id:string,
+    notification_id:string,
+    message:string
+  }
+
+  export interface message {
+    sender_id:string,
+    reciever_id:string,
+    message:string,
+    timeStamp:string,
+    type?: 'sent' | 'received';
+
+}
+export interface conversationData {
+    _id:string
+    sender_id:any,
+    reciever_id:any,
+    message:string,
+    time:Date
+   
+
+}
+export interface companyconversationData {
+    _id:string
+    sender_id:string,
+    reciever_id:Company,
+    message:string,
+    time:Date
+   
+
+}
+
+export interface notification {
+    _id:string
+    sender_id:User,
+    reciever_id:User,
+    message:string,
+    date:Date
+}

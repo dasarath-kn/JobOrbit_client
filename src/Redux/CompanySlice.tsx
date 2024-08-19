@@ -12,7 +12,8 @@ const initialState:Company ={
     about:"",
     img_url:"",
     website_url:"",
-    document_url:""
+    document_url:"", 
+    users:[]
 
 }
 
@@ -33,6 +34,7 @@ const CompanySlice = createSlice({
             state.img_url=action.payload.img_url,
             state.website_url=action.payload.website_url,
             state.document_url =action.payload.document_url
+            state.users=action.payload.users
         },
         logoutCompany:(state)=>{
             state._id="",
@@ -47,6 +49,7 @@ const CompanySlice = createSlice({
             state.img_url="",
             state.website_url="",
             state.document_url=""
+            state.users=[]
         }
 
     }

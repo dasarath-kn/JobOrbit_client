@@ -12,6 +12,8 @@ const Job = () => {
     const [openmodal, setOpenmodal] = useState<boolean>(false)
     const [jobdata, setJobdata] = useState<jobdata[]>([])
     const [confirm, setConfirm] = useState<boolean>(false)
+    const [pagecount, setPagecount] = useState<number>(0)
+    const [page, setPage] = useState<number>(0)
     const navigate =useNavigate()
     const { touched, values, errors, handleChange,resetForm,handleBlur, handleSubmit } = useFormik({
         initialValues: {
@@ -26,7 +28,7 @@ const Job = () => {
 
         },validationSchema:JobvalidationSchema, onSubmit: async (Data) => {
             try {
-                let response = await postJob(Data )
+                let response = await postJob(Data as jobdata)
 
                 if (response?.data.success) {
                     setOpenmodal(!openmodal)
@@ -44,8 +46,9 @@ const Job = () => {
     useEffect(() => {
         let jobData = async () => {
             try {
-                let response = await getJob()
-                setJobdata(response?.data.jobData)
+                let response = await getJob(page)
+                setJobdata(response?.data.jobs)
+                setPagecount(response?.data.count)
 
             } catch (error) {
                 console.error(error);
@@ -55,7 +58,7 @@ const Job = () => {
         jobData()
 
 
-    }, [openmodal,confirm])
+    }, [openmodal,confirm,page])
     const handleConfirm = async (id:string)=>{
         try {
             
@@ -73,66 +76,102 @@ const Job = () => {
     const handleApplicant =(job_id:string)=>{
        navigate('/company/applicants',{state:{job_id:job_id}})
     } 
+    const handleScheduled =(job_id:string)=>{
+       navigate('/company/scheduled',{state:{job_id:job_id}})
+    }
+    
+    const handlePage = (mes: string) => {
+        if (mes == "next") {
+          console.log(pagecount, 'pagecount');
+    
+          if (page < pagecount - 1) {
+            setPage(page + 1)
+          }
+        } else {
+          if (page > 0) {
+            setPage(page - 1)
+          }
+        }
+      }
+    
     return (
         <>
-            <div className='w-screen h-auto flex-col  lg:flex pb-20 pt-8'>
-                <div className='lg:ml-36'>
+            <div className='w-full h-auto  min-h-screen flex-col   lg:flex pb-20 pt-8'>
+                <div className='lg:ml-64'>
 
                     <button onClick={() => setOpenmodal(!openmodal)} data-modal-target="crud-modal" data-modal-toggle="crud-modal" className=' mt-7  font-semibold text-lg border-1 rounded-xl bg-black text-white w-28 h-11  ml-5 '>Add jobs</button>
                 </div>
-
-                <div className="grid grid-cols-3 lg:ml-40 lg:mt-8">
-                    {
-                        jobdata && jobdata.map((val:jobdata) => {
-                            return (<>
-                                <div className="p-6 m-2 flex-col  space-y-3 sm:w-40 lg:w-[500px] h-96 lg:h-auto rounded-md border shadow-xl  ">
-                                    <div className='flex justify-end'>
-                                        <p> {formatDistanceToNow(new Date(val.time), { addSuffix: true })}</p>
-                                    </div>
-                                    <h2 className="font-semibold text-2xl ">{val.jobtitle}</h2>
-                                    <p className='font-medium'>{val.company_id.companyname}</p>
-                                    <div className="flex items-center text-gray-400">
-                                         <FaMapMarkerAlt />
-                                        <p className="ml-2 text-black">{val.company_id.state}</p>
-                                    </div>
-                                    <p className='font-medium'>{val.type}</p>
-                                    <p className='font-medium'>{val.location}</p>
-                                    <p>{val.description}</p>
-                                    <div className='flex flex-row space-x-4 items-center'>
-
-                                        {/* <button className="rounded-xl my-3 bg-black text-white w-20 h-11">View</button> */}
-                                        <button onClick={()=>setConfirm(!confirm)} className="rounded-xl my-3 bg-red-600 text-white w-20 h-11">Remove</button>
-                                        <button onClick={()=>handleApplicant(val._id)} className='border-black border-2 w-1/3 h-11 rounded-xl hover:font-semibold'>View Applicants</button>
-                                    </div>
-                                    {
-                    confirm &&
-                    <div id="deleteModal" aria-hidden="true" className=" overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-modal md:h-full">
-                        <div className="relative p-4 w-full max-w-md h-full md:h-auto">
-                            <div className="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-300 sm:p-5">
-                                <button type="button" onClick={() => handleConfirm(val._id)} className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="deleteModal">
-                                    <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                                    <span className="sr-only">Close modal</span>
-                                </button>
-                                <p className="mb-4 text-black">Are you sure  to delete job</p>
-                                <div className="flex justify-center items-center space-x-4">
-                                    <button data-modal-toggle="deleteModal" onClick={() => handleConfirm(val._id)} type="button" className="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
-                                        No, cancel
-                                    </button>
-                                    <button type="submit" onClick={() => handleConfirm(val._id)} className="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
-                                        Yes, I'm sure
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                <div className="flex justify-center">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:ml-40 lg:mt-8">
+    {
+      jobdata && jobdata.length > 0 ? (
+        jobdata.map((val: jobdata) => {
+          return (
+            <div key={val._id} className="p-6 m-2 flex flex-col space-y-3 sm:w-40 lg:w-[500px] h-96 lg:h-auto rounded-md border shadow-xl">
+              <div className='flex justify-end'>
+                <p> {formatDistanceToNow(new Date(val.time), { addSuffix: true })}</p>
+              </div>
+              <h2 className="font-semibold text-2xl ">{val.jobtitle}</h2>
+              <p className='font-medium'>{val.company_id.companyname}</p>
+              <div className="flex items-center text-gray-400">
+                <FaMapMarkerAlt />
+                <p className="ml-2 text-black">{val.company_id.state}</p>
+              </div>
+              <p className='font-medium'>{val.type}</p>
+              <p className='font-medium'>{val.location}</p>
+              <p>{val.description}</p>
+              <div className='flex flex-row space-x-4 items-center'>
+                <button onClick={() => setConfirm(!confirm)} className="rounded-xl my-3 bg-red-600 text-white w-20 h-11">Remove</button>
+                <button onClick={() => handleApplicant(val._id)} className='border-black border-2 w-1/3 h-11 rounded-xl hover:font-semibold'>View Applicants</button>
+                <button onClick={() => handleScheduled(val._id)} className='border-black border-2 w-1/3 h-11 rounded-xl hover:font-semibold'>Scheduled</button>
+              </div>
+              {confirm &&
+                <div id="deleteModal" aria-hidden="true" className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full overflow-y-auto overflow-x-hidden md:inset-0 md:h-full">
+                  <div className="relative p-4 w-full max-w-md h-full md:h-auto">
+                    <div className="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-300 sm:p-5">
+                      <button type="button" onClick={() => handleConfirm(val._id)} className="absolute top-2.5 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                        <span className="sr-only">Close modal</span>
+                      </button>
+                      <p className="mb-4 text-black">Are you sure to delete job</p>
+                      <div className="flex justify-center items-center space-x-4">
+                        <button onClick={() => handleConfirm(val._id)} type="button" className="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                          No, cancel
+                        </button>
+                        <button type="submit" onClick={() => handleConfirm(val._id)} className="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                          Yes, I'm sure
+                        </button>
+                      </div>
                     </div>
-
-                }
-                                </div>
-                            </>)
-                        })
-                    }
-
+                  </div>
                 </div>
+              }
+            </div>
+          )
+        })
+      ) : (
+        <div className='flex w-full h-full items-center justify-center'>
+          <p className='text-black font-semibold text-2xl'>No Jobs Found </p>
+        </div>
+      )
+    }
+  </div>
+  </div>
+  <div className="flex flex-col items-center mt-24">
+          <span className="text-sm text-gray-700 dark:text-gray-400">
+            Showing <span className="font-semibold text-gray-900 ">{page + 1}</span> of <span className="font-semibold text-gray-900">{pagecount}</span> Entries
+          </span>
+          <div className="inline-flex mt-2 xs:mt-0">
+            <button onClick={() => handlePage("prev")} className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              Prev
+            </button>
+            <button onClick={() => handlePage("next")} className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              Next
+            </button>
+          </div>
+        </div>
+
+
 
                 {
                     openmodal && (
@@ -212,6 +251,7 @@ const Job = () => {
             </form>
         </div>
     </div>
+    
 </div>
 
 

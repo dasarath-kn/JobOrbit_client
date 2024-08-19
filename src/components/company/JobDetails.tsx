@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
-import { jobdata } from '../../Interface/CompanyInterface';
+import { Company, jobdata } from '../../Interface/CompanyInterface';
 import { useLocation } from 'react-router-dom';
 import { jobApply, viewJobdetails } from '../../Api/userApi';
 import toast, { Toaster } from 'react-hot-toast';
 import { RootState } from '../../Redux/Store';
 import { useSelector } from 'react-redux';
-import { User } from '../../Interface/UserInterface';
 
 const JobDetails = () => {
   const [job, setJob] = useState<jobdata | null>(null);
   const location = useLocation();
   const { job_id } = location.state;
- const companyDatas: User = useSelector((state: RootState) => state.company);
+ const companyDatas: Company = useSelector((state: RootState) => state.company);
  const [updated,setUpdated] =useState(false)
  const [limit,setLimit]=useState<Number>()
 
@@ -59,7 +58,7 @@ const JobDetails = () => {
               >
                 View applicants
               </button>
-}
+
             </div>
           </div>
         </div>

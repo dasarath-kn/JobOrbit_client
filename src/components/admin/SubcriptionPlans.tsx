@@ -6,13 +6,15 @@ import { subscription } from '../../Interface/AdminInterface';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import toast, { Toaster } from 'react-hot-toast';
+import subscriptionSchema from '../../Validations/Admin/subscriptionValidation';
 
 
 const SubscriptionPlans = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [plans, setPlans] = useState<subscription[]>([]);
 const [updated,setUpdated] =useState<boolean>(false)
-  const { handleSubmit, handleChange, values } = useFormik({
+  const { handleSubmit, handleChange, values,touched,errors } = useFormik({
+    validationSchema:subscriptionSchema,
     initialValues: {
       subscriptiontype: '',
       price: '',
@@ -20,7 +22,7 @@ const [updated,setUpdated] =useState<boolean>(false)
       limit: ''
     },
     onSubmit: async (data,{resetForm}) => {
-      let response = await subscriptions(data);
+      let response = await subscriptions(data as subscription);
       if (response?.data.success) {
         console.log(response.data.success);
         setUpdated(!updated)
@@ -43,7 +45,6 @@ const [updated,setUpdated] =useState<boolean>(false)
     fetchSubscriptionPlans();
     
   }, [updated]);
-  console.log(plans,"pppppppp");
   
   
   const handleDeleteplan = async(id:string)=>{
@@ -83,18 +84,17 @@ const [updated,setUpdated] =useState<boolean>(false)
             {plans.map((plan, index) => (
               <div key={index} className="p-6 m-2 flex-col space-y-3 sm:w-full lg:w-[500px] h-72 rounded-md border shadow-xl">
                 <div className='flex justify-end'>
-                {/* <MdEdit className='w-5 h-5'/>       */}
+              
                 <MdDelete onClick={()=>handleDeleteplan(plan._id)} className='w-5 h-5'/>
                           </div>
                 <h2 className="font-semibold text-2xl">{plan.subscriptiontype}</h2>
                 <p className='font-medium'>${plan.price}</p>
                 <div className="flex items-center text-gray-400">
-                  {/* <FaMapMarkerAlt /> */}
+                
                   <p className=" text-black">{plan.month} Months plan</p>
                 </div>
                 <p className='font-medium'>Daily user can apply {plan.limit} jobs</p>
                 <div className='flex flex-row space-x-4'>
-                  {/* <button className="rounded-xl my-3 bg-black text-white w-20 h-11">View</button> */}
                   {plan.unlist? <button onClick={()=>handleListunlist(plan._id,"list")} className="rounded-xl my-3 bg-green-500 text-white w-20 h-11">List</button>:
                   <button onClick={()=>handleListunlist(plan ?._id,"unlist")} className="rounded-xl my-3 bg-red-500 text-white w-20 h-11">Unlist</button>}
                 </div>
@@ -133,6 +133,8 @@ const [updated,setUpdated] =useState<boolean>(false)
                       className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Enter subscription type"
                     />
+   {errors.subscriptiontype && touched.subscriptiontype && <p className='text-sm text-red-500'>{errors.subscriptiontype}</p>}
+
                   </div>
                   <div className="sm:col-span-1">
                     <label className="block mb-2 text-sm font-medium text-black">Price</label>
@@ -146,6 +148,8 @@ const [updated,setUpdated] =useState<boolean>(false)
                       className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Enter price"
                     />
+                                                    {errors.price && touched.price && <p className='text-sm text-red-500'>{errors.price}</p>}
+
                   </div>
                   <div className="sm:col-span-1">
                     <label className="block mb-2 text-sm font-medium text-black">Month</label>
@@ -159,6 +163,8 @@ const [updated,setUpdated] =useState<boolean>(false)
                       className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Enter month count"
                     />
+                                                    {errors.month && touched.month && <p className='text-sm text-red-500'>{errors.month}</p>}
+
                   </div>
                   <div className="sm:col-span-1">
                     <label className="block mb-2 text-sm font-medium text-black">Limit</label>
@@ -172,6 +178,8 @@ const [updated,setUpdated] =useState<boolean>(false)
                       className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Enter limit count"
                     />
+                                                    {errors.limit && touched.limit && <p className='text-sm text-red-500'>{errors.limit}</p>}
+
                   </div>
                 </div>
                 <button type="submit" className="text-white inline-flex items-center bg-black focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">

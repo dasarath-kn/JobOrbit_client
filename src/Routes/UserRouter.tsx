@@ -9,15 +9,17 @@ import UserLoginAuth from '../Authentication/User/UserLoginAuth';
 import UserLogoutAuth from '../Authentication/User/UserLogoutAuth';
 import Emailverify from '../components/common/Emailverify';
 import ResetPassword from '../components/common/ResetPassword';
-import ProfilePage from '../pages/user/ProfilePage';
-import JobPage from '../pages/user/JobPage';
-import JobDetailsPage from '../pages/user/JobDetailsPage';
-import SubscriptionPlanPage from '../pages/user/SubscriptionPlanPage';
+const ProfilePage =lazy(()=>import('../pages/user/ProfilePage'));
+const JobPage =lazy(()=> import('../pages/user/JobPage'));
+const JobDetailsPage =lazy(()=> import('../pages/user/JobDetailsPage'));
+const SubscriptionPlanPage =lazy(()=> import('../pages/user/SubscriptionPlanPage'));
 import Success from '../components/common/Success';
 import DocumentViewer from '../components/common/DocumentViewer';
-import ConnectionPage from '../pages/user/ConnectionPage';
-import CompanyProfilePage from '../pages/user/CompanyProfilePage';
-import ViewUsersprofilepage from '../pages/user/ViewUsersprofilepage';
+const AboutPage =lazy(()=> import('../pages/user/AboutPage'));
+const InboxPage =lazy(()=> import('../pages/user/InboxPage'));
+const ConnectionPage =lazy(()=> import('../pages/user/ConnectionPage'));
+const CompanyProfilePage =lazy(()=> import('../pages/user/CompanyProfilePage'));
+const ViewUsersprofilepage =lazy(()=>import('../pages/user/ViewUsersprofilepage'));
 const Homepage = lazy(()=> import('../pages/user/HomePage'));
 const UserRouter = () => {
     return (
@@ -36,6 +38,9 @@ const UserRouter = () => {
                 <Route path='/connections' element={<ConnectionPage/>}/>
                 <Route path='/companyprofile' element={<CompanyProfilePage/>}/>
                 <Route path='/userprofile' element={<ViewUsersprofilepage/>}/>
+                <Route path='/inbox' element={<InboxPage/>}/>
+                <Route path='/about' element={<AboutPage/>} />
+
 
                 </Route>
                 <Route path='' element={<UserLoginAuth/>} >
@@ -44,6 +49,8 @@ const UserRouter = () => {
                 <Route path='/signup' element={<SignUp/>} />
                 <Route path='/verify' element={<Emailverify role={"User"}/>} />
                 <Route path='/resetpassword' element={<ResetPassword role={"User"}/>} />
+                <Route path='/about' element={<AboutPage/>} />
+                
                 </Route>
             </Routes>
         </Suspense>

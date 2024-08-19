@@ -5,8 +5,8 @@ import { User } from '../../Interface/UserInterface';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { format } from 'date-fns';
 import socket from '../../Config/Socket';
-interface mes{
-  message:String
+interface mes {
+  message:string
 }
 const ViewUserprofile = () => {
   const location = useLocation()
@@ -35,7 +35,7 @@ const ViewUserprofile = () => {
   useEffect(() => {
     if (socket) {
         const handleNotification = (mes:mes) => {
-            window.alert(mes.message); // Typo here
+            window.alert(mes.message);
         };
 
         socket.on('notification', handleNotification);
@@ -82,7 +82,13 @@ const ViewUserprofile = () => {
                     {userdata?.github_url}
                   </a>
                 </li>
-              
+                {userdata?.resume_url &&<li>
+                <button onClick={() => {
+                
+                  window.open(userdata?.resume_url, '_blank')
+                
+              }} className='border-2 border-black w-52 h-9 font-semibold text-white bg-black rounded-full  '>Resume</button>
+                </li>}
               </ul>
             </div>
             <div className='flex lg:flex-row  flex-col sm:ml-0 lg:ml-36 lg:space-x-60'>

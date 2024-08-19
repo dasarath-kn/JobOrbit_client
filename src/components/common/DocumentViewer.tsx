@@ -10,7 +10,7 @@ function DocumentViewer() {
   useEffect(() => {
     
       try {
-     setPdfUrl(userDatas?.resume_url);
+     setPdfUrl(userDatas?.resume_url as string);
       } catch (error) {
         console.error('Error fetching document URL:', error);
       }

@@ -1,8 +1,9 @@
 import toast from "react-hot-toast";
 import axiosInstance from "../Config/AxiosInstance";
-import jobShedule, { Company, CompanyLogin, jobdata, post } from "../Interface/CompanyInterface";
+import jobShedule, { Company, CompanyLogin, jobdata, post, replyData } from "../Interface/CompanyInterface";
 import GoogleAuth from "../Interface/GoogleauthToken";
 import { MdSchedule } from "react-icons/md";
+import handleTokenError from "./errorHandling";
 const token =localStorage.getItem('Companytoken')
 
 export const companyLogin = async (companyData: CompanyLogin) => {
@@ -62,7 +63,7 @@ export const getCompanydata = async () => {
         })
         return response
     } catch (error: any) {
-        console.error(error.response.data.message);
+        handleTokenError(error, "Company")
 
     }
 }
@@ -75,8 +76,8 @@ export const verifyCompany = async (email: string) => {
         let response = await axiosInstance.post('/company/verfiyuser', Email)
         return response
     } catch (error: any) {
-        console.error(error.response.data.message);
-        toast.error(error.response.data.message)
+        handleTokenError(error, "Company")
+
     }
 }
 
@@ -86,7 +87,7 @@ export const companyresetPassword = async (userdata: Company) => {
         return response
 
     } catch (error: any) {
-        console.error(error.response.data.message);
+        handleTokenError(error, "Company")
 
     }
 }
@@ -100,21 +101,22 @@ export const postJob = async (jobData: jobdata) => {
         })
         return response
     } catch (error: any) {
-        console.error(error.response.data.message);
+        handleTokenError(error, "Company")
+
     }
 }
 
-export const getJob = async () => {
+export const getJob = async (page:number) => {
     try {
         let token = localStorage.getItem('Companytoken')
-        let response = await axiosInstance.get('/company/getjobdata', {
+        let response = await axiosInstance.get(`/company/getjobdata?page=${page}`, {
             headers: {
                 "Authorization": token
             }
         })
         return response
     } catch (error: any) {
-        console.error(error.response.data.message);
+        handleTokenError(error, "Company")
 
     }
 
@@ -124,7 +126,7 @@ export const removeJob=async(id:string)=>{
         let response = await axiosInstance.delete(`/company/deletejob?id=${id}`)
         return response
     } catch (error: any) {
-        console.error(error.response.data.message);
+        handleTokenError(error, "Company")
 
     }
 }
@@ -137,8 +139,8 @@ export const editProfile =async(companydata:Company,token:string)=>{
             }
         })
         return response
-    } catch (error:any) {
-        console.error(error.response.data.message);
+    } catch (error: any) {
+        handleTokenError(error, "Company")
 
     }
 }
@@ -150,8 +152,8 @@ try {
         "Authorization":token
     }})
     return response
-} catch (error:any) {
-    console.error(error.response.data.message);
+}catch (error: any) {
+    handleTokenError(error, "Company")
 
 }
 }
@@ -162,8 +164,9 @@ export const posts =async(token:string)=>{
             "Authorization":token
         }})
         return response
-    } catch (error:any) {
-        console.error(error.response.data.message);
+    } catch (error: any) {
+        handleTokenError(error, "Company")
+
     }
     }
 
@@ -173,8 +176,9 @@ export const posts =async(token:string)=>{
                 "Authorization":token
             }})
             return response
-        } catch (error:any) {
-            console.error(error.response.data.message);
+        } catch (error: any) {
+            handleTokenError(error, "Company")
+    
         }
     }
 
@@ -182,8 +186,9 @@ export const posts =async(token:string)=>{
         try {
             let response = await axiosInstance.delete(`/company/deletepost?id=${id}`,{headers:{"Authorization":token}})
             return response
-        } catch (error:any) {
-            console.error(error.response.data.message);
+        } catch (error: any) {
+            handleTokenError(error, "Company")
+    
         }
     }
 
@@ -191,9 +196,10 @@ export const posts =async(token:string)=>{
         try {
             const response = await axiosInstance.get(`/company/applicants?job_id=${job_id}`,{headers:{"Authorization":token}})
             return response
-        } catch (error:any) {
-                console.error(error.response.data.message);
-            }
+        } catch (error: any) {
+            handleTokenError(error, "Company")
+    
+        }
         
     }
 
@@ -201,25 +207,104 @@ export const posts =async(token:string)=>{
         try {
             const response = await axiosInstance.post('/company/schedulejob',scheduleData,{headers:{"Authorization":token}})
             return response 
-        } catch (error:any) {
-            console.error(error.response.data.message);
+        }catch (error: any) {
+            handleTokenError(error, "Company")
+    
         }
     }
 
     export const getScheduledJobs = async(job_id:string)=>{
         try {
-            const response = await axiosInstance.get(`/company/schedulejob?job_id=${job_id}`,{headers:{"Authorization":token}})
+            const response = await axiosInstance.get(`/company/schedulejob?id=${job_id}`,{headers:{"Authorization":token}})
             return response
             
-        } catch (error:any) {
-            console.error(error.response.data.message);
+        } catch (error: any) {
+            handleTokenError(error, "Company")
+    
         }
     }
-    export const schedulejobs =async()=>{
+    export const schedulejobs =async(job_id:string)=>{
         try {
-            const response =await axiosInstance.get('/company/findschedulejob',{headers:{"Authorization":token}})
+            const response =await axiosInstance.get(`/company/findschedulejob?id=${job_id}`,{headers:{"Authorization":token}})
             return response
-        } catch (error:any) {
-            console.error(error.response.data.message);
+        } catch (error: any) {
+            handleTokenError(error, "Company")
+    
         }
     }
+    export const getReviews = async () => {
+        try {
+            const response = await axiosInstance.get('/company/getreviews', { headers: { "Authorization": token } })
+            return response
+        }catch (error: any) {
+            handleTokenError(error, "Company")
+    
+        }
+    
+    }
+    export const getcompanymessages = async (id: string) => {
+        try {
+            
+            const response = await axiosInstance.get(`/company/messages?_id=${id}`, { headers: { "Authorization": token } })
+            return response
+        } catch (error: any) {
+            handleTokenError(error, "Company")
+    
+        }
+    }
+        export const getComments = async (post_id: String) => {
+            try {
+                console.log(post_id);
+                
+                let response = await axiosInstance.get(`/company/getcomment?post_id=${post_id}`, { headers: { "Authorization": token} })
+                return response
+            } catch (error: any) {
+                handleTokenError(error, "Company")
+        
+        
+            }
+        }
+
+        export const replyComment = async(replyData:replyData)=>{
+            try {
+                const response = await axiosInstance.patch('/company/replycomment',replyData,{headers:{"Authorization":token}})
+                return response 
+            }  catch (error: any) {
+                handleTokenError(error, "Company")
+        
+        
+            }
+        }
+
+        export const removeApplicant =async(job_id:string,user_id:string)=>{
+            try {
+                const data ={job_id:job_id,user_id:user_id}
+                const response = await axiosInstance.patch('/company/schedulejob',data,{headers:{"Authorization":token}})
+                return response
+            }  catch (error: any) {
+                handleTokenError(error, "Company")
+                
+            }
+        }
+    
+
+        export const conversation = async()=>{
+            try {
+                const response = await axiosInstance.get('/company/conversation',{headers:{"Authorization":token}})
+                return response
+                
+            } catch (error: any) {
+                handleTokenError(error, "Company")
+        
+            }
+        }
+
+        export const getmessages = async (id: string) => {
+            try {
+                const response = await axiosInstance.get(`/messages?_id=${id}`, { headers: { "Authorization": token } })
+                return response
+            } catch (error: any) {
+                handleTokenError(error, "User")
+        
+            }
+        }

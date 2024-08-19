@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { getApplicants, saveScheduledjob, schedulejobs } from '../../Api/companyApi'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { getApplicants, removeApplicant, saveScheduledjob, schedulejobs } from '../../Api/companyApi'
 import jobShedule, { jobdata } from '../../Interface/CompanyInterface'
 import { User } from '../../Interface/UserInterface'
 import { setDate } from 'date-fns'
@@ -9,14 +9,16 @@ import toast, { Toaster } from 'react-hot-toast'
 const JobApplicants = () => {
     const location = useLocation()
     const { job_id } = location.state || {}
-    const [scheduled, setScheduled] = useState()
+    const [scheduled, setScheduled] = useState<jobShedule[]>([])
     const [jobdata, setJobdata] = useState<jobdata>()
-    const [userdata, setUserdata] = useState<User>()
+    const [userdata, setUserdata] = useState<User[]>([])
+    const [selectedUser, setSelectedUser] = useState<string>()
     const [showModal, setShowModal] = useState<boolean>(false)
-    const [date, SetDate] = useState<Date>()
-    const [time, SetTime] = useState()
+    const [date, SetDate] = useState<string>()
+    const [time, SetTime] = useState<string>()
     const [message, SetMessage] = useState<String>()
     const [updated, setUpdated] = useState<boolean>(false)
+    const navigate =useNavigate()
     useEffect(() => {
         const job = async () => {
             try {
@@ -25,7 +27,7 @@ const JobApplicants = () => {
                     setJobdata(response.data.appliedUsers)
                     console.log(response.data.appliedUsers, "ss");
 
-                    const data = response.data.appliedUsers.map((val) => {
+                    const data = response.data.appliedUsers.map((val:jobdata) => {
                         return val.applicants_id
                     }).flat()
                     setUserdata(data)
@@ -42,7 +44,7 @@ const JobApplicants = () => {
     useEffect(() => {
         const scheduled = async () => {
             try {
-                let response = await schedulejobs()
+                let response = await schedulejobs(job_id)
                 if (response?.data.success) {
                     setScheduled(response.data.scheduledJobs)
                 }
@@ -56,10 +58,13 @@ const JobApplicants = () => {
     }, [updated])
         console.log(scheduled,"dfssf");
         
-    const handleSchedule = async (user_id: string) => {
+    const handleSchedule = async () => {
         try {
+            const user_id =selectedUser
+            console.log(user_id);
+            
             const scheduleData = { date, time, message, user_id, job_id }
-            const response = await saveScheduledjob(scheduleData as jobShedule)
+            const response = await saveScheduledjob(scheduleData as any)
             if (response?.data.success) {
                 setShowModal(!showModal)
                 setUpdated(!updated)
@@ -71,9 +76,18 @@ const JobApplicants = () => {
 
         }
     }
-    const isUserScheduled = (user_id: string) => {
-        return scheduled.some(s => s.user_id === user_id)
+   const rejectUser = async(user_id:string)=>{
+    try {
+        const response = await removeApplicant(job_id,user_id)
+        if(response?.data.success){
+            setUpdated(!updated)
+        }
+
+    } catch (error) {
+        console.error(error);
+        
     }
+   }
     return (
         <>
             <div className='min-h-screen  justify-center items-center'>
@@ -86,16 +100,18 @@ const JobApplicants = () => {
                       
                         
                         return (<>
-                            <div className=' flex  justify-center mb-9  bg-gray-100   w-auto   lg:h-32 lg:m-8  sm:p-8'>
-                                    <ul className='flex flex-col lg:flex-row md:flex-row sm:flex-col space-x-3 md:space-x-20 md:p-0 p-8 lg:space-x-16 items-center  font-medium'>
+                           <div className='flex justify-center mb-9 bg-gray-100 w-full lg:w-auto lg:h-32 lg:m-8 sm:p-8 p-4'>
+                           <ul className='flex flex-col lg:flex-row md:flex-row sm:flex-col lg:space-x-6 md:space-x-20 sm:space-y-4 lg:space-y-0 md:space-y-0 items-center font-medium'>
                                     <li>{index + 1}</li>
                                     <li>{val.firstname}</li>
                                     <li>{val.email}</li>
-                                    <li>view More</li>
-                                    {!isUserScheduled(val._id) ?<li onClick={() => setShowModal(!showModal)}>Schedule</li> :
+                                    <li className='cursor-pointer'onClick={() => navigate('/company/applicantprofile', { state: { id: val._id } })}>view More</li>
+                                    {!scheduled.some((values)=>values.user_id._id ===val._id)?<li className='cursor-pointer' onClick={() => {setShowModal(!showModal),setSelectedUser(val._id)}}>Schedule</li> :
                                         
-                                        <li className='text-orange-500'>Scheduled</li>
+                                        <li className='text-orange-500 cursor-pointer'>Scheduled</li>
                                     }
+                                    {!scheduled.some((values)=>values.user_id._id ===val._id) &&
+                                    <li onClick={()=>rejectUser(val._id)} className='text-red-500 cursor-pointer'>Reject</li>}
                                 </ul>
                                 <Toaster
                                     position="top-center"
@@ -130,7 +146,7 @@ const JobApplicants = () => {
                                                     <label htmlFor="message" className='text-black font-medium'>Message</label>
                                                     <input type="text" onChange={(e) => SetMessage(e.target.value)} className='w-2/3 h-11 border-6 border-black' placeholder='Enter message' />
                                                 </div>
-                                                <button type='button' onClick={() => handleSchedule(val._id)} className='w-full bg-black h-11 text-white'>Submit</button>
+                                                <button type='button' onClick={() => handleSchedule()} className='w-full bg-black h-11 text-white'>Submit</button>
                                             </div>
                                         </div>
                                     </div>

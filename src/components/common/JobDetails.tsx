@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { User } from '../../Interface/UserInterface';
 
 const JobDetails = () => {
-  const [job, setJob] = useState<jobdata | null>(null);
+  const [job, setJob] = useState<jobdata >();
   const location = useLocation();
   const { job_id } = location.state;
  const userDatas: User = useSelector((state: RootState) => state.user);
@@ -38,11 +38,11 @@ const applicant: Applicant = { _id:_id };
     Jobdetails();
   }, [job_id,updated]);
 
-  const handleJobapply = async (job_id: string) => {
+  const handleJobapply = async (job_id: string,company_id:string) => {
     try {
       if(userDatas.plan_id){
         if(userDatas.jobapplied_Count <limit){
-      let response = await jobApply(job_id);
+      let response = await jobApply(job_id,company_id);
       if (response?.data?.success) {
         toast.success(response.data.message);
         setUpdated(!updated)
@@ -77,12 +77,14 @@ const applicant: Applicant = { _id:_id };
               <FaMapMarkerAlt />
               <p className='ml-2 text-black'>{job?.company_id.city}</p>
             </div>
+            <p className=''>{job?.type}</p>
+            <p>{job?.location}</p>
             <div className='flex justify-center md:justify-start'>
             
              {job?.applicants_id?.includes(userDatas._id)?(<p className='text-xl font-semibold text-green-500'>Applied</p>):
 
              (<button
-                onClick={() => job?._id && handleJobapply(job._id)}
+                onClick={() => job?._id && handleJobapply(job._id,job.company_id._id as string)}
                 className='bg-black rounded-full text-white w-24 h-12'
               >
                 Apply

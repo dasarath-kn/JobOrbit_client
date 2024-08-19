@@ -18,7 +18,10 @@ const initialState: User = {
     percentage: "",
     plan_id: "",
     jobapplied_Count: "",
-    experience: [{}]
+    online:'',
+    experience: [],
+    connections:[],
+    companies:[]
 
 }
 
@@ -46,6 +49,9 @@ const UserSlice = createSlice({
                 state.experience = action.payload.experience
             state.jobapplied_Count = action.payload.jobapplied_Count
             state.plan_id = action.payload.plan_id
+            state.connections =action.payload.connections
+            state.companies =action.payload.companies
+            state.online =action.payload.online
         },
         logoutUser: (state) => {
 
@@ -66,7 +72,10 @@ const UserSlice = createSlice({
                 state.percentage = "",
                 state.plan_id = "",
                 state.jobapplied_Count = "",
-                state.experience = [{}]
+                state.experience = [],
+                state.connections=[]
+                state.companies=[]
+                state.online=""
 
 
         }

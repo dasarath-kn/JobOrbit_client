@@ -3,10 +3,16 @@ import Dashboard from './Dashboard';
 import { subscriptedUser, subscription } from '../../Interface/AdminInterface';
 import { getSubscriptionplans, subscribeduserdetails, subscriptionPayment } from '../../Api/userApi';
 import { loadStripe } from '@stripe/stripe-js';
+import { User } from '../../Interface/UserInterface';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../Redux/Store';
 
 const SubscriptionPlans = () => {
-    const [plans,setPlans]=useState<subscription>()
+    const [plans,setPlans]=useState<subscription[]>([])
     const [subscribeduser,setSubscribeduser]=useState<subscriptedUser>()
+    const userDatas: User = useSelector((state: RootState) => state.user);
+
+
     useEffect(()=>{
          const subscriptions =async()=>{
             try {
@@ -36,7 +42,7 @@ const SubscriptionPlans = () => {
     },[])
     
 
-    const handleSubscription =async(_id:string)=>{
+    const handleSubscription =async(_id:string,month:number)=>{
       try {
       
         const public_key = import.meta.env.VITE_STRIPE_PUBLISHED_KEY
@@ -44,9 +50,7 @@ const SubscriptionPlans = () => {
         
         const stripe = await loadStripe(public_key)
         
-        const sessionResponse = await subscriptionPayment({price:_id})
-        console.log(sessionResponse?.data,"ll");
-        
+        const sessionResponse = await subscriptionPayment(_id,month)        
         const sessionId =sessionResponse?.data.payment_id
         const result = stripe?.redirectToCheckout({
           sessionId:sessionId
@@ -57,7 +61,6 @@ const SubscriptionPlans = () => {
         
       }
     }
-    console.log(subscribeduser);
     
   return (
     <div className='  min-h-screen'>
@@ -83,16 +86,19 @@ const SubscriptionPlans = () => {
             <li>{val.month} Months</li>
             <li>Apply daily {val.limit} jobs</li>
             {subscribeduser?.plan_id._id ==val._id && subscribeduser?.payment_status? 
-            <button  className=' text-yellow-400 rounded-3xl w-32 h-11'>Subscribed</button>:
+            <button disabled={val._id==userDatas._id?true:false} className=' text-yellow-400 rounded-3xl w-32 h-11'>Subscribed</button>:
 
-            <button onClick={()=>handleSubscription(val._id)} className='bg-black text-white rounded-3xl w-32 h-11'>Buy now</button>
+            <button disabled={val._id==userDatas._id?true:false} onClick={()=>handleSubscription(val._id,val.month as number)} className='bg-black text-white rounded-3xl w-32 h-11'>Buy now</button>
             }</ul>
         </div>
         </>)
         }):
-        <div className='flex items-center'>
-            <p className='text-black font-bold text-3xl'>Subscription plans not found</p>
+        <div className="flex w-full lg:ml-96 ml-0 min-h-screen justify-center ">
+        <div className="w-1/2  h-96 flex flex-col justify-center ml-11  items-center">
+          <p className="text-black font-semibold text-2xl text-center">No Subscription Plan Found</p>
         </div>
+      </div>
+      
 }
        
       </div>

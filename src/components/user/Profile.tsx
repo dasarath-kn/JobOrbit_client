@@ -1,18 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { FaGithub, FaMapMarkerAlt } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../Redux/Store'
 import { experienceData, User } from '../../Interface/UserInterface'
 import { useFormik } from 'formik'
-import { addExperience, addSkills, appliedJobs, editProfile, getUserdata, uploadResume } from '../../Api/userApi'
+import { addExperience, addSkills, appliedJobs, editProfile, getUserdata, subscribeduserdetails, uploadResume } from '../../Api/userApi'
 import { setUserdetails } from '../../Redux/UserSlice'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { IoMdAdd } from 'react-icons/io'
 import toast, { Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
-import { jobdata } from '../../Interface/CompanyInterface'
+import { jobApplied, jobdata } from '../../Interface/CompanyInterface'
 import { ProfileSchema } from '../../Validations/User/Loginvalidation'
+import { subscriptedUser } from '../../Interface/AdminInterface'
 
 const Profile = () => {
   const [data, setData] = useState<User>()
@@ -30,13 +31,15 @@ const Profile = () => {
   const [skills, setSkills] = useState([])
   const [updated, setUpdated] = useState<boolean>(false)
   const [textareaValue, setTextareaValue] = useState('');
-  const [resume, setResume] = useState('')
+  const [resume, setResume] = useState<File|undefined>(undefined)
   const [showApplied, setShowApplied] = useState<boolean>(false)
-  const [appliedJobdata, setAppliedJobdata] = useState<jobdata[]>()
+  const [appliedJobdata, setAppliedJobdata] = useState<jobApplied[]>([])
   const [mode, setMode] = useState('')
   const [skillerror, setSkillerror] = useState('')
   const [uploaderror, setUploaderror] = useState('')
   const [error, setError] = useState({});
+  const [buttonLoad, setButtonload] = useState<boolean>(false)
+  const [planDetails,setPlanDetails]=useState<subscriptedUser>()
   const navigate = useNavigate()
 
   const fileInputRef = useRef();
@@ -78,8 +81,21 @@ const Profile = () => {
 
       }
     }
+    const planDetail = async ()=>{
+      try {
+        const response = await subscribeduserdetails()
+        if(response?.data.success){
+          setPlanDetails(response.data.subscribedUser)
+        }
+      }catch (error) {
+        console.error(error);
+
+      }
+    }
     applied()
+    planDetail()
   }, [])
+
 
   const handleEdit = () => {
     setOpenmodal(!openmodal)
@@ -99,6 +115,7 @@ const Profile = () => {
 
     }, validationSchema: ProfileSchema, onSubmit: async (formData: any) => {
       try {
+        setButtonload(!buttonLoad)
         const formDataToSend = new FormData();
         Object.keys(formData).forEach(key => {
           formDataToSend.append(key, formData[key]);
@@ -106,7 +123,7 @@ const Profile = () => {
         if (imageFile) {
           if (!data?.img_url) {
             formDataToSend.append("image", imageFile);
-            formDataToSend.append("percentage", "15")
+            formDataToSend.append("percentage", "30")
           } else {
             formDataToSend.append("percentage", data?.percentage)
           }
@@ -114,6 +131,8 @@ const Profile = () => {
 
         let response = await editProfile(formDataToSend as any)
         if (response?.data.success) {
+          setButtonload(false)
+
           setOpenmodal(!openmodal)
           dispatch(setUserdetails(response.data.userData))
         }
@@ -131,8 +150,8 @@ const Profile = () => {
       // setPreviewUrl(URL.createObjectURL(file));
     }
   }
-  const validateForm = () => {
-    const errors = {};
+  const validateForm = (): experienceData => {
+    const errors:experienceData = {};
     if (!experiencefield) errors.experiencefield = 'Experience Field is required';
     if (!mode) errors.mode = 'Duration is required';
     if (!startdate) errors.startdate = 'Joined Date is required';
@@ -176,11 +195,11 @@ const Profile = () => {
     setTextareaValue(inputValue);
     setSkillerror('')
 
-    const skill = inputValue.split(',').map(val => val.trim())
+    const skill = inputValue.split(',').map((val:string) => val.trim())
 
     setSkills(skill)
   }
-  const submitSkills = async (e) => {
+  const submitSkills = async (e:ChangeEvent<HTMLInputElement>) => {
     if (skills.length == 0) {
       setSkillerror("Enter your skills")
       e.preventDefault()
@@ -188,8 +207,7 @@ const Profile = () => {
     }
     e.preventDefault()
     try {
-      if (data?.skills?.length == 0) {
-
+      if (!data?.skills?.length ==0) {
         const percentage = 15
         const response = await addSkills(skills as [], percentage as number)
         if (response?.data) {
@@ -224,11 +242,13 @@ const Profile = () => {
   //   return () => clearTimeout(timer)
   // }, [])
 
-  const handlePdf = (e: Event) => {
+  const handlePdf = (e: ChangeEvent<HTMLInputElement>) => {
     try {
-      let file = e.target.files[0]
-      setResume(file)
-      setUploaderror('')
+     
+      if (e.target.files && e.target.files.length > 0) {
+        let file = e.target.files[0];
+        setResume(file)
+        setUploaderror('')}
     } catch (error) {
       console.error(error);
 
@@ -236,21 +256,19 @@ const Profile = () => {
   }
   const submitPdf = async () => {
 
-    if (resume.length === 0) {
-      console.log("hello");
-
+    if (resume?.size === 0) {
       setUploaderror("Upload your cv")
       return
     }
     try {
       if (!data?.resume_url) {
         const formData = new FormData()
-        formData.append("image", resume)
+        formData.append("image", resume as File)
         formData.append("percentage", "15")
-        const response = await uploadResume(formData)
+        const response = await uploadResume(formData as any)
         if (response?.data) {
           setUploaderror('')
-          setResume('')
+          setResume(undefined)
 
           setUpdated(!updated)
           if (fileInputRef.current) {
@@ -261,13 +279,13 @@ const Profile = () => {
         }
       } else {
         const formData = new FormData()
-        formData.append("image", resume)
+        formData.append("image", resume as File)
         formData.append("percentage", data?.percentage)
-        const response = await uploadResume(formData)
+        const response = await uploadResume(formData as any)
         if (response?.data) {
           setUpdated(!updated)
           setUploaderror('')
-          setResume('')
+          setResume(undefined)
 
           if (fileInputRef.current) {
             console.log(fileInputRef.current.value);
@@ -287,7 +305,7 @@ const Profile = () => {
   }
   return (
     <>
-{/* 
+      {/* 
       {load &&
         <div className=' flex justify-center items-center min-h-screen'>
 
@@ -303,7 +321,7 @@ const Profile = () => {
         </div>
       } */}
       {load == false &&
-      <div className='w-full h-auto flex flex-col items-center min-h-screen sm:justify-center'>
+        <div className='w-full h-auto flex flex-col items-center min-h-screen sm:justify-center'>
           <div className='shadow-2xl rounded-3xl flex flex-col sm:flex-col md:flex-row md:w-full lg:flex-row p-9 text-white sm:w-full lg:w-4/5 h-auto mb-11 lg:mt-20 sm:mt-0'>
             <div className='lg:w-1/4 h-auto md:w-full  lg:content-center sm:w-full sm:h-1/2  md:content-center  mt-20'>
 
@@ -311,7 +329,7 @@ const Profile = () => {
                 <img src={data?.img_url} className='lg:ml-4 sm:ml-0 mt-4 rounded-3xl ' alt="Default Image" />
               ) : (<>
                 <img src='../public/imgadd.jpg' className='lg:ml-4 sm:ml-0 mt-4 items-center' alt="User Image" />
-                <p className='text-red-500 font-medium pl-8'>Add image and increase 15% profile percentage</p>
+                {/* <p className='text-red-500 font-medium pl-8'>Add image and increase 15% profile percentage</p> */}
               </>
               )}
             </div>
@@ -333,7 +351,7 @@ const Profile = () => {
                   </a></li>
 
                 {!data?.github_url && (<>
-      /            <div className=''>
+                  <div className=''>
                     <p className='text-red-500'>Complete your details increase 15% profile percentage</p>
                   </div>
 
@@ -349,7 +367,7 @@ const Profile = () => {
             <div className='border-7 lg:ml-28 sm:ml-0 md:ml-0 mt-28'>
               <ul className='text-black font-medium'>
                 <li className='font-bold'>Skills:</li>
-                {data?.skills?.length > 0 ? (
+                {data && data?.skills?.length > 0 ? (
                   data.skills.map((val, index) => (
                     <li key={index}>{val}</li>
                   ))
@@ -386,6 +404,37 @@ const Profile = () => {
           </div>
           <div className='w-full flex justify-center  items-center '>
             <div className='rounded-2xl flex flex-col  w-3/4 m-9 h-auto shadow-xl p-6 bg-white'>
+            {planDetails &&<div className='m-6'>
+                <div className='space-y-3'>
+                  <p className='text-2xl font-semibold'> Subscribed details</p>
+                </div>
+                <div >
+
+                  <div className='flex flex-col space-y-2 '>
+                    <div className='grid grid-cols-10 gap-x-7 gap-y-3 '>
+                     
+                     
+                        {/* <div className='col-span-10'>
+
+                          <p className='text-red-500 font-medium'>Add your skills and increase 15% profile percentage</p>
+                        </div> */}
+                 
+                    </div>
+                   <div>
+                    <ul>
+                      <li className='font-medium text-xl'>{planDetails.plan_id.subscriptiontype}</li>
+                      <li>Payment Method:Card</li>
+                      <li>Activated date:{format(new Date(planDetails.activation_date), 'dd MMMM, yyyy')}</li>
+                      <li>Expiry date:{format(new Date(planDetails.expiry_date), 'dd MMMM, yyyy')}</li>
+                    </ul>
+                   </div>
+
+                    <div>
+                                     </div>
+                  </div>
+                </div>
+              </div>}
+              
               <div className='m-6'>
                 <div className='space-y-3'>
                   <p className='text-2xl font-semibold'>Skills</p>
@@ -448,14 +497,13 @@ const Profile = () => {
                   <button className='font-medium text-gray-400 ' onClick={() => setExperiencemodal(!experiencemodal)}>Add experience</button>
                 </div>
                 <div className=' grid lg:grid-cols-2 sm:grid-rows-1 sm:gap-x-0 lg:gap-x-4 h-auto' >
-                {data && data?.experience.length > 0 ? data.experience.map((val) => {
-                     const startDate = format(new Date(val.start_date), 'MMMM dd, yyyy');
-                     const endDate = val.mode === "Present" ? "Present" : format(new Date(val.end_date), 'MMMM dd, yyyy');
+                  {data && data?.experience.length > 0 ? data.experience.map((val) => {
+                    const startDate = format(new Date(val.start_date), 'MMMM dd, yyyy');
+                    const endDate = val.mode === "Present" ? "Present" : format(new Date(val.end_date), 'MMMM dd, yyyy');
                     return (
                       <div className='rounded-3xl border-9 h-auto bg-gray-100 mt-9 p-5'>
                         <div className='flex justify-end space-x-3'>
-                          {/* <MdEdit className='h-12 w-7' />
-              <MdDelete className='h-12 w-7'/> */}
+
                         </div>
                         <div className='flex flex-col space-y-6'>
                           <p className='text-2xl font-semibold text-center md:text-left break-words'>
@@ -464,7 +512,6 @@ const Profile = () => {
                           <div className='space-y-4'>
                             <p className='text-xl font-normal'>Start Date: {startDate}</p>
                             <p className='text-xl font-normal'>End Date: {endDate}</p>
-                            {/* <p>{val.mode}</p> */}
                           </div>
                           <div>
                             <p className='text-xl font-medium'>Responsibilities:</p>
@@ -574,9 +621,14 @@ const Profile = () => {
                     </div>
 
                   </div>
-                  <button type="submit" className="text-white inline-flex items-center bg-black focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                    Submit
+                  <button disabled={buttonLoad} type="submit" className="text-white inline-flex items-center bg-black focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                    {buttonLoad && <svg aria-hidden="true" role="status" className="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB" />
+                      <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor" />
+                    </svg>}
+                    {buttonLoad ? "Submiting..." : "Submit"}
                   </button>
+
                 </form>
               </div>
             </div>
@@ -645,7 +697,7 @@ const Profile = () => {
 
       </>)}
       {showApplied && (<>
-        <div id="popup-modal" className="fixed inset-0 bg-gray-700/50 z-50 flex justify-center items-center">
+        <div id="popup-modal" className="fixed inset-0 bg-gray-700/50 z-50 flex justify-center items-center ">
           <div className="relative w-1/2 max-w-[50%] max-h-[90%] p-4">
             <div className="relative bg-white rounded-lg shadow">
               <button
@@ -659,7 +711,7 @@ const Profile = () => {
                 </svg>
                 <span className="sr-only">Close modal</span>
               </button>
-              <div className="p-6 text-center space-y-7">
+              <div className="p-6 text-center space-y-7 overflow-y-auto max-h-96">
                 <h3 className="mb-5 font-semibold text-black text-2xl">Applied Jobs</h3>
                 {appliedJobdata && appliedJobdata.length > 0 ? appliedJobdata.map((values, index) => {
                   return (<>
@@ -667,11 +719,11 @@ const Profile = () => {
                       <div className="w-full max-w-6xl p-8">
                         <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 font-medium">
                           <div className="flex items-center justify-center">{index + 1}</div>
-                          <div className="flex items-center justify-center">{values.jobtitle}</div>
+                          <div className="flex items-center justify-center">{values.job_id.jobtitle}</div>
                           <div className="flex items-center justify-center">{values.company_id.companyname}</div>
-                          <div className="flex items-center justify-center">View More</div>
-                          <div className="flex items-center justify-center">Status</div>
-                          <div className="flex items-center justify-center">Time</div>
+                          {/* <div className="flex items-center justify-center">View More</div> */}
+                          <div className="flex items-center justify-center">{values.status}</div>
+                          <div className="flex items-center justify-center">{format(new Date(values.applied_date), 'dd MMMM, yyyy')}</div>
                         </div>
                       </div>
                     </div>

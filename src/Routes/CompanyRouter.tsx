@@ -10,6 +10,10 @@ import CompanyLoginAuth from '../Authentication/User/Company/CompanyLoginAuth';
 import CompanyLogoutAuth from '../Authentication/User/Company/CompanyLogoutAuth';
 import ResetPassword from '../components/common/ResetPassword';
 import JobApplicantPage from '../pages/Company/JobApplicantPage';
+import InboxPage from '../pages/Company/InboxPage';
+import ViewUserprofile from '../components/company/ViewUserprofile';
+import ViewUsersprofilepage from '../pages/Company/ViewUsersprofilepage';
+import ScheduledJobPage from '../pages/Company/ScheduledJobPage';
 const Emailverify =lazy(()=> import('../components/common/Emailverify'));
 const Post =lazy(()=> import('../pages/Company/PostPage'));
 const JobPage =lazy(()=> import( '../pages/Company/JobPage'));
@@ -33,6 +37,9 @@ const CompanyRouter = () => {
         <Route path='/job' element={<JobPage/>}/>
         <Route path='/post' element={<Post/>}/>
         <Route path='/applicants' element={<JobApplicantPage/>}/>
+        <Route path='/inbox' element={<InboxPage/>}/>
+        <Route path='/applicantprofile' element={<ViewUsersprofilepage/>}/>
+        <Route path='/scheduled' element={<ScheduledJobPage/>}/>
         </Route>
     </Routes>
     </Suspense>

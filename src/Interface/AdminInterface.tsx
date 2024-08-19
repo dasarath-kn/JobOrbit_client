@@ -1,3 +1,5 @@
+import { User } from "./UserInterface"
+
 export interface AdminLogin {
     email:string,
     password:string
@@ -6,11 +8,11 @@ export interface AdminLogin {
 
 export interface subscription {
     _id:string
-    subscriptiontype:string,
+    subscriptiontype?:string,
     price:string,
     limit:string,
-    month:number,
-    unlist:boolean,
+    month:number|string,
+    unlist?:boolean,
     userdetails?:[{
         user_id:string,
         transaction_id:string,
@@ -25,8 +27,8 @@ export interface dashboard{
 }
 export interface subscriptedUser {
     session_id:string,
-    plan_id:string
-     user_id:string,
+    plan_id:subscription
+     user_id:User,
      activation_date:Date,
      expiry_date:Date,
      payment_status:Boolean

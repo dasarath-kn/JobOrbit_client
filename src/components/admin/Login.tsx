@@ -23,7 +23,7 @@ const Login = () => {
               let response = await adminLogin(Data as AdminLogin)
               if(response?.data){
                 localStorage.setItem("Admintoken",response.data.token)
-                navigate('/admin/usermanagement')              
+                navigate('/admin/dashboard')              
               }
               } catch (error) {
                 console.log(error);
