@@ -45,7 +45,7 @@ const LandingPage = () => {
           </ul>
         </div>
         <div className='lg:mt-8 lg:justify-center content-center flex-1'>
-          <img src="public/landingpage1.png" alt="Landing page illustration" className="w-full h-auto  "  />
+          <img src="/landingpage1.png" alt="Landing page illustration" className="w-full h-auto  "  />
         </div>
       </div>
 
