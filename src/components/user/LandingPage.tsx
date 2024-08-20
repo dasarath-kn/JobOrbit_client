@@ -1,9 +1,30 @@
+import { useEffect, useState } from 'react';
 import { FaSearch, FaMapMarkerAlt } from 'react-icons/fa';
+import { jobdata } from '../../Interface/CompanyInterface';
+import { getJobs } from '../../Api/userApi';
+import { useNavigate } from 'react-router-dom';
 const LandingPage = () => {
+  const navigate =useNavigate()
+  let [jobdata, setJobdata] = useState<jobdata[]>([])
+
+  useEffect(() => {
+    let jobs = async () => {
+      try {
+        let response = await getJobs(0,"" ,"" ,"" )
+        if (response?.data) {
+          setJobdata(response.data.jobs)
+        }
+      } catch (error) {
+        console.error(error);
+
+      }
+    }
+    jobs()
+  }, [])
   
   return (
     <>
-      <div id='main1' className='bg-black h-screen flex flex-col lg:flex-row justify-evenly p-8 '>
+      <div id='main1' className='bg-black min-h-screen h-auto  flex flex-col lg:flex-row justify-evenly p-8'>
         <div className='text-white flex-1 content-center lg:ml-32 '>
           <h1 className='text-white text-4xl lg:text-6xl mb-8'>Find Your Job With <br /> JobOrbit.</h1>
           <p className='mb-10'>Our platform connects job seekers with a diverse range of job <br /> openings from top companies across various industries.</p>
@@ -46,7 +67,7 @@ const LandingPage = () => {
         <div className='flex-1 flex flex-col mt-8 lg:mt-0 lg:ml-8 justify-center items-center content-center'>
           <h1 className='my-7 font-bold text-2xl lg:text-4xl text-center'>Build Your Connections.</h1>
           <p className='text-center'>Expanding your professional network by connecting with industrial peers.</p>
-          <button className='bg-black my-10 text-white w-44 h-10 rounded-lg '>Connect</button>
+          <button onClick={()=>navigate('/connections')} className='bg-black my-10 text-white w-44 h-10 rounded-lg '>Connect</button>
         </div>
       </div>
 
@@ -84,69 +105,22 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className=''>
-        <div className='px-8 lg:px-44'>
-          <h1 className='text-black font-medium text-2xl lg:text-3xl'>Find Your Job Here</h1>
-        </div>
-        <div className='mt-7 flex flex-wrap justify-evenly'>
-          <div className='sm:w-40 p-6  lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 shadow-xl'>
-            <h2 className='font-medium text-xl'>Fullstack Developer</h2>
-            <p>Codex Technologies</p>
-            <div className="flex items-center text-gray-400">
-            <FaMapMarkerAlt />
-        <p className="ml-2 text-black">Bengaluru</p>
-      </div>
-            <button className=' rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
-          </div>
-          <div className='p-6 sm:w-40 lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 shadow-xl'>
-            <h2 className='font-medium text-xl'>Fullstack Developer</h2>
-            <p>Codex Technologies</p>
-            <div className="flex items-center text-gray-400">
-        <FaMapMarkerAlt />
-        <p className="ml-2 text-black">Bengaluru</p>
-      </div>
-            <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
-          </div>
-          <div className='p-6 sm:w-40 lg:w-80 h-40 rounded-md border shadow-xl'>
-            <h2 className='font-medium text-xl'>Fullstack Developer</h2>
-            <p>Codex Technologies</p>
-            <div className="flex items-center text-gray-400">
-        <FaMapMarkerAlt />
-        <p className="ml-2 text-black">Bengaluru</p>
-      </div>
-            <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
-          </div>
-        </div>
-        <div className='mt-7 flex flex-wrap justify-evenly'>
-          <div className='p-6 w-full lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 hidden lg:block shadow-xl'>
-            <h2 className='font-medium text-xl'>Fullstack Developer</h2>
-            <p>Codex Technologies</p>
-            <div className="flex items-center text-gray-400">
-        <FaMapMarkerAlt />
-        <p className="ml-2 text-black">Bengaluru</p>
-      </div>
-            <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
-          </div>
-          <div className='p-6 w-full lg:w-80 h-40 rounded-md border mb-6 lg:mb-0 hidden lg:block shadow-xl'>
-            <h2 className='font-medium text-xl'>Fullstack Developer</h2>
-            <p>Codex Technologies</p>
-            <div className="flex items-center text-gray-400">
-        <FaMapMarkerAlt />
-        <p className="ml-2 text-black">Bengaluru</p>
-      </div>
-            <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
-          </div>
-          <div className='p-6 w-full lg:w-80 h-40 rounded-md border hidden lg:block shadow-xl'>
-            <h2 className='font-medium text-xl'>Fullstack Developer</h2>
-            <p>Codex Technologies</p>
-            <div className="flex items-center text-gray-400">
-        <FaMapMarkerAlt />
-        <p className="ml-2 text-black">Bengaluru</p>
-      </div>
-            <button className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
-          </div>
-        </div>
-      </div>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-8 lg:px-44'>
+  {jobdata&& jobdata.map((val)=>{return(<><div className='p-6 h-40 rounded-md border shadow-xl'>
+    <h2 className='font-medium text-xl'>{val.jobtitle}</h2>
+    <p>{val.company_id.companyname}</p>
+    <div className="flex items-center text-gray-400">
+      <FaMapMarkerAlt />
+      <p className="ml-2 text-black">{val.company_id.city}</p>
+    </div>
+    <button onClick={() => navigate('/jobdetails', { state: { job_id: val._id } })}  className='rounded-xl my-3 bg-black text-white w-20 h-7'>View</button>
+  </div></>)})}
+
+
+  
+   
+</div>
+
 
       <div className=''>
         <div className='px-8 lg:px-44 mt-5'>

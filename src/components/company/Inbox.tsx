@@ -11,7 +11,6 @@ const Inbox = () => {
   const companyDatas: Company = useSelector((state: RootState) => state.company);
   const [selectedUser, setSelectedUser] = useState<User>();
   const [details, setDetails] = useState<boolean>(false)
-
   const [message, setMessage] = useState<string>('');
   const  companyData = useSelector((state: RootState) => state.company);
   const [messages, setMessages] = useState<message[]>([]);

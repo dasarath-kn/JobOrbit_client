@@ -5,7 +5,7 @@ const handleTokenError = (error:any, mode:string) => {
         if (error.response && (error.response.data.message === 'Token has expired' || error.response.data.message === 'Invalid token'||error.response.status === 401)) {
           
             localStorage.removeItem('Usertoken');
-            window.location.href = '/signin'; // This works for redirecting
+            window.location.href = '/signin'; 
         }
     } else if (mode === "Company") {
         if (error.response && (error.response.data.message === 'Token has expired' || error.response.data.message === 'Invalid token'||error.response.status === 401)) {

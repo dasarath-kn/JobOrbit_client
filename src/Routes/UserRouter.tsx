@@ -20,7 +20,7 @@ const InboxPage =lazy(()=> import('../pages/user/InboxPage'));
 const ConnectionPage =lazy(()=> import('../pages/user/ConnectionPage'));
 const CompanyProfilePage =lazy(()=> import('../pages/user/CompanyProfilePage'));
 const ViewUsersprofilepage =lazy(()=>import('../pages/user/ViewUsersprofilepage'));
-const Homepage = lazy(()=> import('../pages/user/HomePage'));
+const HomePage = lazy(()=>import('../pages/user/Homepage'))
 const UserRouter = () => {
     return (
         <>
@@ -28,7 +28,7 @@ const UserRouter = () => {
             <Routes>
                 <Route path='/' element={<LandingPage />} />
                 <Route path='' element={<UserLogoutAuth/>}>
-                <Route path='/post' element={<Homepage/>} />
+                <Route path='/post' element={<HomePage/>} />
                 <Route path='/profile' element={<ProfilePage/>} />
                 <Route path='/job' element={<JobPage/>}/>
                 <Route path='/jobdetails' element={<JobDetailsPage/>}/>
@@ -40,8 +40,6 @@ const UserRouter = () => {
                 <Route path='/userprofile' element={<ViewUsersprofilepage/>}/>
                 <Route path='/inbox' element={<InboxPage/>}/>
                 <Route path='/about' element={<AboutPage/>} />
-
-
                 </Route>
                 <Route path='' element={<UserLoginAuth/>} >
                 <Route path='/otp' element={<Otp role={"User"}/>}/>

@@ -134,7 +134,7 @@ const MainNav = () => {
           </svg>
         </button>
         <div className={`${isOpen ? 'block' : 'hidden'} w-full md:block md:w-auto`} id="navbar-default">
-          <ul className="font-medium flex flex-col p-4 text-white md:p-0 mt-4 border md:flex-row md:space-x-8 md:mt-0 md:border-0 cursor-pointer">
+          <ul className="font-medium flex flex-col p-4  text-white md:p-0 mt-4 border md:flex-row md:space-x-8 md:mt-0 md:border-0 cursor-pointer">
             <li className="md:ml-auto" onClick={() => navigate('/post')}>
               Post
             </li>
