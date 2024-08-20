@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import SideBar from './SideBar'
 import { Company } from '../../Interface/CompanyInterface'
 import { companyBlockUnblock, getCompanies } from '../../Api/adminApi'

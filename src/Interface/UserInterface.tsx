@@ -1,4 +1,3 @@
-import { string } from "yup"
 import { Company, post } from "./CompanyInterface";
 
  export interface UserLogin {
@@ -26,7 +25,7 @@ export interface Companies{
 }
 
 export interface User{
-    _id:string,
+    _id?:string,
     firstname?:string,
     lastname?:string,
     email?:string,
@@ -44,14 +43,14 @@ export interface User{
     portfolio_url?:string,
     resume_url?:string,
     skills?:[string],
-    percentage:string,
+    percentage?:string,
     qualification?:string,
-    plan_id:string,
-    online:string,
-    jobapplied_Count:number|string,
-    experience:Experience[]
-    connections:Connection[]
-    companies:Companies[]
+    plan_id?:string,
+    online?:string,
+    jobapplied_Count?:number|string,
+    experience?:Experience[]
+    connections?:Connection[]
+    companies?:Companies[]
 
 }
 

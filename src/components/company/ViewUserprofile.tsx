@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { findUser } from '../../Api/userApi';
 import { User } from '../../Interface/UserInterface';
@@ -119,7 +119,7 @@ const ViewUserprofile = () => {
           </div>
 
         </div>
-        {userdata && userdata.experience.length>0 &&  
+        {userdata?.experience && userdata.experience.length>0 &&  
         <div className='shadow-2xl rounded-3xl flex sm:flex-col lg:flex-col p-9 text-white sm:w-full lg:w-4/5 w-full h-auto mb-11 mt-20'>
 
         <div className=' m-6'>

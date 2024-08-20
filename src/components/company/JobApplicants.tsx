@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getApplicants, removeApplicant, saveScheduledjob, schedulejobs } from '../../Api/companyApi'
 import jobShedule, { jobdata } from '../../Interface/CompanyInterface'
 import { User } from '../../Interface/UserInterface'
-import { setDate } from 'date-fns'
 import toast, { Toaster } from 'react-hot-toast'
 
 const JobApplicants = () => {
     const location = useLocation()
     const { job_id } = location.state || {}
     const [scheduled, setScheduled] = useState<jobShedule[]>([])
-    const [jobdata, setJobdata] = useState<jobdata>()
     const [userdata, setUserdata] = useState<User[]>([])
     const [selectedUser, setSelectedUser] = useState<string>()
     const [showModal, setShowModal] = useState<boolean>(false)
@@ -24,8 +22,6 @@ const JobApplicants = () => {
             try {
                 let response = await getApplicants(job_id)
                 if (response?.data.success) {
-                    setJobdata(response.data.appliedUsers)
-                    console.log(response.data.appliedUsers, "ss");
 
                     const data = response.data.appliedUsers.map((val:jobdata) => {
                         return val.applicants_id
@@ -56,13 +52,10 @@ const JobApplicants = () => {
         }
         scheduled()
     }, [updated])
-        console.log(scheduled,"dfssf");
         
     const handleSchedule = async () => {
         try {
-            const user_id =selectedUser
-            console.log(user_id);
-            
+            const user_id =selectedUser            
             const scheduleData = { date, time, message, user_id, job_id }
             const response = await saveScheduledjob(scheduleData as any)
             if (response?.data.success) {
@@ -111,7 +104,7 @@ const JobApplicants = () => {
                                         <li className='text-orange-500 cursor-pointer'>Scheduled</li>
                                     }
                                     {!scheduled.some((values)=>values.user_id._id ===val._id) &&
-                                    <li onClick={()=>rejectUser(val._id)} className='text-red-500 cursor-pointer'>Reject</li>}
+                                    <li onClick={()=>rejectUser(val._id as string)} className='text-red-500 cursor-pointer'>Reject</li>}
                                 </ul>
                                 <Toaster
                                     position="top-center"

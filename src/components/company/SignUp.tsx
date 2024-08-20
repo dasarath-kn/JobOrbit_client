@@ -1,12 +1,11 @@
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Company } from '../../Interface/CompanyInterface';
 import { companyInitialValues, companyValidationSchema } from '../../Validations/Company/Signupvalidations';
 import { companySignup } from '../../Api/companyApi';
 import { Toaster, toast } from 'react-hot-toast';
-import { date } from 'yup';
 import GoogleAuth from '../common/GoogleAuth';
 
 const SignUp:React.FC = () => {

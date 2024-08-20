@@ -1,4 +1,3 @@
-import React from 'react'
 import NavBar from '../../components/company/NavBar'
 import Profile from '../../components/company/Profile'
 import Footer from '../../components/common/Footer'

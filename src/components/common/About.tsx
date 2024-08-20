@@ -1,10 +1,8 @@
-import React from 'react'
 
 const About = () => {
   return (
     <>
 <div className="w-full min-h-screen relative">
-  {/* Our Mission Section */}
   <div className="w-full">
     <div className="relative">
       <img src="/about.jpg" className="w-full h-96 blur-sm" alt="About" />
@@ -17,12 +15,10 @@ const About = () => {
     </div>
   </div>
 
-  {/* Why Choose JobOrbit Section */}
   <div className="w-full py-20">
     <h2 className="text-4xl font-semibold text-center text-gray-800 mb-12">Why Choose JobOrbit</h2>
     <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
       
-      {/* Advanced Search */}
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-2xl font-bold text-gray-800 mb-4">Find Jobs Tailored to Your Skills</h3>
         <p className="text-gray-600">
@@ -30,7 +26,6 @@ const About = () => {
         </p>
       </div>
 
-      {/* Real-Time Notifications */}
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-2xl font-bold text-gray-800 mb-4">Stay Updated on Job Applications and New Opportunities</h3>
         <p className="text-gray-600">
@@ -38,7 +33,6 @@ const About = () => {
         </p>
       </div>
 
-      {/* Secure and Private */}
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-2xl font-bold text-gray-800 mb-4">Your Data is Safe with Us</h3>
         <p className="text-gray-600">
@@ -46,7 +40,6 @@ const About = () => {
         </p>
       </div>
 
-      {/* User-Friendly Interface */}
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-2xl font-bold text-gray-800 mb-4">Easy to Navigate and Use</h3>
         <p className="text-gray-600">
@@ -54,7 +47,6 @@ const About = () => {
         </p>
       </div>
 
-      {/* Wide Range of Opportunities */}
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-2xl font-bold text-gray-800 mb-4">From Startups to Enterprises</h3>
         <p className="text-gray-600">

@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import Dashboard from './Dashboard'
+import  { useEffect, useState } from 'react'
 import { FaBookmark, FaHeart, FaRegBookmark, FaRegComment, FaRegHeart } from 'react-icons/fa'
 import { getComments, getPosts, getSavedpost, getUserdata, likeunlike, postComment, reportPost, savePost } from '../../Api/userApi'
 import { post } from '../../Interface/CompanyInterface'
-import { formatDistanceToNow } from 'date-fns'
-import { comment, Connection, postreport, savedPost, User } from '../../Interface/UserInterface'
+import { comment,  savedPost, User } from '../../Interface/UserInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../Redux/Store'
 import toast, { Toaster } from 'react-hot-toast'
-import { IoMdMore, IoMdSend } from 'react-icons/io'
-import LoadingSpinner from '../common/LoadingSpinner'
+import { IoMdMore } from 'react-icons/io'
 import { setUserdetails } from '../../Redux/UserSlice'
 import { useNavigate } from 'react-router-dom'
 
@@ -23,7 +20,6 @@ const Post = () => {
   const [selectedvalues, setSelectedvalues] = useState<post>()
   const [comments, setComments] = useState<comment[]>()
   const [sentcomment, setSentcomment] = useState<boolean>()
-  const [load, setLoad] = useState<boolean>(false)
   const [updated, setUpdated] = useState<boolean>(false)
   const [menu, setMenu] = useState<boolean>(false)
   const [likedUsers, setLikdUsers] = useState<boolean>(false)
@@ -167,12 +163,7 @@ const Post = () => {
     comments()
   }, [openmodal, sentcomment])
 
-  // useEffect(()=>{
-  //   let timer =setTimeout(()=>{
-  //     setLoad(!load)
-  //   },1000)
-  //   return ()=>clearTimeout(timer)
-  // },[])
+
 
   const handlemenu = () => {
     setMenu(!menu)
@@ -226,9 +217,8 @@ const Post = () => {
           </div>
         </div>
 
-        {load && <LoadingSpinner />}
         {!postHandle ? <>
-          {postdata.length > 0 && load == false ? postdata.map((val) => (
+          {postdata.length > 0  ? postdata.map((val) => (
             <div key={val._id} className='m-11 lg:w-4/5  h-fit shadow-lg p-9 '>
               <div className='flex flex-row justify-between items-center p-3 '>
                 <div className='flex items-center space-x-3'>
@@ -420,7 +410,7 @@ const Post = () => {
             </div>
           </>}
         </> : <>
-          {saved.length > 0 && load == false ? saved.map((val, index) => (
+          {saved.length > 0  ? saved.map((val, index) => (
             <div key={val._id} className='m-11 w-4/5 h-fit shadow-lg p-9 '>
               <div className='flex flex-row justify-between items-center p-3'>
                 <div className='flex items-center space-x-3'>
@@ -702,7 +692,7 @@ const Post = () => {
                         {val.img_url ? <img src={val.img_url} alt="" className='w-9 h-9 rounded-full' /> : <img src="/user06.png" alt="" className='w-9 h-9' />}
                         <p className='font-light'>{val.firstname}</p>
 
-                        {userDatas.connections.map((values: any) => { values.connection_id === val._id }) ? (
+                        {userDatas.connections && userDatas.connections.map((values: any) => { values.connection_id === val._id }) ? (
                           <button onClick={() => navigate('/inbox')} className='bg-black w-24 rounded-xl text-white h-9'>Message</button>
                         ) : (
                           <button className='bg-black w-24 rounded-xl text-white h-9'>Connect</button>

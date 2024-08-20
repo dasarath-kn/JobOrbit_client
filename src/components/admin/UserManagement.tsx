@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './SideBar';
-import Nav from './Nav';
 import toast, { Toaster } from 'react-hot-toast'
 import { getUsers, userBlockUnblock } from '../../Api/adminApi';
 import { User } from '../../Interface/UserInterface';

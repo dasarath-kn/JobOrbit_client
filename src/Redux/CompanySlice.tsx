@@ -13,7 +13,8 @@ const initialState:Company ={
     img_url:"",
     website_url:"",
     document_url:"", 
-    users:[]
+    users:[],
+    percentage:''
 
 }
 

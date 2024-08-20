@@ -1,7 +1,6 @@
 import axiosInstance from "../Config/AxiosInstance";
 import toast from "react-hot-toast";
 import { comment, connection, connectionData, experienceData, postreport, reviews, User, UserLogin } from "../Interface/UserInterface";
-import GoogleauthToken from "../Interface/GoogleauthToken";
 import GoogleAuth from "../Interface/GoogleauthToken";
 import handleTokenError from "./errorHandling";
 const token = localStorage.getItem("Usertoken")

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import Dashboard from './Dashboard';
+import  { useEffect, useState } from 'react';
 import { subscriptedUser, subscription } from '../../Interface/AdminInterface';
 import { getSubscriptionplans, subscribeduserdetails, subscriptionPayment } from '../../Api/userApi';
 import { loadStripe } from '@stripe/stripe-js';
@@ -52,7 +51,7 @@ const SubscriptionPlans = () => {
         
         const sessionResponse = await subscriptionPayment(_id,month)        
         const sessionId =sessionResponse?.data.payment_id
-        const result = stripe?.redirectToCheckout({
+         stripe?.redirectToCheckout({
           sessionId:sessionId
         })
         

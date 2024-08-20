@@ -1,5 +1,5 @@
-import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
-import { FaHeart, FaRegComment, FaRegHeart } from 'react-icons/fa';
+import  {  MouseEvent, useEffect, useState } from 'react';
+import { FaRegComment, FaRegHeart } from 'react-icons/fa';
 import { addPost, deletePost, getComments, posts, replyComment } from '../../Api/companyApi';
 import toast, { Toaster } from 'react-hot-toast';
 import { post } from '../../Interface/CompanyInterface';

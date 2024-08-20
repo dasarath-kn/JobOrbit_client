@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoIosNotificationsOutline, IoMdCloseCircle } from "react-icons/io";
 import { notification, User } from '../../Interface/UserInterface';
@@ -225,8 +225,8 @@ const MainNav = () => {
                                 {val.sender_id.firstname}
                               </li>
                               <li className='flex flex-row justify-center items-center space-x-2'>
-                                <MdVerified onClick={() => handleConnection(val._id, val.sender_id._id, "accept")} className='text-green-500' />
-                                <IoMdCloseCircle onClick={() => handleConnection(val._id, val.sender_id._id, "reject")} className='text-red-500' />
+                                <MdVerified onClick={() => handleConnection(val._id, val.sender_id._id as string, "accept")} className='text-green-500' />
+                                <IoMdCloseCircle onClick={() => handleConnection(val._id, val.sender_id._id as string, "reject")} className='text-red-500' />
                               </li>
                               <li className='font-light text-sm'>
                                 {formatDistanceToNow(new Date(val.date), { addSuffix: true })}

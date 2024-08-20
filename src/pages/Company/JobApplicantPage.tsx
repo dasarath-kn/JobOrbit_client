@@ -1,4 +1,3 @@
-import React from 'react'
 import NavBar from '../../components/company/NavBar'
 import JobApplicants from '../../components/company/JobApplicants'
 import Footer from '../../components/common/Footer'

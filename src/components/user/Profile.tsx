@@ -1,17 +1,14 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { FaGithub, FaMapMarkerAlt } from 'react-icons/fa'
+import  { ChangeEvent, useEffect, useRef, useState } from 'react'
+import {  FaMapMarkerAlt } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../Redux/Store'
 import { experienceData, User } from '../../Interface/UserInterface'
 import { useFormik } from 'formik'
 import { addExperience, addSkills, appliedJobs, editProfile, getUserdata, subscribeduserdetails, uploadResume } from '../../Api/userApi'
 import { setUserdetails } from '../../Redux/UserSlice'
-import { MdDelete, MdEdit } from 'react-icons/md'
-import { IoMdAdd } from 'react-icons/io'
 import toast, { Toaster } from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
-import { jobApplied, jobdata } from '../../Interface/CompanyInterface'
+import { jobApplied } from '../../Interface/CompanyInterface'
 import { ProfileSchema } from '../../Validations/User/Loginvalidation'
 import { subscriptedUser } from '../../Interface/AdminInterface'
 
@@ -20,14 +17,12 @@ const Profile = () => {
   const [imageFile, setImageFile] = useState<any>()
   const [openmodal, setOpenmodal] = useState<boolean>(false)
   const dispatch = useDispatch()
-  const [experienceError, setExperienceerror] = useState<string>('')
   const [experiencemodal, setExperiencemodal] = useState<boolean>(false)
   const [experiencefield, setExperiencefield] = useState<string>('')
   const [startdate, setStartdate] = useState<string>('')
   const [enddate, setEnddate] = useState<string>('')
   const [responsibilities, setResponsibilities] = useState<string>('')
   const userDatas: User = useSelector((state: RootState) => state.user)
-  const [load, setLoad] = useState<boolean>(false)
   const [skills, setSkills] = useState([])
   const [updated, setUpdated] = useState<boolean>(false)
   const [textareaValue, setTextareaValue] = useState('');
@@ -37,12 +32,15 @@ const Profile = () => {
   const [mode, setMode] = useState('')
   const [skillerror, setSkillerror] = useState('')
   const [uploaderror, setUploaderror] = useState('')
-  const [error, setError] = useState({});
+  const [error, setError] = useState({  experiencefield: '',
+    mode: '',
+    startdate: '',
+    enddate: '',
+    responsibilities: ''});
   const [buttonLoad, setButtonload] = useState<boolean>(false)
   const [planDetails,setPlanDetails]=useState<subscriptedUser>()
-  const navigate = useNavigate()
 
-  const fileInputRef = useRef();
+  const fileInputRef:any = useRef();
 
   useEffect(() => {
     const userData = async () => {
@@ -113,19 +111,21 @@ const Profile = () => {
       img_url: ''
 
 
-    }, validationSchema: ProfileSchema, onSubmit: async (formData: any) => {
+    }, validationSchema: ProfileSchema, onSubmit: async (formData: User) => {
       try {
         setButtonload(!buttonLoad)
         const formDataToSend = new FormData();
         Object.keys(formData).forEach(key => {
-          formDataToSend.append(key, formData[key]);
+          // formDataToSend.append(key, formData[key]);
+          formDataToSend.append(key, formData[key as keyof User] as any);
+
         });
         if (imageFile) {
           if (!data?.img_url) {
             formDataToSend.append("image", imageFile);
             formDataToSend.append("percentage", "30")
           } else {
-            formDataToSend.append("percentage", data?.percentage)
+            formDataToSend.append("percentage", data.percentage as string)
           }
         }
 
@@ -168,7 +168,7 @@ const Profile = () => {
     if (Object.keys(formErrors).length === 0) {
 
       const experienceData = { experiencefield: experiencefield, start_date: startdate, end_date: enddate, mode: mode, responsibilities: responsibilities, percentage: data?.percentage }
-      if (data?.experience.length == 0) {
+      if (data?.experience&& data?.experience.length == 0) {
         let percentage = "15"
         experienceData.percentage = percentage
         let response = await addExperience(experienceData as experienceData)
@@ -187,7 +187,7 @@ const Profile = () => {
 
       }
     }
-    else { setError(formErrors); }
+    else { setError(formErrors as any); }
   }
   const handleskills = async (e: any) => {
     let inputValue = e.target.value
@@ -207,7 +207,7 @@ const Profile = () => {
     }
     e.preventDefault()
     try {
-      if (!data?.skills?.length ==0) {
+      if (data?.skills && data?.skills?.length >0) {
         const percentage = 15
         const response = await addSkills(skills as [], percentage as number)
         if (response?.data) {
@@ -280,7 +280,7 @@ const Profile = () => {
       } else {
         const formData = new FormData()
         formData.append("image", resume as File)
-        formData.append("percentage", data?.percentage)
+        formData.append("percentage", data?.percentage as string)
         const response = await uploadResume(formData as any)
         if (response?.data) {
           setUpdated(!updated)
@@ -305,22 +305,7 @@ const Profile = () => {
   }
   return (
     <>
-      {/* 
-      {load &&
-        <div className=' flex justify-center items-center min-h-screen'>
-
-
-          <div role="status" className="max-w-sm animate-pulse">
-            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-200 w-96 mb-6"></div>
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 max-w-[500px] mb-2.5"></div>
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 mb-2.5"></div>
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 max-w-[430px] mb-2.5"></div>
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 max-w-[300px] mb-2.5"></div>
-            <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-200 max-w-[460px]"></div>
-          </div>
-        </div>
-      } */}
-      {load == false &&
+      
         <div className='w-full h-auto flex flex-col items-center min-h-screen sm:justify-center'>
           <div className='shadow-2xl rounded-3xl flex flex-col sm:flex-col md:flex-row md:w-full lg:flex-row p-9 text-white sm:w-full lg:w-4/5 h-auto mb-11 lg:mt-20 sm:mt-0'>
             <div className='lg:w-1/4 h-auto md:w-full  lg:content-center sm:w-full sm:h-1/2  md:content-center  mt-20'>
@@ -367,7 +352,7 @@ const Profile = () => {
             <div className='border-7 lg:ml-28 sm:ml-0 md:ml-0 mt-28'>
               <ul className='text-black font-medium'>
                 <li className='font-bold'>Skills:</li>
-                {data && data?.skills?.length > 0 ? (
+                {data?.skills && data?.skills?.length > 0 ? (
                   data.skills.map((val, index) => (
                     <li key={index}>{val}</li>
                   ))
@@ -444,7 +429,7 @@ const Profile = () => {
                   <div className='flex flex-col space-y-2 '>
                     <div className='grid grid-cols-10 gap-x-7 gap-y-3 '>
                       {data?.skills && data?.skills?.length > 0 ? (
-                        data.skills.map((val, index) => (
+                        data.skills.map((val) => (
                           <p className='rounded-xl bg-orange-200 w-full text-center'>{val}</p>
                         ))
                       ) : (
@@ -461,7 +446,7 @@ const Profile = () => {
                     <div>
                       <button
                         type='button' // Ensure button type is 'button' to prevent form submission
-                        onClick={(e) => submitSkills(e)}
+                        onClick={(e) => submitSkills(e as any)}
                         className='disabled bg-black text-white w-16 h-9'
                       >
                         Add
@@ -497,7 +482,7 @@ const Profile = () => {
                   <button className='font-medium text-gray-400 ' onClick={() => setExperiencemodal(!experiencemodal)}>Add experience</button>
                 </div>
                 <div className=' grid lg:grid-cols-2 sm:grid-rows-1 sm:gap-x-0 lg:gap-x-4 h-auto' >
-                  {data && data?.experience.length > 0 ? data.experience.map((val) => {
+                  {data?.experience && data?.experience.length > 0 ? data.experience.map((val) => {
                     const startDate = format(new Date(val.start_date), 'MMMM dd, yyyy');
                     const endDate = val.mode === "Present" ? "Present" : format(new Date(val.end_date), 'MMMM dd, yyyy');
                     return (
@@ -545,7 +530,7 @@ const Profile = () => {
 
 
 
-        </div>}
+        </div>
       {
         openmodal && (
 

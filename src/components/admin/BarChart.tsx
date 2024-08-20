@@ -1,5 +1,3 @@
-// BarChart.js
-import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -9,6 +7,8 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartOptions,
+  ChartData,
 } from 'chart.js';
 
 ChartJS.register(
@@ -20,7 +20,12 @@ ChartJS.register(
   Legend
 );
 
-const BarChart = ({ data, options }) => {
+interface BarChartProps {
+  data: ChartData<'bar'>;
+  options?: ChartOptions<'bar'>;
+}
+
+const BarChart: React.FC<BarChartProps> = ({ data, options }) => {
   return <Bar data={data} options={options} />;
 };
 

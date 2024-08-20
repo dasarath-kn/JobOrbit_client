@@ -15,7 +15,7 @@ const loginValidation = Yup.object({
  
   })
 
-  export const ProfileSchema = Yup.object({
+  export const ProfileSchema = Yup.object().shape({
     
     firstname: Yup.string().required('First name is required'),
     lastname: Yup.string().required('Last name is required'),

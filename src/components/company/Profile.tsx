@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import  { ChangeEvent, useEffect, useState } from 'react'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import { editProfile, getCompanydata, uploadDocument } from '../../Api/companyApi'
 import { Company } from '../../Interface/CompanyInterface'

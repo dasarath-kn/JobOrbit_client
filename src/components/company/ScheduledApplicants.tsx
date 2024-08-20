@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { schedulejobs } from '../../Api/companyApi'
 import jobShedule from '../../Interface/CompanyInterface'
-import toast, { Toaster } from 'react-hot-toast'
+import  { Toaster } from 'react-hot-toast'
 import { format } from 'date-fns'
 const ScheduledApplicants = () => {
     const location = useLocation()

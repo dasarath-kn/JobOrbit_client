@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { connectCompany, connections, connectUser, getCompanies, getUserdata, getUsers, inbox, manageConnection } from '../../Api/userApi'
-import { connection, notification, User } from '../../Interface/UserInterface'
+import {  connections, getCompanies, getUserdata, getUsers, inbox, manageConnection } from '../../Api/userApi'
+import {  notification, User } from '../../Interface/UserInterface'
 import { Company } from '../../Interface/CompanyInterface'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,7 +22,6 @@ const Connections = () => {
     const userDatas: User = useSelector((state: RootState) => state.user)
     const dispatch = useDispatch()
     const [updated, setUpdated] = useState<boolean>(false)
-    const [selectedCompany, setSelectedCompany] = useState<string>('')
     const [searchUser, setSearchUser] = useState<string>('')
     const [searchCompany, setSearchCompany] = useState<string>('')
     const [searchUserData, setSearchUserData] = useState<User[]>([])
@@ -112,23 +111,22 @@ const Connections = () => {
 
         }
     }
-    const handleCompany = async (id: string) => {
-        try {
-            setSelectedCompany(id)
-            const data = {
-                company_id: id
-            }
-            const response = await connectCompany(data as connection)
-            if (response?.data.success) {
-                setUpdated(!updated)
-                navigate('/inbox')
+    // const handleCompany = async (id: string) => {
+    //     try {
+    //         const data = {
+    //             company_id: id
+    //         }
+    //         const response = await connectCompany(data as connection)
+    //         if (response?.data.success) {
+    //             setUpdated(!updated)
+    //             navigate('/inbox')
 
-            }
-        } catch (error) {
-            console.error(error);
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
 
-        }
-    }
+    //     }
+    // }
     const handleInbox = async (id: string,role:string) => {
         try {
             navigate('/inbox')
@@ -182,7 +180,6 @@ const Connections = () => {
         <>
           <div className='min-h-screen flex justify-center mb-9 px-4'>
     <div className='flex flex-col w-full max-w-screen-xl'>
-        {/* Users Section */}
         <div className='flex flex-col mt-9'>
             <p className='text-2xl font-semibold text-center'>Users</p>
             <div className='w-full flex justify-center mt-5'>
@@ -205,7 +202,7 @@ const Connections = () => {
             <button onClick={() => setRequestModal(!requestModal)} className='mt-5 font-semibold'>Show Request</button>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-9 gap-x-6 gap-y-6 overflow-y-auto max-h-64'>
                 {userData && userData.length > 0 ? userData.map((val) => {
-                    const matchingConnections = userDatas.connections?.length > 0
+                    const matchingConnections = userDatas.connections && userDatas.connections?.length > 0
                         ? userDatas.connections.filter((values) => values.connection_id?._id === val._id)
                         : [];
 
@@ -227,7 +224,7 @@ const Connections = () => {
                             {matchingConnections.length > 0 ? (
                                 matchingConnections[0].status ? (
                                     <button
-                                        onClick={() => handleInbox(val._id,"user")}
+                                        onClick={() => handleInbox(val._id as string,"user")}
                                         className='bg-black text-white rounded-xl h-11 w-20'>
                                         Message
                                     </button>
@@ -236,7 +233,7 @@ const Connections = () => {
                                 )
                             ) : (
                                 <button
-                                    onClick={() => handleConnection(val._id)}
+                                    onClick={() => handleConnection(val._id as string)}
                                     className='bg-black text-white rounded-xl h-11 w-20'>
                                     Connect
                                 </button>
@@ -331,8 +328,8 @@ const Connections = () => {
                                                 <p className='text-gray-500 text-sm'>{formatDistanceToNow(new Date(val.date), { addSuffix: true })}</p>
                                             </div>
                                             <div className='flex items-center space-x-2'>
-                                                <MdVerified onClick={() => handleAccept(val._id, val.sender_id._id, "accept")} className='text-green-500 cursor-pointer' />
-                                                <IoMdCloseCircle onClick={() => handleAccept(val._id, val.sender_id._id, "reject")} className='text-red-500 cursor-pointer' />
+                                                <MdVerified onClick={() => handleAccept(val._id, val.sender_id._id as string, "accept")} className='text-green-500 cursor-pointer' />
+                                                <IoMdCloseCircle onClick={() => handleAccept(val._id, val.sender_id._id as string, "reject")} className='text-red-500 cursor-pointer' />
                                             </div>
                                         </div>
                                     ))}

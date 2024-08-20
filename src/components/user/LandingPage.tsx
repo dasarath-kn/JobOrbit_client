@@ -1,14 +1,6 @@
-import React from 'react';
-import { FaSearch, FaMapMarkerAlt, FaBookmark } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { FaSearch, FaMapMarkerAlt } from 'react-icons/fa';
 const LandingPage = () => {
-  var settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
+  
   return (
     <>
       <div id='main1' className='bg-black h-screen flex flex-col lg:flex-row justify-evenly p-8 '>

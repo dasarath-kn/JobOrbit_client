@@ -1,7 +1,6 @@
-import React, { Fragment } from 'react'
 import ContentLoader from 'react-content-loader'
 
-const Skelton = props => {
+const Skelton = (props:any) => {
 
 
   return (

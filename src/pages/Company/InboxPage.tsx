@@ -1,4 +1,3 @@
-import React from 'react'
 import NavBar from '../../components/company/NavBar'
 import Inbox from '../../components/company/Inbox'
 import Footer from '../../components/common/Footer'

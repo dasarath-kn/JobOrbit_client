@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getUserdata } from '../../Api/userApi';
 import { User } from '../../Interface/UserInterface';
@@ -9,7 +9,6 @@ import { RootState } from '../../Redux/Store';
 
 const Dashboard = () => {
   let [data, setData] = useState<User>()
-  let token = localStorage.getItem("Usertoken")
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const userDatas: User = useSelector((state: RootState) => state.user) 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import { Company } from '../../Interface/CompanyInterface'
 import { addreviews, getCompaniesById, getReviews } from '../../Api/userApi'

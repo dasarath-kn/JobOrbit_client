@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { jobdata } from '../../Interface/CompanyInterface';
 import { useLocation } from 'react-router-dom';
@@ -16,10 +16,10 @@ const JobDetails = () => {
  const {_id}=userDatas
  console.log(_id);
  
- interface Applicant {
-  _id: string;
-}
-const applicant: Applicant = { _id:_id };
+//  interface Applicant {
+//   _id: string;
+// }
+// const applicant: Applicant = { _id:_id };
  const [updated,setUpdated] =useState(false)
  const [limit,setLimit]=useState<Number>(0)
 
@@ -41,7 +41,8 @@ const applicant: Applicant = { _id:_id };
   const handleJobapply = async (job_id: string,company_id:string) => {
     try {
       if(userDatas.plan_id){
-        if(userDatas.jobapplied_Count <limit){
+        const jobAppliedCount = userDatas.jobapplied_Count ?? 0;
+        if(jobAppliedCount <limit){
       let response = await jobApply(job_id,company_id);
       if (response?.data?.success) {
         toast.success(response.data.message);
@@ -81,7 +82,7 @@ const applicant: Applicant = { _id:_id };
             <p>{job?.location}</p>
             <div className='flex justify-center md:justify-start'>
             
-             {job?.applicants_id?.includes(userDatas._id)?(<p className='text-xl font-semibold text-green-500'>Applied</p>):
+             {job?.applicants_id?.includes(userDatas._id as string)?(<p className='text-xl font-semibold text-green-500'>Applied</p>):
 
              (<button
                 onClick={() => job?._id && handleJobapply(job._id,job.company_id._id as string)}

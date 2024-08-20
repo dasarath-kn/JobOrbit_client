@@ -1,4 +1,3 @@
-import { string } from "yup"
 import { User } from "./UserInterface"
 
 export interface CompanyLogin{
@@ -32,9 +31,9 @@ export interface Company {
     website_url?:string,
     is_verified?:boolean,
     admin_verified?:boolean,
-    document_url:string,
-    percentage:number,
-    users:Users[]
+    document_url?:string,
+    percentage?:number|string,
+    users?:Users[]
 
 }
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { FaSearch } from 'react-icons/fa'
 import { IoIosLogOut } from 'react-icons/io'
 import { IoNotificationsSharp } from 'react-icons/io5'

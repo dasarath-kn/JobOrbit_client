@@ -2,7 +2,6 @@ import toast from "react-hot-toast";
 import axiosInstance from "../Config/AxiosInstance";
 import jobShedule, { Company, CompanyLogin, jobdata, post, replyData } from "../Interface/CompanyInterface";
 import GoogleAuth from "../Interface/GoogleauthToken";
-import { MdSchedule } from "react-icons/md";
 import handleTokenError from "./errorHandling";
 const token =localStorage.getItem('Companytoken')
 

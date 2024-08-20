@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import SideBar from './SideBar'
-import { postreport, User } from '../../Interface/UserInterface'
+import { postreport} from '../../Interface/UserInterface'
 import { getPostreportdata, removePost } from '../../Api/adminApi'
-import { FaRegHeart } from 'react-icons/fa'
-import { MdDelete } from 'react-icons/md'
-import { post } from '../../Interface/CompanyInterface'
-import { format, formatDistanceToNow } from 'date-fns'
+import { format } from 'date-fns'
 import toast, { Toaster } from 'react-hot-toast'
 
 const ReportedPost = () => {

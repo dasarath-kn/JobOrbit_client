@@ -305,7 +305,7 @@ const Inbox = () => {
                         )}
                       </div>
                      <button
-                        onClick={() => handleMessageSend(selectedUser._id,"message")}
+                        onClick={() => handleMessageSend(selectedUser._id as string,"message")}
                         className='ml-4 bg-black text-white p-2 rounded-lg'
                       >
                         Send

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Route,Routes } from 'react-router-dom'
 import UserManagement from '../pages/Admin/UserManagement'
 import DashboardPage from '../pages/Admin/DashboardPage'

@@ -1,4 +1,3 @@
-import React from 'react'
 import MainNav from '../../components/common/MainNav'
 import Footer from '../../components/common/Footer'
 import ViewCompanyProfile from '../../components/user/ViewCompanyProfile'

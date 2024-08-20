@@ -4,11 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { userLogin } from '../../Api/userApi';
 import loginValidation from '../../Validations/User/Loginvalidation'
-import { Toaster, toast } from 'react-hot-toast';
-import { User, UserLogin } from '../../Interface/UserInterface';
+import { Toaster } from 'react-hot-toast';
+import {  UserLogin } from '../../Interface/UserInterface';
 import { CompanyLogin } from '../../Interface/CompanyInterface';
 import { companyLogin } from '../../Api/companyApi';
-import { GoogleLogin } from '@react-oauth/google';
 import GoogleAuth from './GoogleAuth';
 
 

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
