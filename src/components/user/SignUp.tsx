@@ -47,8 +47,8 @@ const SignUp:React.FC = () => {
   return (
     <div className='flex flex-col  min-h-screen lg:justify-center items-center   p-11'>
       <div className=' flex flex-col mt-8 lg:mt-0  w-full h-auto lg:w-1/3 border shadow-xl p-8 '>
-      <span className="text-2xl font-extrabold mb-4">JobOrbit</span>
-        <span className='text-2xl font-semibold '>SignUp</span>
+      <img src="/Joborbit.png" className='w-40 ' alt="" />
+      <span className='text-2xl font-semibold mt-4 '>SignUp</span>
 
         <form onSubmit={handleSubmit}>
         <div className='flex  flex-col md:flex-row space-x-0 md:space-y-0 md:space-x-4 space-y-4 mt-6 '>

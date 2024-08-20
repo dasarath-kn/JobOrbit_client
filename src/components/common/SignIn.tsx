@@ -4,11 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { userLogin } from '../../Api/userApi';
 import loginValidation from '../../Validations/User/Loginvalidation'
-import { Toaster, toast } from 'react-hot-toast';
-import { User, UserLogin } from '../../Interface/UserInterface';
+import { Toaster } from 'react-hot-toast';
+import {  UserLogin } from '../../Interface/UserInterface';
 import { CompanyLogin } from '../../Interface/CompanyInterface';
 import { companyLogin } from '../../Api/companyApi';
-import { GoogleLogin } from '@react-oauth/google';
 import GoogleAuth from './GoogleAuth';
 
 
@@ -51,7 +50,7 @@ const SignIn: React.FC<props> = ({ role }) => {
             }
             else {
               localStorage.setItem("Usertoken", response.data.token)
-              navigate('/dashboard',)
+              navigate('/post',)
             }
           }
         }
@@ -77,11 +76,13 @@ const SignIn: React.FC<props> = ({ role }) => {
   })
 
   return (
-    <div className='flex flex-col  lg:flex-row justify-center  items-center min-h-screen p-4'>
+    <div className='flex flex-col  lg:flex-row justify-center  items-center min-h-screen  p-4'>
 
       <div className='mt-8 lg:mt-0 bg-white w-full md:w-1/2 lg:w-1/3 h-auto lg: border shadow-xl flex flex-col p-8'>
-        <span className="text-2xl font-extrabold mb-4">JobOrbit</span>
-        <span className='text-2xl font-semibold mb-4'>{`${role} Login`}</span>
+        {/* <span className="text-2xl font-extrabold mb-4">JobOrbit</span> */}
+
+        <img src="/Joborbit.png" className='w-40 ' alt="" />
+        <span className='text-2xl font-semibold mb-4 mt-4'>{`${role} Login`}</span>
         <div className='flex flex-col'>
           <form onSubmit={handleSubmit}>
             <label className='font-medium mb-2'>{field}:</label>
@@ -96,12 +97,12 @@ const SignIn: React.FC<props> = ({ role }) => {
                 {showpassword ? <FaEyeSlash className='text-black' /> : < FaEye className='text-black' />}
               </div>
             </div>
-            <span onClick={()=>role=="User"?navigate('/verify'):navigate('/company/verify')} className='font-normal self-end mb-4 text-right'>Forget Password?</span>
+            <span onClick={() => role == "User" ? navigate('/verify') : navigate('/company/verify')} className='font-normal self-end mb-4 text-right'>Forget Password?</span>
             <button className='bg-white border-2 font-medium w-full h-12  rounded-lg hover:bg-black hover:text-white' type='submit'>SignIn</button>
           </form>
           <span className=''>Don't Have an account? <a className='text-blue-500 hover:underline' onClick={() => { role == 'User' ? navigate('/signup') : navigate('/company/signup') }}>SignUp</a></span>
           <span className='text-center font-semibold'>Or</span>
-          <GoogleAuth role={role}/>
+          <GoogleAuth role={role} />
         </div>
 
       </div>

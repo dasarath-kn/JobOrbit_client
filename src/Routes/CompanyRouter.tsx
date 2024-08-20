@@ -1,4 +1,4 @@
-import React,{Suspense,lazy} from 'react'
+import {Suspense,lazy} from 'react'
 import { Routes,Route } from 'react-router-dom'
 const Homepage =lazy(()=> import( '../pages/user/LandingPage'));
 const SignIn = lazy(()=> import( '../components/common/SignIn'));
@@ -9,7 +9,13 @@ const ProfilePage =lazy(()=> import('../pages/Company/ProfilePage'));
 import CompanyLoginAuth from '../Authentication/User/Company/CompanyLoginAuth';
 import CompanyLogoutAuth from '../Authentication/User/Company/CompanyLogoutAuth';
 import ResetPassword from '../components/common/ResetPassword';
-import Emailverify from '../components/common/Emailverify';
+import JobApplicantPage from '../pages/Company/JobApplicantPage';
+import InboxPage from '../pages/Company/InboxPage';
+import ViewUsersprofilepage from '../pages/Company/ViewUsersprofilepage';
+import ScheduledJobPage from '../pages/Company/ScheduledJobPage';
+import JobdetailsPage from '../pages/Company/JobdetailsPage';
+const Emailverify =lazy(()=> import('../components/common/Emailverify'));
+const Post =lazy(()=> import('../pages/Company/PostPage'));
 const JobPage =lazy(()=> import( '../pages/Company/JobPage'));
 const CompanyRouter = () => {
   return (
@@ -29,6 +35,12 @@ const CompanyRouter = () => {
 
         <Route path='/profile' element={<ProfilePage/>}/>
         <Route path='/job' element={<JobPage/>}/>
+        <Route path='/post' element={<Post/>}/>
+        <Route path='/applicants' element={<JobApplicantPage/>}/>
+        <Route path='/inbox' element={<InboxPage/>}/>
+        <Route path='/applicantprofile' element={<ViewUsersprofilepage/>}/>
+        <Route path='/scheduled' element={<ScheduledJobPage/>}/>
+        <Route path='/jobdetails' element={<JobdetailsPage/>}/>
         </Route>
     </Routes>
     </Suspense>

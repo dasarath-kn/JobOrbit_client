@@ -8,9 +8,7 @@ import { verifyCompany } from '../../Api/companyApi'
 interface props{
     role:string
 }
-interface VerifyData {
-  email: string;
-}
+
 const Emailverify:React.FC<props> = ({role}) => {
     const navigate = useNavigate()
     const {handleChange,handleBlur,handleSubmit,touched,errors} =useFormik({

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import loginValidation from '../../Validations/User/Loginvalidation'
 import { useNavigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
@@ -23,7 +23,7 @@ const Login = () => {
               let response = await adminLogin(Data as AdminLogin)
               if(response?.data){
                 localStorage.setItem("Admintoken",response.data.token)
-                navigate('/admin/usermanagement')              
+                navigate('/admin/dashboard')              
               }
               } catch (error) {
                 console.log(error);

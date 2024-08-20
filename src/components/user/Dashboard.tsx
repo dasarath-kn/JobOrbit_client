@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getUserdata } from '../../Api/userApi';
 import { User } from '../../Interface/UserInterface';
@@ -9,7 +9,6 @@ import { RootState } from '../../Redux/Store';
 
 const Dashboard = () => {
   let [data, setData] = useState<User>()
-  let token = localStorage.getItem("Usertoken")
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const userDatas: User = useSelector((state: RootState) => state.user) 
@@ -28,7 +27,6 @@ const Dashboard = () => {
       }
     }
     userData()
-    console.log("hello");
     
   }, [dispatch])
   useEffect(() => {
@@ -55,6 +53,9 @@ const Dashboard = () => {
           <li className='font-semibold text-2xl' >{data?.firstname}</li>
           <li className='text-gray-500'>
             <button onClick={()=>navigate('/profile')} >View Profile</button>
+          </li>
+          <li className='text-gray-500'>
+            <button onClick={()=>navigate('/viewplan')} >View Plan</button>
           </li>
           <li className='text-gray-500 text-center'>
             <button onClick={handleLogout}>Logout</button>

@@ -1,5 +1,3 @@
-import React from 'react'
-import NavBar from '../../components/company/NavBar'
 import Footer from '../../components/common/Footer'
 import Jobs from '../../components/user/Jobs'
 import MainNav from '../../components/common/MainNav'

@@ -14,6 +14,7 @@ export default {
     default:'#0000'
   },
   plugins: [
+    require('tailwind-scrollbar'),
     
 
   ],

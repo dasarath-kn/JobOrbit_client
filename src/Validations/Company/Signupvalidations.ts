@@ -30,6 +30,7 @@ const nameRegex = /^[A-Za-z][A-Za-z ]*$/;
     city: '',
     address: '',
     about: '',
-    confirmpassword:''
+    confirmpassword:'',
+    percentage:''
   };
   

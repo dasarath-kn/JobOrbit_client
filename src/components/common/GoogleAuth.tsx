@@ -25,7 +25,7 @@ const GoogleAuth: React.FC<props> = ({ role }) => {
 
 
                     localStorage.setItem("Usertoken", token)
-                    navigate("/dashboard")
+                    navigate("/post")
                 }
             } else {
                     let Response = await companyGooglesignup(data)

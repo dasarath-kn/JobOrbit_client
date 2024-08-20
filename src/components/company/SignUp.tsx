@@ -1,12 +1,11 @@
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Company } from '../../Interface/CompanyInterface';
 import { companyInitialValues, companyValidationSchema } from '../../Validations/Company/Signupvalidations';
 import { companySignup } from '../../Api/companyApi';
 import { Toaster, toast } from 'react-hot-toast';
-import { date } from 'yup';
 import GoogleAuth from '../common/GoogleAuth';
 
 const SignUp:React.FC = () => {
@@ -53,6 +52,8 @@ const SignUp:React.FC = () => {
   return (
     <div className='flex flex-col  min-h-screen lg:justify-center items-center   p-11'>
       <div className=' mt-8 lg:mt-0  w-full h-auto lg:w-1/3 border shadow-xl p-8 '>
+        <img src="/Joborbit.png" className='w-40 mb-4 ' alt="" />
+
         <span className='text-2xl font-semibold mb-8'>SignUp</span>
 
         <form onSubmit={handleSubmit}>
@@ -78,11 +79,31 @@ const SignUp:React.FC = () => {
 
           </div>
           <div className='flex flex-col md:w-1/2'>
-            <label className='font-medium mb-2 '>Industry:</label>
-            <input name="industry" type="text" value={values.industry} onChange={handleChange} onBlur={handleBlur} className='border-2  border-gray-700/70 w-full h-12 rounded-xl p-3 text-black' placeholder="Enter industry" />
-            {errors.industry && touched.industry && <p className='text-sm text-red-500'>{errors.industry}</p>}
+  <label className='font-medium mb-2'>Industry:</label>
+  <div className="relative">
+    <select
+      name="industry"
+      value={values.industry}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      className='border-2 border-gray-700/70 w-full h-12 rounded-xl p-3 text-black'
+    >
+      <option value="">Select an industry</option>
+      <option value="IT">IT</option>
+      <option value="Finance">Finance</option>
+      <option value="Healthcare">Healthcare</option>
+      <option value="Education">Education</option>
+      {/* Add more options as needed */}
+    </select>
+    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </div>
+  </div>
+  {errors.industry && touched.industry && <p className='text-sm text-red-500'>{errors.industry}</p>}
+</div>
 
-          </div>
 
         </div>
         <div className='flex  flex-col md:flex-row space-x-0 md:space-y-0 md:space-x-4 space-y-4 mt-6 '>
