@@ -17,7 +17,7 @@ const Otp:React.FC<Props> = ({role}) => {
   const {mes}=location.state||{}
   
   useEffect(()=>{
-    let timer:number
+    let timer:NodeJS.Timeout | number
     if(count>0){
      timer =setTimeout(()=>{
       setCount(count-1)
