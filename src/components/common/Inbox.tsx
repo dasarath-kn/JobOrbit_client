@@ -23,8 +23,8 @@ const Inbox = () => {
   const [details, setDetails] = useState<boolean>(false)
   const dispatch = useDispatch()
   const [userConversation, setUserConverstaion] = useState<conversationData[]>([])
-  const [searchConversation, setsearchConversation] = useState<conversationData[]>([])
   const [role, setRole] = useState<string>('user')
+  const [searchConversation, setsearchConversation] = useState<conversationData[]>([])
   const handleSelectedUser = (data: User | Company) => {
     setMessages([]);
     setSelectedUser(data);

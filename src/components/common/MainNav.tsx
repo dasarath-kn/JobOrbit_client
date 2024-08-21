@@ -1,13 +1,13 @@
 import  { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoIosNotificationsOutline, IoMdCloseCircle } from "react-icons/io";
-import { notification, User } from '../../Interface/UserInterface';
+import { conversationData, notification, User } from '../../Interface/UserInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Redux/Store';
 import { logoutUser, setUserdetails } from '../../Redux/UserSlice';
 import { MdVerified } from 'react-icons/md';
 import socket from '../../Config/Socket';
-import { connections, getUserdata, manageConnection } from '../../Api/userApi';
+import { connections, conversation, getUserdata, manageConnection } from '../../Api/userApi';
 import { formatDistanceToNow } from 'date-fns';
 import { FaCrown } from 'react-icons/fa';
 
@@ -16,7 +16,7 @@ const MainNav = () => {
   const [menu, setMenu] = useState<boolean>(false);
   const [notification, setNotification] = useState<boolean>(false)
   const [notificationData, setNotificationData] = useState<notification[]>()
-  const [notificationMessage, setNotificationMessage] = useState<notification[]>([])
+  const [userConversation, setUserConverstaion] = useState<conversationData[]>([])
   const dispatch = useDispatch()
 
   const userDatas: User = useSelector((state: RootState) => state.user);
@@ -58,20 +58,7 @@ const MainNav = () => {
 
     return () => clearTimeout(timer);
   }, [notificationData]);
-  useEffect(() => {
-    const connection = async () => {
-      try {
-        const response = await connections()
-        if (response?.data.success) {
-          setNotificationMessage(response.data.connectRequests)
-        }
-      } catch (error) {
-        console.error(error);
-
-      }
-    }
-    connection()
-  }, [notificationData, notification])
+ 
   useEffect(() => {
     const userData = async () => {
       try {
@@ -89,18 +76,22 @@ const MainNav = () => {
     userData()
 
   }, [dispatch])
-  const handleConnection = async (notification_id: string, connection_id: string, message: string) => {
-    try {
-      const connectionData = { connection_id: connection_id, notification_id: notification_id, message: message }
-      const response = await manageConnection(connectionData)
-      if (response?.data.success) {
-        setNotification(true)
-      }
-    } catch (error) {
-      console.error(error);
 
+  useEffect(() => {
+    const conversationData = async () => {
+      try {
+        let response = await conversation("user")
+        if (response?.data.success) {
+          setUserConverstaion(response.data.conversationData)
+
+        }
+      } catch (error) {
+        console.error(error);
+
+      }
     }
-  }
+    conversationData()
+  }, [])  
   return (
     <nav className="bg-black">
       <div className="w-full flex flex-wrap  justify-evenly items-center  p-8">
@@ -206,33 +197,36 @@ const MainNav = () => {
             <li>
               <IoIosNotificationsOutline onClick={() => setNotification(!notification)} className="text-white w-11 h-8  rounded-full" />
               {notification && (
-                <div className="absolute right-80  w-96 min-h-20 max-h-40 overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 z-50 bg-white/80 border border-gray-200 rounded-lg dark:text-white mt-11">
+                <div className="absolute right-80  w-80 min-h-20 max-h-40 overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 z-50 bg-white/80 border border-gray-200 rounded-lg dark:text-white mt-11">
                   <div className='m-4 h-full'>
-                    <p className='text-gray-500 pb-4'>Connection Request</p>
+                    <p className='text-gray-500 pb-4'>Online People</p>
                     <div className='flex flex-col space-y-4 h-full'>
-                      {notificationMessage && notificationMessage.length > 0 ? (
-                        notificationMessage.map((val, index) => (
-                          <div key={index} className='h-full'>
+                      {userConversation && userConversation.length > 0 ? (
+                        userConversation.map((val, index) => (
+                         val.reciever_id.online && (<>
+                         <div key={index} className='h-full'>
                             <ul className='font-medium text-xl text-black flex flex-row items-center justify-evenly space-x-4'>
                               <li>
-                                {!val.sender_id.img_url ? (
+                                {!val.reciever_id.img_url ? (
                                   <img src="/user06.png" className='w-9 h-9 rounded-full' alt="User" />
                                 ) : (
-                                  <img src={val.sender_id.img_url} className='w-9 h-9 rounded-full' alt="User" />
+                                  <img src={val.reciever_id.img_url} className='w-9 h-9 rounded-full' alt="User" />
                                 )}
                               </li>
                               <li className='flex-1'>
-                                {val.sender_id.firstname}
+                               <p> {val.reciever_id.firstname}</p>
+                               <p className='font-extralight text-sm text-green-500'> Online</p>
                               </li>
+                             
                               <li className='flex flex-row justify-center items-center space-x-2'>
-                                <MdVerified onClick={() => handleConnection(val._id, val.sender_id._id as string, "accept")} className='text-green-500' />
-                                <IoMdCloseCircle onClick={() => handleConnection(val._id, val.sender_id._id as string, "reject")} className='text-red-500' />
+                               <button onClick={()=>navigate('/inbox')} className='font-normal text-sm bg-black text-white w-20 h-9 rounded-xl'>Message</button>
                               </li>
-                              <li className='font-light text-sm'>
+                              {/* <li className='font-light text-sm'>
                                 {formatDistanceToNow(new Date(val.date), { addSuffix: true })}
-                              </li>
+                              </li> */}
                             </ul>
                           </div>
+                          </>)
 
                         ))
                       ) : (
@@ -255,7 +249,7 @@ const MainNav = () => {
         {notificationData && notificationData.length > 0 && (
           <div className="absolute right-40 w-80 h-auto mt-20 bg-green-200 scrollbar-thumb-gray-300 scrollbar-track-gray-100 z-50  border border-gray-200 rounded-lg dark:text-white ">
             <div className='m-4 text-black'>
-              <p className='text-gray-500 pb-4 text-center'> New Connection Request</p>
+              <p className='text-gray-500 pb-4 text-center'>New Connection Request</p>
               {notificationData.map((val) => {
                 return (<> <div className='w-full h-full flex flex-row space-x-7 justify-center items-center '>
                   {val.sender_id.img_url ? <img src={val.sender_id.img_url} className='w-9 h-9 rounded-full' alt="" />
