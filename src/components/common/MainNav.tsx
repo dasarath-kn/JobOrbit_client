@@ -1,14 +1,12 @@
 import  { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IoIosNotificationsOutline, IoMdCloseCircle } from "react-icons/io";
+import { IoIosNotificationsOutline } from "react-icons/io";
 import { conversationData, notification, User } from '../../Interface/UserInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Redux/Store';
 import { logoutUser, setUserdetails } from '../../Redux/UserSlice';
-import { MdVerified } from 'react-icons/md';
 import socket from '../../Config/Socket';
-import { connections, conversation, getUserdata, manageConnection } from '../../Api/userApi';
-import { formatDistanceToNow } from 'date-fns';
+import {  conversation, getUserdata } from '../../Api/userApi';
 import { FaCrown } from 'react-icons/fa';
 
 const MainNav = () => {
