@@ -38,7 +38,6 @@ const ViewCompanyProfile = () => {
       try {
         const response = await getReviews(id)
         if (response?.data.success) {
-          console.log(response?.data, "ddd");
 
           setReviewData(response.data.reviews.review)
           setCount(response.data.reviews.counts)

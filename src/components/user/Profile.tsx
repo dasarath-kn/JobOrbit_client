@@ -288,8 +288,6 @@ const Profile = () => {
           setResume(undefined)
 
           if (fileInputRef.current) {
-            console.log(fileInputRef.current.value);
-
             fileInputRef.current.value = '';
 
           }
@@ -313,7 +311,7 @@ const Profile = () => {
               {data?.img_url ? (
                 <img src={data?.img_url} className='lg:ml-4 sm:ml-0 mt-4 rounded-3xl ' alt="Default Image" />
               ) : (<>
-                <img src='../public/imgadd.jpg' className='lg:ml-4 sm:ml-0 mt-4 items-center' alt="User Image" />
+                <img src='/user06.png' className='lg:ml-4 sm:ml-0 mt-4 items-center' alt="User Image" />
                 {/* <p className='text-red-500 font-medium pl-8'>Add image and increase 15% profile percentage</p> */}
               </>
               )}
@@ -445,7 +443,7 @@ const Profile = () => {
 
                     <div>
                       <button
-                        type='button' // Ensure button type is 'button' to prevent form submission
+                        type='button' 
                         onClick={(e) => submitSkills(e as any)}
                         className='disabled bg-black text-white w-16 h-9'
                       >

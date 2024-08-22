@@ -13,8 +13,7 @@ const JobDetails = () => {
   const location = useLocation();
   const { job_id } = location.state;
  const userDatas: User = useSelector((state: RootState) => state.user);
- const {_id}=userDatas
- console.log(_id);
+
  
 //  interface Applicant {
 //   _id: string;

@@ -97,10 +97,10 @@ const SignIn: React.FC<props> = ({ role }) => {
                 {showpassword ? <FaEyeSlash className='text-black' /> : < FaEye className='text-black' />}
               </div>
             </div>
-            <span onClick={() => role == "User" ? navigate('/verify') : navigate('/company/verify')} className='font-normal self-end mb-4 text-right'>Forget Password?</span>
-            <button className='bg-white border-2 font-medium w-full h-12  rounded-lg hover:bg-black hover:text-white' type='submit'>SignIn</button>
+            <span onClick={() => role == "User" ? navigate('/verify') : navigate('/company/verify')} className='font-normal self-end mb-4 text-right cursor-pointer'>Forget Password?</span>
+            <button className='bg-white border-2 font-medium w-full h-12  rounded-lg hover:bg-black hover:text-white ' type='submit'>SignIn</button>
           </form>
-          <span className=''>Don't Have an account? <a className='text-blue-500 hover:underline' onClick={() => { role == 'User' ? navigate('/signup') : navigate('/company/signup') }}>SignUp</a></span>
+          <span className=''>Don't Have an account? <a className='text-blue-500 hover:underline cursor-pointer' onClick={() => { role == 'User' ? navigate('/signup') : navigate('/company/signup') }}>SignUp</a></span>
           <span className='text-center font-semibold'>Or</span>
           <GoogleAuth role={role} />
         </div>

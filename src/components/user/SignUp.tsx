@@ -36,7 +36,7 @@ const SignUp:React.FC = () => {
         }
           
         } catch (error) {
-          console.log(error);
+          console.error(error);
           
         }
       }
@@ -88,7 +88,8 @@ const SignUp:React.FC = () => {
               {errors.password && touched.password && <p className='text-sm text-red-500'>{errors.password}</p>}
 
               <div className='absolute right-3 top-3' onClick={passwordvisibility}>
-                {showpassword ? <FaEyeSlash className='text-white' /> : <FaEye className='text-white' />}
+                {showpassword ? <FaEyeSlash className='text-black' /> : <FaEye className='text-black' />}
+
               </div>
             </div>
           </div>
@@ -99,7 +100,7 @@ const SignUp:React.FC = () => {
               {errors.confirmpassword && touched.confirmpassword && <p className='text-sm text-red-500'>{errors.confirmpassword}</p>}
 
               <div className='absolute right-3 top-3' onClick={confirmpasswordvisibility}>
-                {confirmpassword ? <FaEyeSlash className='text-white' /> : <FaEye className='text-white' />}
+                {confirmpassword ? <FaEyeSlash className='text-black' /> : <FaEye className='text-black' />}
               </div>
             </div>
           </div>
@@ -128,7 +129,7 @@ const SignUp:React.FC = () => {
 
         </div>
         </form>
-        <span className=''>Already Have an account? <a className='text-blue-500 hover:underline' onClick={() => {  navigate('/signin')  }}>SignIn</a></span>
+        <span className=''>Already Have an account? <a className='text-blue-500 hover:underline cursor-pointer' onClick={() => {  navigate('/signin')  }}>SignIn</a></span>
         <div className='flex justify-center'>
 
           <span className='content mt-4'>Or</span>

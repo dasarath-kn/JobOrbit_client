@@ -32,7 +32,6 @@ const Job = () => {
 
         if (response?.data.success) {
           setOpenmodal(!openmodal)
-          console.log(response.data.message);
           toast.success(response.data.message)
           resetForm();
         }
@@ -82,8 +81,6 @@ const Job = () => {
 
   const handlePage = (mes: string) => {
     if (mes == "next") {
-      console.log(pagecount, 'pagecount');
-
       if (page < pagecount - 1) {
         setPage(page + 1)
       }
@@ -157,7 +154,7 @@ const Job = () => {
             }
           </div>
         </div>
-        <div className="flex flex-col items-center mt-24">
+      {jobdata && jobdata.length>0 &&  <div className="flex flex-col items-center mt-24">
           <span className="text-sm text-gray-700 dark:text-gray-400">
             Showing <span className="font-semibold text-gray-900 ">{page + 1}</span> of <span className="font-semibold text-gray-900">{pagecount}</span> Entries
           </span>
@@ -169,7 +166,7 @@ const Job = () => {
               Next
             </button>
           </div>
-        </div>
+        </div>}
 
 
 

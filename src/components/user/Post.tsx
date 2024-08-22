@@ -36,8 +36,6 @@ const Post = () => {
       try {
         let response = await getUserdata()
         if (response?.data.success) {
-          console.log(response.data);
-
           dispatch(setUserdetails(response?.data.userData))
         }
 
@@ -66,7 +64,6 @@ const Post = () => {
       try {
         let response = await getSavedpost()
         if (response?.data) {
-          console.log(response.data);
           setSaved(response.data.savedPosts)
           setSavedPostData(response.data.savedPosts.map((val: any) => ({ ...val.post_id, currentIndex: 0 })))
 
@@ -83,10 +80,6 @@ const Post = () => {
 
   }, [like, updated])
 
-  console.log(postdata, 'ppp');
-
-  console.log(savedPostData, "ss");
-
   const goToSlide = (postId: string, index: number) => {
     setPostdata(prevData =>
       prevData.map(post =>
@@ -102,8 +95,6 @@ const Post = () => {
     );
   };
   const handleLike = async (id: string, status: string) => {
-    console.log(id);
-
     let token = localStorage.getItem('Usertoken')
     let response = await likeunlike(id, status, token as string)
     if (response?.data.success) {

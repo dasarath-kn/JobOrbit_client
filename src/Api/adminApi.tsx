@@ -8,7 +8,6 @@ export const adminLogin = async(adminData:AdminLogin)=>{
             let response = await axiosInstance.post('/admin/login',adminData)
             return response            
         } catch (error:any) {
-            console.log(error.response.data.message);
             toast.error(error.response.data.message)
             
         }
@@ -27,7 +26,6 @@ export const getCompanies =async(page:number)=> {
     try {
         
         let response = await axiosInstance.get(`/admin/companydata?page=${page}`,{headers:{"Authorization":token}})
-       console.log(response.data);
        
         return response
     } catch (error: any) {

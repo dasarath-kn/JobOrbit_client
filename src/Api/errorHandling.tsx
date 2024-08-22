@@ -1,5 +1,4 @@
 const handleTokenError = (error:any, mode:string) => {
-    console.log("Handling token error...");
 
     if (mode === "User") {
         if (error.response && (error.response.data.message === 'Token has expired' || error.response.data.message === 'Invalid token'||error.response.status === 401)) {

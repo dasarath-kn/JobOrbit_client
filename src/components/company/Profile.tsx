@@ -27,7 +27,6 @@ const Profile = () => {
       try {
         let response = await getCompanydata()
         if (response?.data.success) {
-          console.log(response?.data.companydata,"dsd");
           if(!response?.data.companydata.document_url){           
             setShowModal(true)
           }
@@ -52,8 +51,6 @@ const Profile = () => {
       try {
         const response = await getReviews()
         if (response?.data.success) {
-          console.log(response?.data, "ddd");
-
           setReviewData(response.data.reviews.review)
           setCount(response.data.reviews.counts)
 
@@ -65,7 +62,7 @@ const Profile = () => {
       }
     }
     reviews()
-  },[])
+  },[companyDatas])
   // useEffect(()=>{
   //   if(!data?.document_url){
   //     console.log(data?.document_url,"ddd");
@@ -147,7 +144,7 @@ const Profile = () => {
           {data?.img_url ? (
               <img src={data?.img_url} className='ml-4 mt-4' alt="Default Image" />
             ) : (
-              <img src='../public/imgadd.jpg' className='ml-4 mt-4 items-center' alt="User Image" />
+              <img src='/imgadd.jpg' className='ml-4 mt-4 items-center' alt="User Image" />
             )}          </div>
           <div className='border-7 ml-28 '>
             <ul className='space-y-6 '>

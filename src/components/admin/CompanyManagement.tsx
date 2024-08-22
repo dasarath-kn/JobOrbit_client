@@ -29,17 +29,14 @@ const CompanyManagement = () => {
         }
         companyData()
     }, [block, page, updated])
-    console.log(pagecount, "ppp");
 
     const handlemodal = (val: Company) => {
         setShowmodal(!showmodal)
         setSelectedcompany(val)
     }
     const BlockUnblock = async (company_id: string, status: string) => {
-        console.log(company_id, status);
 
         let response = await companyBlockUnblock(company_id, status)
-        console.log(response?.data);
         setUpdated(!updated)
 
         toast.success(response?.data.message)
@@ -71,8 +68,6 @@ const CompanyManagement = () => {
     }
     const handlePage = (mes: string) => {
         if (mes == "next") {
-            console.log(page);
-            console.log(pagecount, 'pagecount');
 
             if (page < pagecount - 1) {
                 setPage(page + 1)

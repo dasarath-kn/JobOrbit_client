@@ -49,7 +49,6 @@ const Otp:React.FC<Props> = ({role}) => {
       }else{
         let response = await userverifyOtp(Data.otp)
         
-        console.log(response);
         if(response?.data){
           
           if(mes =="Resetpassword"){
@@ -63,7 +62,7 @@ const Otp:React.FC<Props> = ({role}) => {
         }
       }        
       } catch (error) {
-        console.log(error);
+        console.error(error);
         
       }
     }

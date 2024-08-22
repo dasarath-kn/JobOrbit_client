@@ -33,11 +33,9 @@ const MainNav = () => {
     navigate('/')
   }
   useEffect(() => {
-    console.log("hello");
 
     socket.on('notification', ({ data }) => { 
       if (data[0].reciever_id == userDatas._id) {
-        console.log(data);
         setNotificationData(data)
 
 

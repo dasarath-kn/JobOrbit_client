@@ -64,14 +64,11 @@ const UserManagement: React.FC = () => {
     const handlePagination = (index: number) => {
 
         setPage(index)
-        console.log(page);
         
 
     }
     const handlePage = (mes: string) => {
         if (mes == "next") {
-            console.log(page);
-            console.log(pagecount, 'pagecount');
 
             if (page < pagecount - 1) {
                 setPage(page + 1)

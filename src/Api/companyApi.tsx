@@ -8,11 +8,9 @@ const token =localStorage.getItem('Companytoken')
 export const companyLogin = async (companyData: CompanyLogin) => {
     try {
         let response = await axiosInstance.post('/company/login', companyData)
-        console.log(response.data);
 
         return response
     } catch (error: any) {
-        console.log(error.response.data.message);
         toast.error(error.response.data.message)
 
     }
@@ -21,12 +19,10 @@ export const companyLogin = async (companyData: CompanyLogin) => {
 export const companySignup = async (companyData: Company) => {
     try {
         let response = await axiosInstance.post('/company/signup', companyData)
-        console.log(response.data);
         return response
 
 
     } catch (error: any) {
-        console.log(error.response.data.message);
         toast.error(error.response.data.message)
 
     }
@@ -252,9 +248,7 @@ export const posts =async(token:string)=>{
         }
     }
         export const getComments = async (post_id: String) => {
-            try {
-                console.log(post_id);
-                
+            try {                
                 let response = await axiosInstance.get(`/company/getcomment?post_id=${post_id}`, { headers: { "Authorization": token} })
                 return response
             } catch (error: any) {

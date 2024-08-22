@@ -44,9 +44,7 @@ const SubscriptionPlans = () => {
     const handleSubscription =async(_id:string,month:number)=>{
       try {
       
-        const public_key = import.meta.env.VITE_STRIPE_PUBLISHED_KEY
-        console.log(public_key);
-        
+        const public_key = import.meta.env.VITE_STRIPE_PUBLISHED_KEY        
         const stripe = await loadStripe(public_key)
         
         const sessionResponse = await subscriptionPayment(_id,month)        

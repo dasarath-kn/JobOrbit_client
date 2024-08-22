@@ -71,8 +71,6 @@ const Inbox = () => {
       const data = userConversation.filter((val) => {
         return val.reciever_id.firstname?.toLowerCase().startsWith(search.toLowerCase())
       })
-      console.log(data);
-
       setUserConverstaion(data)
     }
     searchUser()
@@ -147,10 +145,8 @@ const Inbox = () => {
     const fetchMessages = async () => {
       try {
         const response = await getmessages(selectedUser?._id as string);
-        console.log(selectedUser?._id);
 
         if (response?.data.messages) {
-          console.log(response.data.messages);
 
           const combinedMessages = [
             ...response.data.messages.sender.map((msg: any) => ({

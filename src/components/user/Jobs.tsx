@@ -74,7 +74,6 @@ const Jobs = () => {
   }
   const handlePage = (mes: string) => {
     if (mes == "next") {
-      console.log(pagecount, 'pagecount');
 
       if (page < pagecount - 1) {
         setPage(page + 1)

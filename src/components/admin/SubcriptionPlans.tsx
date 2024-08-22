@@ -23,7 +23,6 @@ const [updated,setUpdated] =useState<boolean>(false)
     onSubmit: async (data,{resetForm}) => {
       let response = await subscriptions(data as subscription);
       if (response?.data.success) {
-        console.log(response.data.success);
         setUpdated(!updated)
         setOpenModal(!openModal)
         resetForm();
