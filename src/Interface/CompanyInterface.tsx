@@ -7,7 +7,7 @@ export interface CompanyLogin{
      
 }
 export interface Users{
-  user_id:string
+  user_id:User
 }
 
 export  interface replyData {

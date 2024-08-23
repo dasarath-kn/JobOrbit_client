@@ -316,7 +316,7 @@ const Jobs = () => {
             })) : (<>
               <div className="flex  min-h-screen  mt-11">
                 <div className="w-full  h-40   flex  justify-center   ">
-                  <p className="text-black font-semibold text-2xl text-center mt-4">No Posts Found</p>
+                  <p className="text-black font-semibold text-2xl text-center mt-4">No Jobs Found</p>
                 </div>
               </div>
             </>)}

@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { IoIosNotificationsOutline, IoMdCloseCircle } from "react-icons/io";
+import { IoIosNotificationsOutline } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutCompany } from '../../Redux/CompanySlice';
 import { RootState } from '../../Redux/Store';
-import { MdVerified } from 'react-icons/md';
 
 
 const NavBar = () => {
@@ -27,6 +26,7 @@ const NavBar = () => {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+  
   return (
     <>
       <nav className="bg-black">
@@ -85,106 +85,46 @@ const NavBar = () => {
                 {notification && (
                   <div className="absolute right-80 w-96 min-h-20 max-h-40 overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 z-50 bg-white/80 border border-gray-200 rounded-lg dark:text-white mt-2">
                     <div className='m-4'>
-                      <p className='text-gray-500 pb-4'>Connection Request</p>
-                      <div className='flex flex-col space-y-4'>
-                        <div className=''>
-                          <ul className='font-medium text-xl text-black  flex flex-row justify-evenly'>
-                            <li>
-                              <img src="/user06.png" className='w-9 h-9' alt="" />
-                            </li>
-                            <li>Dasarath</li>
+                      <p className='text-gray-500 pb-4'>Online People</p>
+                      <div className='flex flex-col space-y-4 h-full'>
+                      {companyData.users && companyData.users.length > 0 ? (
+                        companyData.users.map((val, index) => (
+                         val.user_id.online && (<>
+                         <div key={index} className='h-full'>
+                            <ul className='font-medium text-xl text-black flex flex-row items-center justify-evenly space-x-4'>
+                              <li>
+                                {!val.user_id.img_url ? (
+                                  <img src="/user06.png" className='w-9 h-9 rounded-full' alt="User" />
+                                ) : (
+                                  <img src={val.user_id.img_url} className='w-9 h-9 rounded-full' alt="User" />
+                                )}
+                              </li>
+                              <li className='flex-1'>
+                               <p> {val.user_id.firstname}</p>
+                               <p className='font-extralight text-sm text-green-500'> Online</p>
+                              </li>
+                             
+                              <li className='flex flex-row justify-center items-center space-x-2'>
+                               <button onClick={()=>navigate('/company/inbox')} className='font-normal text-sm bg-black text-white w-20 h-9 rounded-xl'>Message</button>
+                              </li>
+                            </ul>
+                          </div>
+                          </>)
 
-                            <li className='flex flex-row justify-center items-center space-x-4'> <MdVerified className='text-green-500' />
-                              <IoMdCloseCircle className='text-red-500' /></li>
-                          </ul>
+                        ))
+                      ) : (
+                        <div className='text-black '>
+                          <p className='text-center font-medium'>Connection Requests not found</p>
                         </div>
-                        <div className=''>
-                          <ul className='font-medium text-xl text-black  flex flex-row justify-evenly'>
-                            <li>
-                              <img src="/user06.png" className='w-9 h-9' alt="" />
-                            </li>
-                            <li>Dasarath</li>
+                      )}
 
-                            <li className='flex flex-row justify-center items-center space-x-4'> <MdVerified className='text-green-500' />
-                              <IoMdCloseCircle className='text-red-500' /></li>
-                          </ul>
-                        </div>
-                        <div className=''>
-                          <ul className='font-medium text-xl text-black  flex flex-row justify-evenly'>
-                            <li>
-                              <img src="/user06.png" className='w-9 h-9' alt="" />
-                            </li>
-                            <li>Dasarath</li>
 
-                            <li className='flex flex-row justify-center items-center space-x-4'> <MdVerified className='text-green-500' />
-                              <IoMdCloseCircle className='text-red-500' /></li>
-                          </ul>
-                        </div>
-                        <div className=''>
-                          <ul className='font-medium text-xl text-black  flex flex-row justify-evenly'>
-                            <li>
-                              <img src="/user06.png" className='w-9 h-9' alt="" />
-                            </li>
-                            <li>Dasarath</li>
 
-                            <li className='flex flex-row justify-center items-center space-x-4'> <MdVerified className='text-green-500' />
-                              <IoMdCloseCircle className='text-red-500' /></li>
-                          </ul>
-                        </div>
 
-                      </div>
                     </div>
-                    <div className='m-4'>
-                      <p className='text-gray-500 pb-4'>Interview  Scheduled</p>
-                      <div className='flex flex-col space-y-4'>
-                        <div className=''>
-                          <ul className='font-medium text-xl text-black  flex flex-row justify-evenly'>
-                            <li>
-                              <img src="/user06.png" className='w-9 h-9' alt="" />
-                            </li>
 
-                            <li>
-                              <p>Codex technologies</p>
-                              <p className='text-gray-500 font-normal text-sm break-words'>Interview scheduled for</p>
-                            </li>
-
-
-                          </ul>
-                        </div>
-                        <div className=''>
-                          <ul className='font-medium text-xl text-black  flex flex-row justify-evenly'>
-                            <li>
-                              <img src="/user06.png" className='w-9 h-9' alt="" />
-                            </li>
-
-                            <li>
-                              <p>Codex technologies</p>
-                              <p className='text-gray-500 font-normal text-sm break-words'>Interview scheduled for</p>
-                            </li>
-
-
-                          </ul>
-                        </div>
-                        <div className=''>
-                          <ul className='font-medium text-xl text-black  flex flex-row justify-evenly'>
-                            <li>
-                              <img src="/user06.png" className='w-9 h-9' alt="" />
-                            </li>
-
-                            <li>
-                              <p>Codex technologies</p>
-                              <p className='text-gray-500 font-normal text-sm break-words'>Interview scheduled for</p>
-                            </li>
-
-
-                          </ul>
-                        </div>
-
-
-
-
-                      </div>
                     </div>
+                   
                   </div>
                 )}
               </li>

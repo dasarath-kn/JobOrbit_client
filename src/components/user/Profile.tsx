@@ -93,6 +93,7 @@ const Profile = () => {
     applied()
     planDetail()
   }, [])
+  
 
 
   const handleEdit = () => {

@@ -53,8 +53,7 @@ const UserSlice = createSlice({
             state.companies =action.payload.companies
             state.online =action.payload.online
         },
-        logoutUser: (state) => {
-
+        logoutUser: (state) => {            
             state._id = "",
                 state.firstname = "",
                 state.lastname = "",

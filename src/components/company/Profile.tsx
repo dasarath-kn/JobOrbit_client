@@ -1,4 +1,4 @@
-import  { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import { editProfile, getCompanydata, uploadDocument } from '../../Api/companyApi'
 import { Company } from '../../Interface/CompanyInterface'
@@ -17,7 +17,7 @@ const Profile = () => {
   const dispatch = useDispatch()
   const [openmodal, setOpenmodal] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [document,setDocument]=useState<File>()
+  const [document, setDocument] = useState<File>()
   const [reviewData, setReviewData] = useState<reviews[]>()
   const [count, setCount] = useState<number[]>([])
 
@@ -27,7 +27,7 @@ const Profile = () => {
       try {
         let response = await getCompanydata()
         if (response?.data.success) {
-          if(!response?.data.companydata.document_url){           
+          if (!response?.data.companydata.document_url) {
             setShowModal(true)
           }
           dispatch(setCompanydetails(response?.data.companydata))
@@ -40,13 +40,13 @@ const Profile = () => {
       }
     }
     companyData()
-  }, [dispatch,openmodal])
+  }, [dispatch, openmodal])
   useEffect(() => {
     if (companyDatas) {
       setData(companyDatas)
     }
   }, [companyDatas])
-  useEffect(()=>{
+  useEffect(() => {
     const reviews = async () => {
       try {
         const response = await getReviews()
@@ -62,11 +62,11 @@ const Profile = () => {
       }
     }
     reviews()
-  },[companyDatas])
+  }, [companyDatas])
   // useEffect(()=>{
   //   if(!data?.document_url){
   //     console.log(data?.document_url,"ddd");
-      
+
   //     setShowModal(true)
   //   }
   // },[])
@@ -77,27 +77,27 @@ const Profile = () => {
       industry: companyDatas.industry || '',
       address: companyDatas.address || '',
       about: companyDatas.about || '',
-      website_url: companyDatas.website_url ||'',
-    }, onSubmit: async (formData:any) => {
-     try {
-       
-       const formDataToSend = new FormData();
-       Object.keys(formData).forEach(key => {
-         formDataToSend.append(key, formData[key]);
+      website_url: companyDatas.website_url || '',
+    }, onSubmit: async (formData: any) => {
+      try {
+
+        const formDataToSend = new FormData();
+        Object.keys(formData).forEach(key => {
+          formDataToSend.append(key, formData[key]);
         });
-        
+
         formDataToSend.append("image", imageFile);
 
-      const token = localStorage.getItem("Companytoken")
-      let response = await editProfile(formDataToSend as any, token as string)
-      if (response?.data.success) {
-        setOpenmodal(!openmodal)
-        dispatch(setCompanydetails(response.data.commentData))
+        const token = localStorage.getItem("Companytoken")
+        let response = await editProfile(formDataToSend as any, token as string)
+        if (response?.data.success) {
+          setOpenmodal(!openmodal)
+          dispatch(setCompanydetails(response.data.commentData))
+        }
+      } catch (error) {
+        console.error(error);
+
       }
-     } catch (error) {
-      console.error(error);
-      
-     }
     }
   })
   const handleEdit = () => {
@@ -110,38 +110,40 @@ const Profile = () => {
       // setPreviewUrl(URL.createObjectURL(file));
     }
   }
-  const handleDocument = (e:ChangeEvent<HTMLInputElement>)=>{
+  const handleDocument = (e: ChangeEvent<HTMLInputElement>) => {
     try {
       if (e.target.files && e.target.files.length > 0) {
         let file = e.target.files[0];
-        setDocument(file);}
+        setDocument(file);
+      }
     } catch (error) {
       console.error(error);
-      
+
     }
   }
-  const submitDocument =async()=>{
+  const submitDocument = async () => {
     try {
       const formData = new FormData()
-      formData.append("image",document as File)
+      formData.append("image", document as File)
       let response = await uploadDocument(formData as any)
-      if(response?.data){
+      if (response?.data) {
         toast.success(response.data.messsage)
         setShowModal(false)
       }
-      
+
     } catch (error) {
       console.error(error);
-      
+
     }
   }
+
   return (
     <>
       <div className='w-screen h-auto min-h-screen flex  flex-col justify-center sm:justify-center sm:w-auto items-center  '>
-        <div className='bg-black text-white flex flex-row s:w-auto lg:w-3/4 1/2 h-auto mt-20 rounded-2xl  '>
+        <div className='bg-black p-9 text-white flex flex-row s:w-auto lg:w-3/4 1/2 h-auto mt-20 rounded-2xl  '>
           <div className='lg:w-1/4 h-auto  lg:content-center sm:w-1/2 sm:h-1/2  md:content-center'>
 
-          {data?.img_url ? (
+            {data?.img_url ? (
               <img src={data?.img_url} className='ml-4 mt-4' alt="Default Image" />
             ) : (
               <img src='/imgadd.jpg' className='ml-4 mt-4 items-center' alt="User Image" />
@@ -287,8 +289,6 @@ const Profile = () => {
       </div>
       {
         openmodal && (
-
-
           <div id="crud-modal" aria-hidden="true" className="bg-black bg-opacity-60 flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div className="relative p-4 w-full max-w-md max-h-full">
               <div className="relative bg-white rounded-lg shadow ">
@@ -306,7 +306,7 @@ const Profile = () => {
                 <form onSubmit={handleSubmit} className="p-4 md:p-5" >
                   <div className="mb-4">
                     <label className="block mb-2 text-sm font-medium text-black ">Profile Picture</label>
-                    <input onChange={handleimage} accept="image/*"  type="file" name="img_url" id="profilePicture" className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" />
+                    <input onChange={handleimage} accept="image/*" type="file" name="img_url" id="profilePicture" className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" />
                   </div>
                   <div className="grid gap-4 mb-4 grid-cols-2">
                     <div className="col-span-2 sm:col-span-1">
@@ -334,7 +334,7 @@ const Profile = () => {
                       <label className="block mb-2 text-sm font-medium text-black">Website URL</label>
                       <input onChange={handleChange} type="text" value={values.website_url} name="website_url" id="website_url" className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter website URL" />
                     </div>
-            
+
                   </div>
                   <button type="submit" className="text-white inline-flex items-center bg-black focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                     Submit
@@ -347,10 +347,10 @@ const Profile = () => {
 
         )
       }
-        {showModal &&(<>
-          <div id="popup-modal" className="fixed inset-0 bg-gray-700/50 z-50 flex justify-center items-center">
-      <div className="relative w-1/2 max-w-[50%] max-h-[90%] p-4">
-          <div className="relative bg-white rounded-lg shadow">
+      {showModal && (<>
+        <div id="popup-modal" className="fixed inset-0 bg-gray-700/50 z-50 flex justify-center items-center">
+          <div className="relative w-1/2 max-w-[50%] max-h-[90%] p-4">
+            <div className="relative bg-white rounded-lg shadow">
               {/* <button 
                   type="button" 
                   className="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center" 
@@ -363,26 +363,26 @@ const Profile = () => {
                   <span className="sr-only">Close modal</span>
               </button> */}
               <div className="p-6 text-center space-y-7">
-                  <h3 className="mb-5 font-semibold text-black text-2xl">Welcome to JobOrbit</h3>
-                  <p>For Verification provide your valuable documents</p>
-                  <div className="flex  justify-center">
-                      <input 
-                          type="file" 
-                          accept='.pdf' 
-                          onChange={(e) => handleDocument(e)} 
-                          className="block  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:border-primary-500"
-                      />
-                  </div>
-                  <button className='bg-black text-white w-24 h-10 rounded-lg mt-4' onClick={submitDocument}>
-                      Submit
-                  </button>
+                <h3 className="mb-5 font-semibold text-black text-2xl">Welcome to JobOrbit</h3>
+                <p>For Verification provide your valuable documents</p>
+                <div className="flex  justify-center">
+                  <input
+                    type="file"
+                    accept='.pdf'
+                    onChange={(e) => handleDocument(e)}
+                    className="block  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                <button className='bg-black text-white w-24 h-10 rounded-lg mt-4' onClick={submitDocument}>
+                  Submit
+                </button>
               </div>
+            </div>
           </div>
-      </div>
-  </div>
+        </div>
 
 
-              </>)}
+      </>)}
     </>
   )
 }
