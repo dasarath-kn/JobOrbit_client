@@ -197,7 +197,7 @@ const MainNav = () => {
                   <div className='m-4 h-full'>
                     <p className='text-gray-500 pb-4'>Online People</p>
                     <div className='flex flex-col space-y-4 h-full'>
-                      {userConversation && userConversation.length > 0 ? (
+                      {userConversation && userConversation.length > 0 && (
                         userConversation.map((val, index) => (
                          val.reciever_id.online && (<>
                          <div key={index} className='h-full'>
@@ -225,11 +225,7 @@ const MainNav = () => {
                           </>)
 
                         ))
-                      ) : (
-                        <div className='text-black '>
-                          <p className='text-center font-medium'>Connection Requests not found</p>
-                        </div>
-                      )}
+                      ) }
 
 
 

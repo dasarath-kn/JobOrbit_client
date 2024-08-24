@@ -1,10 +1,10 @@
-import  { ChangeEvent, useEffect, useRef, useState } from 'react'
-import {  FaMapMarkerAlt } from 'react-icons/fa'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { FaMapMarkerAlt } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../Redux/Store'
 import { experienceData, User } from '../../Interface/UserInterface'
 import { useFormik } from 'formik'
-import { addExperience, addSkills, appliedJobs, editProfile, getUserdata, subscribeduserdetails, uploadResume } from '../../Api/userApi'
+import { addExperience, addSkills, appliedJobs, editProfile, getUserdata, removeExperience, removeSkill, subscribeduserdetails, uploadResume } from '../../Api/userApi'
 import { setUserdetails } from '../../Redux/UserSlice'
 import toast, { Toaster } from 'react-hot-toast'
 import { format } from 'date-fns'
@@ -26,21 +26,23 @@ const Profile = () => {
   const [skills, setSkills] = useState([])
   const [updated, setUpdated] = useState<boolean>(false)
   const [textareaValue, setTextareaValue] = useState('');
-  const [resume, setResume] = useState<File|undefined>(undefined)
+  const [resume, setResume] = useState<File | undefined>(undefined)
   const [showApplied, setShowApplied] = useState<boolean>(false)
   const [appliedJobdata, setAppliedJobdata] = useState<jobApplied[]>([])
   const [mode, setMode] = useState('')
   const [skillerror, setSkillerror] = useState('')
   const [uploaderror, setUploaderror] = useState('')
-  const [error, setError] = useState({  experiencefield: '',
+  const [error, setError] = useState({
+    experiencefield: '',
     mode: '',
     startdate: '',
     enddate: '',
-    responsibilities: ''});
+    responsibilities: ''
+  });
   const [buttonLoad, setButtonload] = useState<boolean>(false)
-  const [planDetails,setPlanDetails]=useState<subscriptedUser>()
+  const [planDetails, setPlanDetails] = useState<subscriptedUser>()
 
-  const fileInputRef:any = useRef();
+  const fileInputRef: any = useRef();
 
   useEffect(() => {
     const userData = async () => {
@@ -79,13 +81,13 @@ const Profile = () => {
 
       }
     }
-    const planDetail = async ()=>{
+    const planDetail = async () => {
       try {
         const response = await subscribeduserdetails()
-        if(response?.data.success){
+        if (response?.data.success) {
           setPlanDetails(response.data.subscribedUser)
         }
-      }catch (error) {
+      } catch (error) {
         console.error(error);
 
       }
@@ -93,7 +95,7 @@ const Profile = () => {
     applied()
     planDetail()
   }, [])
-  
+
 
 
   const handleEdit = () => {
@@ -152,7 +154,7 @@ const Profile = () => {
     }
   }
   const validateForm = (): experienceData => {
-    const errors:experienceData = {};
+    const errors: experienceData = {};
     if (!experiencefield) errors.experiencefield = 'Experience Field is required';
     if (!mode) errors.mode = 'Duration is required';
     if (!startdate) errors.startdate = 'Joined Date is required';
@@ -169,7 +171,7 @@ const Profile = () => {
     if (Object.keys(formErrors).length === 0) {
 
       const experienceData = { experiencefield: experiencefield, start_date: startdate, end_date: enddate, mode: mode, responsibilities: responsibilities, percentage: data?.percentage }
-      if (data?.experience&& data?.experience.length == 0) {
+      if (data?.experience && data?.experience.length == 0) {
         let percentage = "15"
         experienceData.percentage = percentage
         let response = await addExperience(experienceData as experienceData)
@@ -196,11 +198,11 @@ const Profile = () => {
     setTextareaValue(inputValue);
     setSkillerror('')
 
-    const skill = inputValue.split(',').map((val:string) => val.trim())
+    const skill = inputValue.split(',').map((val: string) => val.trim())
 
     setSkills(skill)
   }
-  const submitSkills = async (e:ChangeEvent<HTMLInputElement>) => {
+  const submitSkills = async (e: ChangeEvent<HTMLInputElement>) => {
     if (skills.length == 0) {
       setSkillerror("Enter your skills")
       e.preventDefault()
@@ -208,7 +210,7 @@ const Profile = () => {
     }
     e.preventDefault()
     try {
-      if (data?.skills && data?.skills?.length >0) {
+      if (data?.skills && data?.skills?.length > 0) {
         const percentage = 15
         const response = await addSkills(skills as [], percentage as number)
         if (response?.data) {
@@ -245,11 +247,12 @@ const Profile = () => {
 
   const handlePdf = (e: ChangeEvent<HTMLInputElement>) => {
     try {
-     
+
       if (e.target.files && e.target.files.length > 0) {
         let file = e.target.files[0];
         setResume(file)
-        setUploaderror('')}
+        setUploaderror('')
+      }
     } catch (error) {
       console.error(error);
 
@@ -302,234 +305,274 @@ const Profile = () => {
 
     }
   }
+
+  const removeSkills = async (val: string) => {
+    try {
+      if(data?.skills && data?.skills.length>1){
+        const remove = await removeSkill(val)
+      if (remove?.data.success) {
+        setUpdated(!updated)
+      }
+      }
+    } catch (error) {
+      console.error(error);
+
+    }
+  }
+  const deleteExperience = async (values: string) => {
+    try {
+     if(data?.experience && data.experience.length>1){
+      const remove = await removeExperience(values)
+      if (remove?.data.success) {
+        setUpdated(!updated)
+      }
+     }
+    } catch (error) {
+      console.error(error);
+
+    }
+  }
   return (
     <>
-      
-        <div className='w-full h-auto flex flex-col items-center min-h-screen sm:justify-center'>
-          <div className='shadow-2xl rounded-3xl flex flex-col sm:flex-col md:flex-row md:w-full lg:flex-row p-9 text-white sm:w-full lg:w-4/5 h-auto mb-11 lg:mt-20 sm:mt-0'>
-            <div className='lg:w-1/4 h-auto md:w-full  lg:content-center sm:w-full sm:h-1/2  md:content-center  mt-20'>
 
-              {data?.img_url ? (
-                <img src={data?.img_url} className='lg:ml-4 sm:ml-0 mt-4 rounded-3xl ' alt="Default Image" />
-              ) : (<>
-                <img src='/user06.png' className='lg:ml-4 sm:ml-0 mt-4 items-center' alt="User Image" />
-                {/* <p className='text-red-500 font-medium pl-8'>Add image and increase 15% profile percentage</p> */}
-              </>
-              )}
-            </div>
-            <div className='border-7 lg:ml-28  sm:ml-0'>
-              <ul className='space-y-6 text-black font-medium'>
-                <li className='text-3xl font-extrabold mt-8 '>{data?.firstname} {data?.lastname}</li>
-                <li className=''>{data?.field}</li>
-                <li className='flex flex-row text-black'> <FaMapMarkerAlt className='text-gray-500 mr-1 mt-1' />   : {data?.location} </li>
-                <li className=''>About:{data?.about}</li>
-                <li className=''>Gmail:{data?.email}</li>
-                <li>Phone:{data?.phonenumber}</li>
-                <li>Portfolio:
-                  <a href={`http://www.${data?.portfolio_url}`} className='text-blue-800 underline' target="_blank" rel="noopener noreferrer">
-                    {data?.portfolio_url}
-                  </a></li>
-                <li>Git_hub:
-                  <a href={`http://www.${data?.github_url}`} className='text-blue-800 underline' target="_blank" rel="noopener noreferrer">
-                    {data?.github_url}
-                  </a></li>
+      <div className='w-full h-auto flex flex-col items-center min-h-screen sm:justify-center'>
+        <div className='shadow-2xl rounded-3xl flex flex-col sm:flex-col md:flex-row md:w-full lg:flex-row p-9 text-white sm:w-full lg:w-4/5 h-auto mb-11 lg:mt-20 sm:mt-0'>
+          <div className='lg:w-1/4 h-auto md:w-full  lg:content-center sm:w-full sm:h-1/2  md:content-center  mt-20'>
 
-                {!data?.github_url && (<>
-                  <div className=''>
-                    <p className='text-red-500'>Complete your details increase 15% profile percentage</p>
-                  </div>
-
-                </>)}
-              </ul>
-            </div>
-            <div className='border-7 lg:ml-28 sm:ml-0  mt-28'>
-              <ul className='text-black font-medium'>
-                <li className='font-bold'>Education:</li>
-                <li>{data?.qualification}</li>
-              </ul>
-            </div>
-            <div className='border-7 lg:ml-28 sm:ml-0 md:ml-0 mt-28'>
-              <ul className='text-black font-medium'>
-                <li className='font-bold'>Skills:</li>
-                {data?.skills && data?.skills?.length > 0 ? (
-                  data.skills.map((val, index) => (
-                    <li key={index}>{val}</li>
-                  ))
-                ) : (
-                  <p className='text-gray-500 '>Add your skills</p>
-                )}
-              </ul>
-            </div>
-
-            <div className='border-7 lg:ml-32 sm:ml-0 md:ml-0  mt-12'>
-              {/* <FaGithub onClick={() => { data?.github_url ? `http://${data?.github_url}` : '' }} className='text-black w-9 h-16' /> */}
-              <button onClick={() => {
-                if (data?.resume_url) {
-                  window.open(data.resume_url, '_blank');
-                }
-              }} className='border-2 border-black w-24 h-7 font-semibold text-black  rounded-2xl'>Resume</button>
-              <button onClick={handleEdit} data-modal-target="crud-modal" data-modal-toggle="crud-modal" className='text-black font-bold ml-11'>Edit</button>
-            </div>
+            {data?.img_url ? (
+              <img src={data?.img_url} className='lg:ml-4 sm:ml-0 mt-4 rounded-3xl ' alt="Default Image" />
+            ) : (<>
+              <img src='/user06.png' className='lg:ml-4 sm:ml-0 mt-4 items-center' alt="User Image" />
+              {/* <p className='text-red-500 font-medium pl-8'>Add image and increase 15% profile percentage</p> */}
+            </>
+            )}
           </div>
+          <div className='border-7 lg:ml-28  sm:ml-0'>
+            <ul className='space-y-6 text-black font-medium'>
+              <li className='text-3xl font-extrabold mt-8 '>{data?.firstname} {data?.lastname}</li>
+              <li className=''>{data?.field}</li>
+              <li className='flex flex-row text-black'> <FaMapMarkerAlt className='text-gray-500 mr-1 mt-1' />   : {data?.location} </li>
+              <li className=''>About:{data?.about}</li>
+              <li className=''>Gmail:{data?.email}</li>
+              <li>Phone:{data?.phonenumber}</li>
+              <li>Portfolio:
+                <a href={`http://www.${data?.portfolio_url}`} className='text-blue-800 underline' target="_blank" rel="noopener noreferrer">
+                  {data?.portfolio_url}
+                </a></li>
+              <li>Git_hub:
+                <a href={`http://www.${data?.github_url}`} className='text-blue-800 underline' target="_blank" rel="noopener noreferrer">
+                  {data?.github_url}
+                </a></li>
 
-          <div className="w-1/2 mt-4 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-            <div
-              className="bg-orange-600 h-2.5 rounded-full"
-              style={{ width: `${data?.percentage}%` }}
-            > </div>
-            <div className='flex justify-end'>
-              <p>{data?.percentage}%</p>
-
-            </div>
-          </div>
-          <div className='mt-6'>
-            <button onClick={() => setShowApplied(!showApplied)} className='bg-black text-white w-56 rounded-full h-11'>View Applied jobs</button>
-
-          </div>
-          <div className='w-full flex justify-center  items-center '>
-            <div className='rounded-2xl flex flex-col  w-3/4 m-9 h-auto shadow-xl p-6 bg-white'>
-            {planDetails &&<div className='m-6'>
-                <div className='space-y-3'>
-                  <p className='text-2xl font-semibold'> Subscribed details</p>
+              {!data?.github_url && (<>
+                <div className=''>
+                  <p className='text-red-500'>Complete your details increase 15% profile percentage</p>
                 </div>
-                <div >
 
-                  <div className='flex flex-col space-y-2 '>
-                    <div className='grid grid-cols-10 gap-x-7 gap-y-3 '>
-                     
-                     
-                        {/* <div className='col-span-10'>
+              </>)}
+            </ul>
+          </div>
+          <div className='border-7 lg:ml-28 sm:ml-0  mt-28'>
+            <ul className='text-black font-medium'>
+              <li className='font-bold'>Education:</li>
+              <li>{data?.qualification}</li>
+            </ul>
+          </div>
+          <div className='border-7 lg:ml-28 sm:ml-0 md:ml-0 mt-28'>
+            <ul className='text-black font-medium'>
+              <li className='font-bold'>Skills:</li>
+              {data?.skills && data?.skills?.length > 0 ? (
+                data.skills.map((val, index) => (
+                  <li key={index}>{val}</li>
+                ))
+              ) : (
+                <p className='text-gray-500 '>Add your skills</p>
+              )}
+            </ul>
+          </div>
+
+          <div className='border-7 lg:ml-32 sm:ml-0 md:ml-0  mt-12'>
+            {/* <FaGithub onClick={() => { data?.github_url ? `http://${data?.github_url}` : '' }} className='text-black w-9 h-16' /> */}
+            <button onClick={() => {
+              if (data?.resume_url) {
+                window.open(data.resume_url, '_blank');
+              }
+            }} className='border-2 border-black w-24 h-7 font-semibold text-black  rounded-2xl'>Resume</button>
+            <button onClick={handleEdit} data-modal-target="crud-modal" data-modal-toggle="crud-modal" className='text-black font-bold ml-11'>Edit</button>
+          </div>
+        </div>
+
+        <div className="w-1/2 mt-4 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+          <div
+            className="bg-orange-600 h-2.5 rounded-full"
+            style={{ width: `${data?.percentage}%` }}
+          > </div>
+          <div className='flex justify-end'>
+            <p>{data?.percentage}%</p>
+
+          </div>
+        </div>
+        <div className='mt-6'>
+          <button onClick={() => setShowApplied(!showApplied)} className='bg-black text-white w-56 rounded-full h-11'>View Applied jobs</button>
+
+        </div>
+        <div className='w-full flex justify-center  items-center '>
+          <div className='rounded-2xl flex flex-col  w-3/4 m-9 h-auto shadow-xl p-6 bg-white'>
+            {planDetails && <div className='m-6'>
+              <div className='space-y-3'>
+                <p className='text-2xl font-semibold'> Subscribed details</p>
+              </div>
+              <div >
+
+                <div className='flex flex-col space-y-2 '>
+                  <div className='grid grid-cols-10 gap-x-7 gap-y-3 '>
+
+
+                    {/* <div className='col-span-10'>
 
                           <p className='text-red-500 font-medium'>Add your skills and increase 15% profile percentage</p>
                         </div> */}
-                 
-                    </div>
-                   <div>
+
+                  </div>
+                  <div>
                     <ul>
                       <li className='font-medium text-xl'>{planDetails.plan_id.subscriptiontype}</li>
                       <li>Payment Method:Card</li>
                       <li>Activated date:{format(new Date(planDetails.activation_date), 'dd MMMM, yyyy')}</li>
                       <li>Expiry date:{format(new Date(planDetails.expiry_date), 'dd MMMM, yyyy')}</li>
                     </ul>
-                   </div>
-
-                    <div>
-                                     </div>
                   </div>
-                </div>
-              </div>}
-              
-              <div className='m-6'>
-                <div className='space-y-3'>
-                  <p className='text-2xl font-semibold'>Skills</p>
-                </div>
-                <div >
 
-                  <div className='flex flex-col space-y-2 '>
-                    <div className='grid grid-cols-10 gap-x-7 gap-y-3 '>
-                      {data?.skills && data?.skills?.length > 0 ? (
-                        data.skills.map((val) => (
-                          <p className='rounded-xl bg-orange-200 w-full text-center'>{val}</p>
-                        ))
-                      ) : (
-                        <div className='col-span-10'>
-
-                          <p className='text-red-500 font-medium'>Add your skills and increase 15% profile percentage</p>
-                        </div>
-                      )}
-                    </div>
-                    <textarea value={textareaValue} className='w-full h-24 border-black bg-gray-100 border-9 ' onChange={(e) => handleskills(e)} placeholder='Add your skills here' required />
-                    <span className='text-red-500'>{skillerror}</span>
-
-
-                    <div>
-                      <button
-                        type='button' 
-                        onClick={(e) => submitSkills(e as any)}
-                        className='disabled bg-black text-white w-16 h-9'
-                      >
-                        Add
-                      </button>                    </div>
+                  <div>
                   </div>
                 </div>
               </div>
-              <div className='m-6'>
-                <div className='space-y-3'>
-                  <p className='text-2xl font-semibold'>Upload Resume</p>
-                </div>
-                <div >
+            </div>}
 
-                  <div className='flex flex-col space-y-2 '>
-                    {!data?.resume_url && (
-                      <>
-                        <p className='text-red-500 font-medium'>Add your resume and increase 15% profile percentage</p>
-
-                      </>
-                    )}
-                    <input type='file' accept=".pdf" ref={fileInputRef} onChange={(e) => handlePdf(e)} className='w-full h-14 border-black bg-gray-100 border-9 ' placeholder='Add your skills here' />
-                    <span className='text-red-500'>{uploaderror}</span>
-
-                    <div>
-                      <button onClick={submitPdf} className='bg-black text-white w-16 h-9'>Upload</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className=' m-6'>
-                <div className=''>
-                  <p className='text-2xl font-semibold'>Experience</p>
-                  <button className='font-medium text-gray-400 ' onClick={() => setExperiencemodal(!experiencemodal)}>Add experience</button>
-                </div>
-                <div className=' grid lg:grid-cols-2 sm:grid-rows-1 sm:gap-x-0 lg:gap-x-4 h-auto' >
-                  {data?.experience && data?.experience.length > 0 ? data.experience.map((val) => {
-                    const startDate = format(new Date(val.start_date), 'MMMM dd, yyyy');
-                    const endDate = val.mode === "Present" ? "Present" : format(new Date(val.end_date), 'MMMM dd, yyyy');
-                    return (
-                      <div className='rounded-3xl border-9 h-auto bg-gray-100 mt-9 p-5'>
-                        <div className='flex justify-end space-x-3'>
-
-                        </div>
-                        <div className='flex flex-col space-y-6'>
-                          <p className='text-2xl font-semibold text-center md:text-left break-words'>
-                            {val.experiencefield}
-                          </p>
-                          <div className='space-y-4'>
-                            <p className='text-xl font-normal'>Start Date: {startDate}</p>
-                            <p className='text-xl font-normal'>End Date: {endDate}</p>
-                          </div>
-                          <div>
-                            <p className='text-xl font-medium'>Responsibilities:</p>
-                            <p className='break-words'>
-                              {val.responsibilities}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  }) : (
-                    <div>
-                      <p className='text-red-500 font-medium'>Add your experience and increase 15% profile percentage</p>
-                    </div>
-                  )}
-
-                </div>
-
+            <div className='m-6'>
+              <div className='space-y-3'>
+                <p className='text-2xl font-semibold'>Skills</p>
               </div>
               <div >
 
+                <div className='flex flex-col space-y-2 '>
+                  <div className='grid grid-cols-10 gap-x-7 gap-y-3 '>
+                    {data?.skills && data?.skills?.length > 0 ? (
+                      data.skills.map((val, index) => (<>
+                        <div key={index} className='flex items-center justify-between rounded-xl bg-orange-200 w-full px-4 py-2 mb-2'>
+                          <p className='text-center'>{val}</p>
+                          <button
+                            className='bg-transparent text-red-500 font-bold ml-4  hover:text-white transition rounded-full h-6 w-6 flex items-center justify-center'
+                            onClick={() => removeSkills(val)}
+                          >
+                            &times;
+                          </button>
+                        </div>
+                      </>
+                      ))
+                    ) : (
+                      <div className='col-span-10'>
 
+                        <p className='text-red-500 font-medium'>Add your skills and increase 15% profile percentage</p>
+                      </div>
+                    )}
+                  </div>
+                  <textarea value={textareaValue} className='w-full h-24 border-black bg-gray-100 border-9 ' onChange={(e) => handleskills(e)} placeholder='Add your skills here' required />
+                  <span className='text-red-500'>{skillerror}</span>
+
+
+                  <div>
+                    <button
+                      type='button'
+                      onClick={(e) => submitSkills(e as any)}
+                      className='disabled bg-black text-white w-16 h-9'
+                    >
+                      Add
+                    </button>                    </div>
+                </div>
               </div>
             </div>
-            <Toaster
-              position="top-right"
-              reverseOrder={false}
-            />
+            <div className='m-6'>
+              <div className='space-y-3'>
+                <p className='text-2xl font-semibold'>Upload Resume</p>
+              </div>
+              <div >
+
+                <div className='flex flex-col space-y-2 '>
+                  {!data?.resume_url && (
+                    <>
+                      <p className='text-red-500 font-medium'>Add your resume and increase 15% profile percentage</p>
+
+                    </>
+                  )}
+                  <input type='file' accept=".pdf" ref={fileInputRef} onChange={(e) => handlePdf(e)} className='w-full h-14 border-black bg-gray-100 border-9 ' placeholder='Add your skills here' />
+                  <span className='text-red-500'>{uploaderror}</span>
+
+                  <div>
+                    <button onClick={submitPdf} className='bg-black text-white w-16 h-9'>Upload</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className=' m-6'>
+              <div className=''>
+                <p className='text-2xl font-semibold'>Experience</p>
+                <button className='font-medium text-gray-400 ' onClick={() => setExperiencemodal(!experiencemodal)}>Add experience</button>
+              </div>
+              <div className=' grid lg:grid-cols-2 sm:grid-rows-1 sm:gap-x-0 lg:gap-x-4 h-auto' >
+                {data?.experience && data?.experience.length > 0 ? data.experience.map((val) => {
+                  const startDate = format(new Date(val.start_date), 'MMMM dd, yyyy');
+                  const endDate = val.mode === "Present" ? "Present" : format(new Date(val.end_date), 'MMMM dd, yyyy');
+                  return (
+                    <div className='rounded-3xl border-9 h-auto bg-gray-100 mt-9 p-5'>
+                      <div className='flex justify-end space-x-3'>
+                        <button
+                          className='text-red-600 text-xl  px-3 py-1 rounded-full hover:border-2 transition'
+                          onClick={() => deleteExperience(val.experiencefield)}
+                        >
+                          &times;
+                        </button>
+                      </div>
+                      <div className='flex flex-col space-y-6'>
+                        <p className='text-2xl font-semibold text-center md:text-left break-words'>
+                          {val.experiencefield}
+                        </p>
+                        <div className='space-y-4'>
+                          <p className='text-xl font-normal'>Start Date: {startDate}</p>
+                          <p className='text-xl font-normal'>End Date: {endDate}</p>
+                        </div>
+                        <div>
+                          <p className='text-xl font-medium'>Responsibilities:</p>
+                          <p className='break-words'>{val.responsibilities}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                  );
+                }) : (
+                  <div>
+                    <p className='text-red-500 font-medium'>Add your experience and increase 15% profile percentage</p>
+                  </div>
+                )}
+
+              </div>
+
+            </div>
+            <div >
+
+
+            </div>
           </div>
-
-
-
-
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+          />
         </div>
+
+
+
+
+      </div>
       {
         openmodal && (
 

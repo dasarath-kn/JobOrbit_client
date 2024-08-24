@@ -108,7 +108,7 @@ const Job = () => {
                       <div className='flex justify-end'>
                         <p> {formatDistanceToNow(new Date(val.time), { addSuffix: true })}</p>
                       </div>
-                      <h2 className="font-semibold text-2xl cursor-pointer " onClick={()=>navigate('/company/jobdetails',{state:{job_id:val._id}})} >{val.jobtitle}</h2>
+                      <h2 className="font-semibold text-2xl cursor-pointer " onClick={() => navigate('/company/jobdetails', { state: { job_id: val._id } })} >{val.jobtitle}</h2>
                       <p className='font-medium'>{val.company_id.companyname}</p>
                       <div className="flex items-center text-gray-400">
                         <FaMapMarkerAlt />
@@ -154,7 +154,7 @@ const Job = () => {
             }
           </div>
         </div>
-      {jobdata && jobdata.length>0 &&  <div className="flex flex-col items-center mt-24">
+        {jobdata && jobdata.length > 0 && <div className="flex flex-col items-center mt-24">
           <span className="text-sm text-gray-700 dark:text-gray-400">
             Showing <span className="font-semibold text-gray-900 ">{page + 1}</span> of <span className="font-semibold text-gray-900">{pagecount}</span> Entries
           </span>

@@ -181,7 +181,7 @@ const Connections = () => {
           <div className='min-h-screen flex justify-center mb-9 px-4'>
     <div className='flex flex-col w-full max-w-screen-xl'>
         <div className='flex flex-col mt-9'>
-            <p className='text-2xl font-semibold text-center'>Users</p>
+            <p className='text-2xl font-semibold text-center'>People</p>
             <div className='w-full flex justify-center mt-5'>
                 <div className='flex items-center justify-center border rounded-xl h-12 w-full sm:w-80 lg:w-96 px-4 mt-4 lg:mt-0'>
                     <FaSearch className='text-gray-400 mr-2' />
@@ -190,7 +190,7 @@ const Connections = () => {
                         className='flex-grow border-none focus:outline-none'
                         onChange={(e) => handleUserSearchChange(e)}
                         type="text"
-                        placeholder='Search Users'
+                        placeholder='Search People'
                     />
                     <button
                         onClick={handleSearchUser}
@@ -243,7 +243,7 @@ const Connections = () => {
                 }) : (
                     <div className='w-full justify-center '>
 
-                        <p className='text-center'>No Users found</p>
+                        <p className='text-center'>No People found</p>
                     </div>
                 )}
             </div>

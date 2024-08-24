@@ -478,3 +478,23 @@ export const conversation = async(role:string)=>{
 
     }
 }
+
+export const removeSkill = async(skill:string)=>{
+    try {
+        
+        const response = await axiosInstance.delete(`/removeskill?skill=${skill}` ,{headers:{"Authorization":token}})
+        return response
+    } catch (error: any) {
+        handleTokenError(error, "User")
+
+    }
+}
+export const removeExperience = async(data:string)=>{
+    try {
+       const response = await axiosInstance.delete(`/removeexperience?field=${data}`,{headers:{"Authorization":token}}) 
+        return response 
+    } catch (error: any) {
+        handleTokenError(error, "User")
+
+    }
+}
