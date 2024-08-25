@@ -126,7 +126,7 @@ const Profile = () => {
         if (imageFile) {
           if (!data?.img_url) {
             formDataToSend.append("image", imageFile);
-            formDataToSend.append("percentage", "30")
+            formDataToSend.append("percentage", "15")
           } else {
             formDataToSend.append("percentage", data.percentage as string)
           }
@@ -211,7 +211,7 @@ const Profile = () => {
     e.preventDefault()
     try {
       if (data?.skills && data?.skills?.length > 0) {
-        const percentage = 15
+        const percentage = Number(data?.percentage)
         const response = await addSkills(skills as [], percentage as number)
         if (response?.data) {
           setUpdated(!updated)
@@ -221,7 +221,8 @@ const Profile = () => {
         }
       }
       else {
-        const percentage = Number(data?.percentage)
+        const percentage = 15
+
         const response = await addSkills(skills as [], percentage as number)
         if (response?.data) {
           setUpdated(!updated)
