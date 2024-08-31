@@ -10,6 +10,7 @@ import { User } from '../../Interface/UserInterface';
 
 const JobDetails = () => {
   const [job, setJob] = useState<jobdata >();
+  const [skelton,setSkelton]=useState<boolean>(true)
   const location = useLocation();
   const { job_id } = location.state;
  const userDatas: User = useSelector((state: RootState) => state.user);
@@ -58,10 +59,16 @@ const JobDetails = () => {
       console.error(error);
       toast.error('An error occurred while applying for the job.');
     }
-  };  
+  };
+  useEffect(()=>{
+    let timer =setTimeout(()=>{
+        setSkelton(false)
+    },2000)
+    return()=> clearTimeout(timer)
+},[])  
   return (
     <>
-      <div className='w-full min-h-screen lg:m-11 mb-11 flex flex-col items-center  '>
+     {!skelton?(<div className='w-full min-h-screen lg:m-11 mb-11 flex flex-col items-center  '>
         <div className='w-full flex flex-col md:flex-row'>
           <div className='flex justify-center md:ml-40 mb-5 md:mb-0'>
             {job?.company_id.img_url ? (
@@ -120,7 +127,60 @@ const JobDetails = () => {
           </div>
         </div>
         <Toaster position='top-right' reverseOrder={false} />
+      </div>):(<div className='w-full min-h-screen lg:m-11 mb-11 flex flex-col items-center'>
+  <div className='w-full flex flex-col md:flex-row animate-pulse'>
+    <div className='flex justify-center md:ml-40 mb-5 md:mb-0'>
+      <div className='bg-slate-200 w-96 h-64 rounded-lg'></div> 
+    </div>
+    <div className='space-y-3 w-full text-center lg:ml-7 md:text-left'>
+      <div className='h-8 bg-slate-200 rounded w-3/4 mx-auto md:mx-0'></div> 
+      <div className='h-6 bg-slate-200 rounded w-2/3 mx-auto md:mx-0'></div> 
+      <div className='flex items-center justify-center md:justify-start'>
+        <div className='bg-slate-200 h-5 w-5 rounded-full'></div>
+        <div className='h-6 bg-slate-200 rounded w-1/3 ml-2'></div> 
       </div>
+      <div className='h-5 bg-slate-200 rounded w-1/4 mx-auto md:mx-0'></div> 
+      <div className='h-5 bg-slate-200 rounded w-1/3 mx-auto md:mx-0'></div> 
+      <div className='flex justify-center md:justify-start'>
+        <div className='h-12 bg-slate-200 rounded-full w-24'></div> 
+      </div>
+    </div>
+  </div>
+
+  <div className="w-full lg:w-3/4 sm:w-4/5 md:w-3/4 mt-10 space-y-6 px-4 md:px-0 animate-pulse">
+    <div>
+      <div className='h-6 bg-slate-200 rounded w-1/4'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div>
+    </div>
+    <div>
+      <div className='h-6 bg-slate-200 rounded w-1/4'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div>
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div>
+    </div>
+    <div>
+      <div className='h-6 bg-slate-200 rounded w-1/3'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div>
+    </div>
+    <div>
+      <div className='h-6 bg-slate-200 rounded w-1/4'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div>
+    </div>
+    <div>
+      <div className='h-6 bg-slate-200 rounded w-1/2'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div>
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div>
+    </div>
+    <div>
+      <div className='h-6 bg-slate-200 rounded w-1/4'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div> 
+      <div className='h-5 bg-slate-200 rounded mt-2 w-full'></div>
+    </div>
+  </div>
+</div>
+)}
     </>
   );
 };

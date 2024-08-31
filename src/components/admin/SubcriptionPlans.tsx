@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import SideBar from './SideBar';
 import { useFormik } from 'formik';
 import { deletePlan, getSubscriptionplans, subscriptions, unlistandList } from '../../Api/adminApi';
@@ -11,16 +11,16 @@ import subscriptionSchema from '../../Validations/Admin/subscriptionValidation';
 const SubscriptionPlans = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [plans, setPlans] = useState<subscription[]>([]);
-const [updated,setUpdated] =useState<boolean>(false)
-  const { handleSubmit, handleChange, values,touched,errors } = useFormik({
-    validationSchema:subscriptionSchema,
+  const [updated, setUpdated] = useState<boolean>(false)
+  const { handleSubmit, handleChange, values, touched, errors } = useFormik({
+    validationSchema: subscriptionSchema,
     initialValues: {
       subscriptiontype: '',
       price: '',
       month: '',
       limit: ''
     },
-    onSubmit: async (data,{resetForm}) => {
+    onSubmit: async (data, { resetForm }) => {
       let response = await subscriptions(data as subscription);
       if (response?.data.success) {
         setUpdated(!updated)
@@ -32,24 +32,24 @@ const [updated,setUpdated] =useState<boolean>(false)
 
   useEffect(() => {
     const fetchSubscriptionPlans = async () => {
-    try {
-      let response = await getSubscriptionplans();
-      setPlans(response?.data.subscriptionplan);
-     
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      try {
+        let response = await getSubscriptionplans();
+        setPlans(response?.data.subscriptionplan);
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
     fetchSubscriptionPlans();
-    
+
   }, [updated]);
-  
-  
-  const handleDeleteplan = async(id:string)=>{
+
+
+  const handleDeleteplan = async (id: string) => {
     try {
       let response = await deletePlan(id)
-      if(response?.data){
-        setUpdated(!updated)        
+      if (response?.data) {
+        setUpdated(!updated)
         toast.success(response.data.message)
       }
     } catch (error) {
@@ -58,11 +58,11 @@ const [updated,setUpdated] =useState<boolean>(false)
     }
   }
 
-  const handleListunlist = async(id:string,message:string)=>{
+  const handleListunlist = async (id: string, message: string) => {
     try {
-      let response = await unlistandList(id,message)
-      if(response?.data){
-        setUpdated(!updated)        
+      let response = await unlistandList(id, message)
+      if (response?.data) {
+        setUpdated(!updated)
 
         toast.success(response.data.message)
       }
@@ -82,28 +82,28 @@ const [updated,setUpdated] =useState<boolean>(false)
             {plans.map((plan, index) => (
               <div key={index} className="p-6 m-2 flex-col space-y-3 sm:w-full lg:w-[500px] h-72 rounded-md border shadow-xl">
                 <div className='flex justify-end'>
-              
-                <MdDelete onClick={()=>handleDeleteplan(plan._id)} className='w-5 h-5'/>
-                          </div>
+
+                  <MdDelete onClick={() => handleDeleteplan(plan._id)} className='w-5 h-5' />
+                </div>
                 <h2 className="font-semibold text-2xl">{plan.subscriptiontype}</h2>
                 <p className='font-medium'>${plan.price}</p>
                 <div className="flex items-center text-gray-400">
-                
+
                   <p className=" text-black">{plan.month} Months plan</p>
                 </div>
                 <p className='font-medium'>Daily user can apply {plan.limit} jobs</p>
                 <div className='flex flex-row space-x-4'>
-                  {plan.unlist? <button onClick={()=>handleListunlist(plan._id,"list")} className="rounded-xl my-3 bg-green-500 text-white w-20 h-11">List</button>:
-                  <button onClick={()=>handleListunlist(plan ?._id,"unlist")} className="rounded-xl my-3 bg-red-500 text-white w-20 h-11">Unlist</button>}
+                  {plan.unlist ? <button onClick={() => handleListunlist(plan._id, "list")} className="rounded-xl my-3 bg-green-500 text-white w-20 h-11">List</button> :
+                    <button onClick={() => handleListunlist(plan?._id, "unlist")} className="rounded-xl my-3 bg-red-500 text-white w-20 h-11">Unlist</button>}
                 </div>
               </div>
             ))}
           </div>
         </div>
         <Toaster
-  position="top-right"
-  reverseOrder={false}
-/>
+          position="top-right"
+          reverseOrder={false}
+        />
       </div>
       {openModal && (
         <div id="crud-modal" aria-hidden="true" className="bg-black bg-opacity-60 flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -131,7 +131,7 @@ const [updated,setUpdated] =useState<boolean>(false)
                       className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Enter subscription type"
                     />
-   {errors.subscriptiontype && touched.subscriptiontype && <p className='text-sm text-red-500'>{errors.subscriptiontype}</p>}
+                    {errors.subscriptiontype && touched.subscriptiontype && <p className='text-sm text-red-500'>{errors.subscriptiontype}</p>}
 
                   </div>
                   <div className="sm:col-span-1">
@@ -146,7 +146,7 @@ const [updated,setUpdated] =useState<boolean>(false)
                       className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Enter price"
                     />
-                                                    {errors.price && touched.price && <p className='text-sm text-red-500'>{errors.price}</p>}
+                    {errors.price && touched.price && <p className='text-sm text-red-500'>{errors.price}</p>}
 
                   </div>
                   <div className="sm:col-span-1">
@@ -161,7 +161,7 @@ const [updated,setUpdated] =useState<boolean>(false)
                       className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Enter month count"
                     />
-                                                    {errors.month && touched.month && <p className='text-sm text-red-500'>{errors.month}</p>}
+                    {errors.month && touched.month && <p className='text-sm text-red-500'>{errors.month}</p>}
 
                   </div>
                   <div className="sm:col-span-1">
@@ -176,7 +176,7 @@ const [updated,setUpdated] =useState<boolean>(false)
                       className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Enter limit count"
                     />
-                                                    {errors.limit && touched.limit && <p className='text-sm text-red-500'>{errors.limit}</p>}
+                    {errors.limit && touched.limit && <p className='text-sm text-red-500'>{errors.limit}</p>}
 
                   </div>
                 </div>
@@ -186,7 +186,7 @@ const [updated,setUpdated] =useState<boolean>(false)
               </form>
             </div>
           </div>
-         
+
         </div>
       )}
     </>

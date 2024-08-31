@@ -16,6 +16,7 @@ interface Notification {
     message: string;
 }
 const Connections = () => {
+    const [skelton,setSkelton]=useState<boolean>(true)
     const [userData, setUserData] = useState<User[]>([])
     const [companyData, setCompanyData] = useState<Company[]>([])
     const navigate = useNavigate()
@@ -176,13 +177,19 @@ const Connections = () => {
     
         }
     }
+    useEffect(()=>{
+        let timer =setTimeout(()=>{
+            setSkelton(false)
+        },2000)
+        return()=> clearTimeout(timer)
+    },[])
     return (
         <>
           <div className='min-h-screen flex justify-center mb-9 px-4'>
     <div className='flex flex-col w-full max-w-screen-xl'>
         <div className='flex flex-col mt-9'>
             <p className='text-2xl font-semibold text-center'>People</p>
-            <div className='w-full flex justify-center mt-5'>
+         {!skelton &&   <div className='w-full flex justify-center mt-5'>
                 <div className='flex items-center justify-center border rounded-xl h-12 w-full sm:w-80 lg:w-96 px-4 mt-4 lg:mt-0'>
                     <FaSearch className='text-gray-400 mr-2' />
                     <input
@@ -198,15 +205,15 @@ const Connections = () => {
                         Search
                     </button>
                 </div>
-            </div>
-            <button onClick={() => setRequestModal(!requestModal)} className='mt-5 font-semibold'>Show Request</button>
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-9 gap-x-6 gap-y-6 overflow-y-auto max-h-64'>
+            </div>}
+{          !skelton &&  <button onClick={() => setRequestModal(!requestModal)} className='mt-5 font-semibold'>Show Request</button>
+}            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-9 gap-x-6 gap-y-6 overflow-y-auto max-h-64'>
                 {userData && userData.length > 0 ? userData.map((val) => {
                     const matchingConnections = userDatas.connections && userDatas.connections?.length > 0
                         ? userDatas.connections.filter((values) => values.connection_id?._id === val._id)
                         : [];
 
-                    return (
+                    return !skelton? (
                         <div key={val._id} className='w-full flex justify-between p-6 shadow-2xl items-center bg-gray-50 h-28'>
                             <div className='flex items-center'>
                                 {val.img_url
@@ -239,7 +246,22 @@ const Connections = () => {
                                 </button>
                             )}
                         </div>
-                    );
+                     
+                    ):(   <div className=" shadow rounded-md p-4 max-w-sm w-full mx-auto">
+                        <div className="animate-pulse flex space-x-4">
+                          <div className="rounded-full bg-slate-200 h-10 w-10"></div>
+                          <div className="flex-1 space-y-6 py-1">
+                            <div className="h-2 bg-slate-200 rounded"></div>
+                            <div className="space-y-3">
+                              <div className="grid grid-cols-3 gap-4">
+                                <div className="h-2 bg-slate-200 rounded col-span-2"></div>
+                                <div className="h-2 bg-slate-200 rounded col-span-1"></div>
+                              </div>
+                              <div className="h-2 bg-slate-200 rounded"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>)
                 }) : (
                     <div className='w-full justify-center '>
 
@@ -252,7 +274,7 @@ const Connections = () => {
         <div className='flex flex-col mt-12'>
             <p className='text-2xl font-semibold text-center'>Companies</p>
             <div className='w-full flex justify-center mt-5'>
-                <div className='flex items-center justify-center border rounded-xl h-12 w-full sm:w-80 lg:w-96 px-4 mt-4 lg:mt-0'>
+               {!skelton && <div className='flex items-center justify-center border rounded-xl h-12 w-full sm:w-80 lg:w-96 px-4 mt-4 lg:mt-0'>
                     <FaSearch className='text-gray-400 mr-2' />
                     <input
                         value={searchCompany}
@@ -266,11 +288,11 @@ const Connections = () => {
                         className='bg-black text-white rounded-xl w-20 h-8 ml-2'>
                         Search
                     </button>
-                </div>
+                </div>}
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-9 gap-x-6 gap-y-6 overflow-y-auto max-h-64'>
                 {companyData && companyData.length > 0 ? companyData.map((val) => {
-                    return (
+                    return !skelton ? (
                         <div key={val._id} className='w-full flex justify-between p-6 shadow-2xl items-center bg-gray-50 h-28'>
                             <div className='flex items-center'>
                                 {val.img_url
@@ -291,7 +313,21 @@ const Connections = () => {
                                 Message
                             </button>
                         </div>
-                    );
+                    ):(   <div className=" shadow rounded-md p-4 max-w-sm w-full mx-auto">
+                        <div className="animate-pulse flex space-x-4">
+                          <div className="rounded-full bg-slate-200 h-10 w-10"></div>
+                          <div className="flex-1 space-y-6 py-1">
+                            <div className="h-2 bg-slate-200 rounded"></div>
+                            <div className="space-y-3">
+                              <div className="grid grid-cols-3 gap-4">
+                                <div className="h-2 bg-slate-200 rounded col-span-2"></div>
+                                <div className="h-2 bg-slate-200 rounded col-span-1"></div>
+                              </div>
+                              <div className="h-2 bg-slate-200 rounded"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>)
                 }) : (
                     <p className='text-center'>No Companies Found</p>
                 )}

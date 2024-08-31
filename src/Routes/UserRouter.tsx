@@ -39,7 +39,7 @@ const UserRouter = () => {
                 <Route path='/companyprofile' element={<CompanyProfilePage/>}/>
                 <Route path='/userprofile' element={<ViewUsersprofilepage/>}/>
                 <Route path='/inbox' element={<InboxPage/>}/>
-                <Route path='/about' element={<AboutPage/>} />
+                {/* <Route path='/about' element={<AboutPage/>} /> */}
                 </Route>
                 <Route path='' element={<UserLoginAuth/>} >
                 <Route path='/otp' element={<Otp role={"User"}/>}/>
@@ -47,9 +47,9 @@ const UserRouter = () => {
                 <Route path='/signup' element={<SignUp/>} />
                 <Route path='/verify' element={<Emailverify role={"User"}/>} />
                 <Route path='/resetpassword' element={<ResetPassword role={"User"}/>} />
-                <Route path='/about' element={<AboutPage/>} />
                 
                 </Route>
+                <Route path='/about' element={<AboutPage/>} />
             </Routes>
         </Suspense>
 

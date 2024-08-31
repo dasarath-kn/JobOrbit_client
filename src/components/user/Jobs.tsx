@@ -10,6 +10,7 @@ import { TiArrowSortedDown } from "react-icons/ti";
 const Jobs = () => {
   const dispatch = useDispatch()
   let [jobdata, setJobdata] = useState<jobdata[]>([])
+  const [skelton, setSkelton] = useState<boolean>(true)
   let [search, setSearch] = useState<string>('')
   let [data, setData] = useState<jobdata[]>()
   const [pagecount, setPagecount] = useState<number>(0)
@@ -105,10 +106,16 @@ const Jobs = () => {
     setHandleJobType('')
     setChanged(!changed)
   }
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setSkelton(false)
+    }, 2000)
+    return () => clearTimeout(timer)
+  }, [])
   return (
     <>
       <div className="w-screen h-auto min-h-screen  mt-6 mb-8 ">
-        <div className='flex justify-center items-center space-y-9 flex-col text-center'>
+        {!skelton &&<div className='flex justify-center items-center space-y-9 flex-col text-center'>
 
           <p className='  font-medium text-3xl'>Search And Apply The Job You Want</p>
           <div className='flex items-center  border rounded-xl h-12 w-80 lg:w-96 px-4 mt-4 lg:mt-0'>
@@ -116,7 +123,7 @@ const Jobs = () => {
             <input value={search} className='flex-grow border-none focus:outline-none' onChange={(e) => handleSearch(e)} type="text" placeholder='Search' />
             <button onClick={handleSubmit} className='bg-black text-white rounded-xl w-20 h-8 ml-2'>Search</button>
           </div>
-         {jobdata.length>0 && <div className='flex lg:flex-row space-y-4 sm:flex-row md:space-y-0 md:space-x-4 flex-col lg:space-x-16 sm:space-y-4 lg:space-y-0 '>
+          {jobdata.length > 0 && <div className='flex lg:flex-row space-y-4 sm:flex-row md:space-y-0 md:space-x-4 flex-col lg:space-x-16 sm:space-y-4 lg:space-y-0 '>
             <div className='relative flex items-center border-2 border-black w-48 h-12 rounded-full'>
               <p className='ml-4'>Date Posted</p>
               <TiArrowSortedDown
@@ -295,13 +302,13 @@ const Jobs = () => {
 
 
 
-        </div>
+        </div>}
         <div className='flex justify-center'>
 
 
           <div className=" grid mt-12 h-auto lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-x-10 gap-y-10">
             {jobdata.length > 0 ? (jobdata.map((val) => {
-              return (<>
+              return !skelton ? (<>
 
                 <div className="p-6 sm:w-40 lg:w-80 md:w-80 h-40 rounded-md border shadow-xl">
                   <h2 className="font-medium text-xl">{val.jobtitle}</h2>
@@ -312,7 +319,19 @@ const Jobs = () => {
                   </div>
                   <button onClick={() => navigate('/jobdetails', { state: { job_id: val._id } })} className="rounded-xl my-3 bg-black text-white w-20 h-7">View</button>
                 </div>
-              </>)
+              </>) : (<div className="p-6 sm:w-40 lg:w-80 md:w-80 h-40 rounded-md border shadow-xl">
+                <div className="animate-pulse flex flex-col space-y-3 h-full">
+                  <div className="h-5 bg-slate-200 rounded w-3/4 sm:w-2/3 md:w-3/4 lg:w-3/4"></div>
+
+                  <div className="h-4 bg-slate-200 rounded w-1/2 sm:w-1/3 md:w-1/2 lg:w-1/2"></div>
+                  <div className="flex items-center space-x-2">
+                    <div className="rounded-full bg-slate-200 h-5 w-5"></div>
+                    <div className="h-4 bg-slate-200 rounded w-1/3 sm:w-1/4 md:w-1/3 lg:w-1/3"></div>
+                  </div>
+                  <div className="h-7 bg-slate-200 rounded w-1/4 sm:w-1/6 md:w-1/4 lg:w-1/4"></div>
+                </div>
+              </div>
+              )
             })) : (<>
               <div className="flex  min-h-screen  mt-11">
                 <div className="w-full  h-40   flex  justify-center   ">
@@ -322,7 +341,7 @@ const Jobs = () => {
             </>)}
           </div>
         </div>
-        {jobdata.length > 0 && <div className="flex flex-col items-center mt-24">
+        {jobdata.length > 0 && !skelton && <div className="flex flex-col items-center mt-24">
           <span className="text-sm text-gray-700 dark:text-gray-400">
             Showing <span className="font-semibold text-gray-900 ">{page + 1}</span> of <span className="font-semibold text-gray-900">{pagecount}</span> Entries
           </span>
