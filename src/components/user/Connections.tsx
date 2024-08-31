@@ -265,7 +265,7 @@ const Connections = () => {
                 }) : (
                     <div className='w-full justify-center '>
 
-                        <p className='text-center'>No People found</p>
+                        <p className='text-center'></p>
                     </div>
                 )}
             </div>
@@ -329,7 +329,7 @@ const Connections = () => {
                         </div>
                       </div>)
                 }) : (
-                    <p className='text-center'>No Companies Found</p>
+                    <p className='text-center'></p>
                 )}
             </div>
         </div>

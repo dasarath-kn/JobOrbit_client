@@ -117,7 +117,7 @@ const SubscriptionPlans = () => {
         }) :
           <div className="flex w-full lg:ml-96 ml-0 min-h-screen justify-center ">
             <div className="w-1/2  h-96 flex flex-col justify-center ml-11  items-center">
-              <p className="text-black font-semibold text-2xl text-center">No Subscription Plan Found</p>
+              {/* <p className="text-black font-semibold text-2xl text-center">No Subscription Plan Found</p> */}
             </div>
           </div>
 
