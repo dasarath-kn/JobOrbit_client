@@ -40,7 +40,10 @@ export interface Company {
 export interface jobdata {
     _id: string;
   jobtitle: string;
-  applicants_id:[string]
+  applicants_id:[{
+    user_id:User,
+    resume_url:string
+  }]
   company_id:Company
   type: string;
   location: string;

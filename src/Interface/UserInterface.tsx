@@ -41,7 +41,7 @@ export interface User{
     is_admin?:boolean,
     github_url?:string,
     portfolio_url?:string,
-    resume_url?:string,
+    resume_url?:[string],
     skills?:[string],
     percentage?:string,
     qualification?:string,

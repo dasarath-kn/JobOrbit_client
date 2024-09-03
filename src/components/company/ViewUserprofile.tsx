@@ -84,9 +84,9 @@ const ViewUserprofile = () => {
                 </li>
                 {userdata?.resume_url &&<li>
                 <button onClick={() => {
-                
-                  window.open(userdata?.resume_url, '_blank')
-                
+                if(userdata.resume_url){
+                  window.open(userdata?.resume_url[userdata.resume_url?.length-1], '_blank')
+                }
               }} className='border-2 border-black w-52 h-9 font-semibold text-white bg-black rounded-full  '>Resume</button>
                 </li>}
               </ul>

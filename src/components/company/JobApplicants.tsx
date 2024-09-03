@@ -22,9 +22,10 @@ const JobApplicants = () => {
             try {
                 let response = await getApplicants(job_id)
                 if (response?.data.success) {
-
+                    console.log(response.data.appliedUsers);
+                    
                     const data = response.data.appliedUsers.map((val:jobdata) => {
-                        return val.applicants_id
+                        return val.applicants_id.map(applicant => applicant.user_id);
                     }).flat()
                     setUserdata(data)
                 }
@@ -81,6 +82,8 @@ const JobApplicants = () => {
         
     }
    }
+   console.log(userdata,"SFsfsdsf");
+
     return (
         <>
             <div className='min-h-screen  justify-center items-center'>
@@ -89,21 +92,21 @@ const JobApplicants = () => {
 
                 </div>
                 <div className=' grid lg:grid-cols-2 lg:mb-16 md:grid-row-1 md:w-full md:ml-0  sm:grid-row-1 lg:w-4/5 lg:ml-36 p-2  gap-x-10 h-auto justify-center items-center'>
-                    {userdata && userdata.length > 0 ? userdata.map((val, index) => {
+                    {userdata && userdata.length > 0 ? userdata.map((val:User, index) => {
                       
                         
                         return (<>
-                           <div className='flex justify-center mb-9 bg-gray-100 w-full lg:w-auto lg:h-32 lg:m-8 sm:p-8 p-4'>
+                           <div key={val._id} className='flex justify-center mb-9 bg-gray-100 w-full lg:w-auto lg:h-32 lg:m-8 sm:p-8 p-4'>
                            <ul className='flex flex-col lg:flex-row md:flex-row sm:flex-col lg:space-x-6 md:space-x-20 sm:space-y-4 lg:space-y-0 md:space-y-0 items-center font-medium'>
                                     <li>{index + 1}</li>
                                     <li>{val.firstname}</li>
                                     <li>{val.email}</li>
                                     <li className='cursor-pointer'onClick={() => navigate('/company/applicantprofile', { state: { id: val._id } })}>view More</li>
-                                    {!scheduled.some((values)=>values.user_id._id ===val._id)?<li className='cursor-pointer' onClick={() => {setShowModal(!showModal),setSelectedUser(val._id)}}>Schedule</li> :
+                                    {!scheduled.some((values)=>values.user_id?._id ===val._id)?<li className='cursor-pointer' onClick={() => {setShowModal(!showModal),setSelectedUser(val._id)}}>Schedule</li> :
                                         
                                         <li className='text-orange-500 cursor-pointer'>Scheduled</li>
                                     }
-                                    {!scheduled.some((values)=>values.user_id._id ===val._id) &&
+                                    {!scheduled.some((values)=>values.user_id?._id ===val._id) &&
                                     <li onClick={()=>rejectUser(val._id as string)} className='text-red-500 cursor-pointer'>Reject</li>}
                                 </ul>
                                 <Toaster

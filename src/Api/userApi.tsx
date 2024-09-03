@@ -281,9 +281,9 @@ export const uploadResume = async (Data: User) => {
     }
 }
 
-export const jobApply = async (job_id: string,company_id:string) => {
+export const jobApply = async (job_id: string,company_id:string,resume_url:string) => {
     try {
-        const data ={job_id:job_id,company_id:company_id}
+        const data ={job_id:job_id,company_id:company_id,resume_url:resume_url}
         let response = await axiosInstance.patch('/jobapply', data, { headers: { 'Authorization': token } })
         return response
     } catch (error: any) {

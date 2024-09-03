@@ -396,7 +396,7 @@ const Profile = () => {
             {/* <FaGithub onClick={() => { data?.github_url ? `http://${data?.github_url}` : '' }} className='text-black w-9 h-16' /> */}
             <button onClick={() => {
               if (data?.resume_url) {
-                window.open(data.resume_url, '_blank');
+                window.open(data.resume_url[data.resume_url.length-1], '_blank');
               }
             }} className='border-2 border-black w-24 h-7 font-semibold text-black  rounded-2xl'>Resume</button>
             <button onClick={handleEdit} data-modal-target="crud-modal" data-modal-toggle="crud-modal" className='text-black font-bold ml-11'>Edit</button>

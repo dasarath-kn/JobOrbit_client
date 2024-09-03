@@ -14,7 +14,6 @@ const JobPage =lazy(()=> import('../pages/user/JobPage'));
 const JobDetailsPage =lazy(()=> import('../pages/user/JobDetailsPage'));
 const SubscriptionPlanPage =lazy(()=> import('../pages/user/SubscriptionPlanPage'));
 import Success from '../components/common/Success';
-import DocumentViewer from '../components/common/DocumentViewer';
 const AboutPage =lazy(()=> import('../pages/user/AboutPage'));
 const InboxPage =lazy(()=> import('../pages/user/InboxPage'));
 const ConnectionPage =lazy(()=> import('../pages/user/ConnectionPage'));
@@ -34,7 +33,6 @@ const UserRouter = () => {
                 <Route path='/jobdetails' element={<JobDetailsPage/>}/>
                 <Route path='/viewplan' element={<SubscriptionPlanPage/>}/>
                 <Route path='/paymentsuccess' element={<Success/>}/>
-                <Route path='/resume' element={<DocumentViewer/>}/>
                 <Route path='/connections' element={<ConnectionPage/>}/>
                 <Route path='/companyprofile' element={<CompanyProfilePage/>}/>
                 <Route path='/userprofile' element={<ViewUsersprofilepage/>}/>
