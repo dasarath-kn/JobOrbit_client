@@ -28,6 +28,8 @@ const JobDetails = () => {
       try {
         let response = await getUserdata()
         if (response?.data.success) {
+          console.log(response.data.resume_url);
+          
           const sortedResumes = response?.data.userData.resume_url.sort((a: string, b: string) => b.localeCompare(a));
           setResumeData(sortedResumes)
         }
@@ -38,8 +40,6 @@ const JobDetails = () => {
       }
     }
     userData()
-    console.log("hello");
-
   }, [updated])
 
   const fileInputRef: any = useRef();
