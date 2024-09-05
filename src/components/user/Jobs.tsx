@@ -36,10 +36,7 @@ const Jobs = () => {
         let response = await getJobs(page, handleJobType, handleJobLocation, handleDate,userDatas?._id as string)
         if (response?.data) {
           setPagecount(response.data.count)
-          const filteredJobs = response.data.jobs.filter((job: jobdata) =>
-            !job.applicants_id.some((applicant) => applicant.user_id === userDatas._id)
-          );
-          setJobdata(filteredJobs)
+          setJobdata(response.data.jobs)
           setData(response.data.jobs)
         }
       } catch (error) {
