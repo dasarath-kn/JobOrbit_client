@@ -1,6 +1,6 @@
 import { useFormik } from 'formik'
 import { useEffect, useState } from 'react'
-import { getJob, postJob, removeJob } from '../../Api/companyApi'
+import { getJob, listJob, postJob, removeJob } from '../../Api/companyApi'
 import toast, { Toaster } from 'react-hot-toast'
 import { jobdata } from '../../Interface/CompanyInterface'
 import { formatDistanceToNow } from 'date-fns'
@@ -14,6 +14,7 @@ const Job = () => {
   const [confirm, setConfirm] = useState<boolean>(false)
   const [pagecount, setPagecount] = useState<number>(0)
   const [page, setPage] = useState<number>(0)
+  const [updated,setUpdated]=useState<boolean>(false)
   const navigate = useNavigate()
   const { touched, values, errors, handleChange, resetForm, handleBlur, handleSubmit } = useFormik({
     initialValues: {
@@ -57,7 +58,7 @@ const Job = () => {
     jobData()
 
 
-  }, [openmodal, confirm, page])
+  }, [openmodal, confirm, page,updated])
   const handleConfirm = async (id: string) => {
     try {
 
@@ -88,6 +89,19 @@ const Job = () => {
       if (page > 0) {
         setPage(page - 1)
       }
+    }
+  }
+
+  const handleJobvisibilty =async(job_id:string,status:string)=>{
+    try {
+      const response = await listJob(job_id,status)
+      if(response?.data.success){
+        toast.success(response.data.message)
+        setUpdated(!updated)
+      }
+    } catch (error) {
+      console.error(error);
+      
     }
   }
 
@@ -122,6 +136,9 @@ const Job = () => {
                         <button onClick={() => handleApplicant(val._id)} className='border-black border-2 w-1/3 h-11 rounded-xl hover:font-semibold'>View Applicants</button>
                         <button onClick={() => handleScheduled(val._id)} className='border-black border-2 w-1/3 h-11 rounded-xl hover:font-semibold'>Scheduled</button>
                       </div>
+                      <div className='w-full flex justify-center h-11'>
+                        {val.list ? <button onClick={()=>handleJobvisibilty(val._id,"block")} className='bg-red-500 rounded-lg text-lg font-medium hover:bg-white border-2 hover:text-red-500 text-white w-full'>Unlist</button>
+                          : <button onClick={()=>handleJobvisibilty(val._id,"unblock")} className='bg-green-500 rounded-lg text-lg font-medium hover:bg-white border-2 hover:text-green-500 text-white w-full'>Unlist</button>}                      </div>
                       {confirm &&
                         <div id="deleteModal" aria-hidden="true" className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full overflow-y-auto overflow-x-hidden md:inset-0 md:h-full">
                           <div className="relative p-4 w-full max-w-md h-full md:h-auto">

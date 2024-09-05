@@ -301,3 +301,14 @@ export const posts =async(token:string)=>{
         
             }
         }
+
+        export const listJob =async(job_id:string,status:string)=>{
+            try {
+                const data ={job_id,status}
+                const response = await axiosInstance.patch('/company/listjob',data,{headers:{"Authorization":token}})
+                return response
+            } catch (error: any) {
+                handleTokenError(error, "User")
+        
+            }
+        }

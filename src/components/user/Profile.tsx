@@ -32,6 +32,7 @@ const Profile = () => {
   const [mode, setMode] = useState('')
   const [skillerror, setSkillerror] = useState('')
   const [uploaderror, setUploaderror] = useState('')
+  const [page,setPage]=useState(0)
   const [error, setError] = useState({
     experiencefield: '',
     mode: '',
@@ -70,9 +71,10 @@ const Profile = () => {
     const applied = async () => {
       try {
 
-        let response = await appliedJobs()
+        let response = await appliedJobs(page)
         if (response?.data.success) {
           setAppliedJobdata(response?.data.appliedJobs)
+          setPage(response.data.count)
         }
 
 

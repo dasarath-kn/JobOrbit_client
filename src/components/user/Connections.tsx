@@ -357,17 +357,28 @@ const Connections = () => {
                             {connectionData && connectionData.length > 0 ? (
                                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6'>
                                     {connectionData.map((val, index) => (
-                                        <div key={index} className='flex items-center p-4 border rounded-lg bg-gray-50'>
-                                            <img src={val.sender_id.img_url || "/user06.png"} className='w-9 h-9 rounded-full' alt="User" />
-                                            <div className='ml-4 flex-1'>
-                                                <p className='font-medium'>{val.sender_id.firstname}</p>
-                                                <p className='text-gray-500 text-sm'>{formatDistanceToNow(new Date(val.date), { addSuffix: true })}</p>
-                                            </div>
-                                            <div className='flex items-center space-x-2'>
-                                                <MdVerified onClick={() => handleAccept(val._id, val.sender_id._id as string, "accept")} className='text-green-500 cursor-pointer' />
-                                                <IoMdCloseCircle onClick={() => handleAccept(val._id, val.sender_id._id as string, "reject")} className='text-red-500 cursor-pointer' />
-                                            </div>
+                                        <div key={index} className="flex items-center p-4 border rounded-lg bg-gray-50 shadow-md">
+                                        <img src={val.sender_id.img_url || "/user06.png"} className="w-9 h-9 rounded-full" alt="User" />
+                                        <div className="ml-4 flex-1">
+                                            <p className="font-medium text-gray-800">{val.sender_id.firstname}</p>
+                                            <p className="text-gray-500 text-sm">{formatDistanceToNow(new Date(val.date), { addSuffix: true })}</p>
                                         </div>
+                                        <div className="flex items-center space-x-2">
+                                            <button 
+                                                onClick={() => handleAccept(val._id, val.sender_id._id as string, "accept")} 
+                                                className="flex items-center justify-center p-2 rounded-full bg-green-100 hover:bg-green-200 transition-colors duration-200"
+                                            >
+                                                <MdVerified className="text-green-500 w-6 h-6" />
+                                            </button>
+                                            <button 
+                                                onClick={() => handleAccept(val._id, val.sender_id._id as string, "reject")} 
+                                                className="flex items-center justify-center p-2 rounded-full bg-red-100 hover:bg-red-200 transition-colors duration-200"
+                                            >
+                                                <IoMdCloseCircle className="text-red-500 w-6 h-6" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
                                     ))}
                                 </div>
                             ) : (

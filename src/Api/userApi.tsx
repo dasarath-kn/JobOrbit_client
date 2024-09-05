@@ -150,14 +150,15 @@ export const addSkills = async (skills: [], percentage: number) => {
     }
 
 }
-export const getJobs = async (page: number, handleJobType: string, handleJobLocation: string, handleDate: string) => {
+export const getJobs = async (page: number, handleJobType: string, handleJobLocation: string, handleDate: string,userId:string) => {
     try {
         let response = await axiosInstance.get(`/jobs`, {
             params: {
                 page: page,
                 type: handleJobType,
                 location: handleJobLocation,
-                date: handleDate
+                date: handleDate,
+                user_id:userId
             },
             headers: {
                 "Authorization": token
@@ -336,10 +337,10 @@ export const reportPost = async (reportPostData: postreport) => {
     }
 }
 
-export const appliedJobs = async () => {
+export const appliedJobs = async (page:number) => {
     try {
 
-        const response = await axiosInstance.get('/appliedjobs', { headers: { "Authorization": token } })
+        const response = await axiosInstance.get(`/appliedjobs?page=${page}`, { headers: { "Authorization": token } })
         return response
     } catch (error: any) {
         handleTokenError(error, "User")

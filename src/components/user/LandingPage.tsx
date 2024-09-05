@@ -10,7 +10,7 @@ const LandingPage = () => {
   useEffect(() => {
     let jobs = async () => {
       try {
-        let response = await getJobs(0,"" ,"" ,"" )
+        let response = await getJobs(0,"" ,"" ,"","" )
         if (response?.data) {
           setJobdata(response.data.jobs)
         }

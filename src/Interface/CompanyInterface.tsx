@@ -52,7 +52,8 @@ export interface jobdata {
   responsibilities:string;
   requirements:string
   qualification:string
-  skills:string
+  skills:string,
+  list:boolean
 }
 export interface post{
   _id:string,
