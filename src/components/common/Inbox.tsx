@@ -413,6 +413,18 @@ const Inbox = () => {
                             >
                               Send Link
                             </button>
+                            <button 
+                              type="button"
+                              className="relative inline-flex items-center w-full px-4 py-4 text-sm font-medium border-b border-gray-200 hover:bg-gray-100 text-black"
+                            >
+                              Send Image
+                            </button>
+                            <button 
+                              type="button"
+                              className="relative inline-flex items-center w-full px-4 py-4 text-sm font-medium border-b border-gray-200 hover:bg-gray-100 text-black"
+                            >
+                              Send Resume
+                            </button>
 
                           </div>
                         )}

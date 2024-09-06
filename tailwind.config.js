@@ -5,7 +5,17 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        scrollRightToLeft: {
+          '0%': { transform: 'translateX(100%)' }, // Start offscreen right
+          '100%': { transform: 'translateX(-100%)' }, // End offscreen left
+        },
+      },
+      animation: {
+        scrollRightToLeft: 'scrollRightToLeft 10s linear infinite',
+      },
+    },
   },
   fontFamily:{
     body: ['Poppins', 'sans-serif']

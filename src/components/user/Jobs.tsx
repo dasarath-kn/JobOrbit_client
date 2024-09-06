@@ -170,12 +170,12 @@ const Jobs = () => {
       <div className="w-screen h-auto min-h-screen  mt-6 mb-8 ">
         {!skelton && <div className='flex justify-center items-center space-y-9 flex-col text-center'>
 
-          <p className='  font-medium text-3xl'>Search And Apply The Job You Want</p>
-          <div className='flex items-center  border rounded-xl h-12 w-80 lg:w-96 px-4 mt-4 lg:mt-0'>
+{         job ? <p className='  font-medium text-3xl'>Search And Apply The Job You Want</p>:<p className='  font-medium text-3xl'>Applied Jobs</p>
+}          {job && <div className='flex items-center  border rounded-xl h-12 w-80 lg:w-96 px-4 mt-4 lg:mt-0'>
             <FaSearch className='text-gray-400 mr-2' />
             <input value={search} className='flex-grow border-none focus:outline-none' onChange={(e) => handleSearch(e)} type="text" placeholder='Search' />
             <button onClick={handleSubmit} className='bg-black text-white rounded-xl w-20 h-8 ml-2'>Search</button>
-          </div>
+          </div>}
           {jobdata.length > 0 && job && <div className='flex lg:flex-row space-y-4 sm:flex-row md:space-y-0 md:space-x-4 flex-col lg:space-x-16 sm:space-y-4 lg:space-y-0 '>
             <div className='relative flex items-center border-2 border-black w-48 h-12 rounded-full'>
               <p className='ml-4'>Date Posted</p>

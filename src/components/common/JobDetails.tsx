@@ -27,9 +27,7 @@ const JobDetails = () => {
     const userData = async () => {
       try {
         let response = await getUserdata()
-        if (response?.data.success) {
-          console.log(response.data.userData.resume_url);
-          
+        if (response?.data.success) {          
           const sortedResumes = response?.data.userData.resume_url.sort((a: string, b: string) => b.localeCompare(a));
           setResumeData(sortedResumes)
         }
@@ -160,19 +158,28 @@ const JobDetails = () => {
 
   }
   const jobApplication = () => {
-    if (userDatas.plan_id) {
-      setShowModal(!showModal)
+    if (userDatas.percentage =="100") {
+      if(userDatas.plan_id){
+        setShowModal(!showModal)
+      }else{
+        toast.error("Choose a subscription plan for applying")
+      }
     }
     else {
-      toast.error("Choose a subscription plan for applying")
+      toast.error("Complete your profile details")
 
     }
   }
 
   return (
     <>
-      {!skelton ? (<div className='w-full min-h-screen lg:m-11 mb-11 flex flex-col items-center  '>
-        <div className='w-full flex flex-col md:flex-row'>
+      {!skelton ? (
+        <div className='w-5/6 min-h-screen lg:m-11 mb-11 flex flex-col items-center   '>
+ {userDatas.percentage && userDatas.percentage <"100" && <div className="overflow-hidden whitespace-nowrap w-1/2 flex justify-center items-center">
+      <p className="inline-block animate-scrollRightToLeft text-lg font-bold text-red-500">
+      Please complete your profile details to proceed!      </p>
+    </div>}
+        <div className='w-full flex flex-col md:flex-row mt-3'>
           <div className='flex justify-center md:ml-40 mb-5 md:mb-0'>
             {job?.company_id.img_url ? (
               <img src={job.company_id.img_url} className='w-96 h-auto' alt='' />
