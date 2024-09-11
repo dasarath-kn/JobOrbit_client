@@ -49,12 +49,18 @@ export interface User{
     plan_id?:string,
     online?:string,
     jobapplied_Count?:number|string,
-    experience?:Experience[]
-    connections?:Connection[]
-    companies?:Companies[]
+    experience?:Experience[],
+    connections?:Connection[],
+    companies?:Companies[],
+    rewards?:rewards[]
 
 }
-
+export interface rewards{
+    awardTittle:string,
+    issuedBy:string,
+    details:string,
+    img_url:string     
+}
 export interface otp {
     otp:string
 }

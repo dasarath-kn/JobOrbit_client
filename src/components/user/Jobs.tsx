@@ -16,7 +16,7 @@ const Jobs = () => {
   let [search, setSearch] = useState<string>('')
   let [data, setData] = useState<jobdata[]>()
   const userDatas: User = useSelector((state: RootState) => state.user)
-  const [pagecount, setPagecount] = useState<number>(0)
+  const [pagecount,setPagecount] = useState<number>(0)
   const [page, setPage] = useState<number>(0)
   const [jobAppliedPage, setJobAppliedPage] = useState<number>(0)
   const [appliedPagecount, setAppliedPagecount] = useState<number>(0)
@@ -363,13 +363,14 @@ const Jobs = () => {
             {jobdata.length > 0 ? (jobdata.map((val) => {
               return !skelton ? (<>
 
-                <div className="p-6 sm:w-40 lg:w-80 md:w-80 h-40 rounded-md border shadow-xl">
+                <div className="p-6 sm:w-40 lg:w-80 md:w-80 h-44 rounded-md border shadow-xl">
                   <h2 className="font-medium text-xl">{val.jobtitle}</h2>
                   <p>{val.company_id.companyname}</p>
                   <div className="flex items-center text-gray-400">
                     <FaMapMarkerAlt />
                     <p className="ml-2 text-black">{val.company_id.state}</p>
                   </div>
+                 {val.jobtitle == userDatas.field && <p className='text-sm font-normal'>Your profile matches this job</p>}
                   <button onClick={() => navigate('/jobdetails', { state: { job_id: val._id } })} className="rounded-xl my-3 bg-black text-white w-20 h-7">View</button>
                 </div>
               </>) : (<div className="p-6 sm:w-40 lg:w-80 md:w-80 h-40 rounded-md border shadow-xl">

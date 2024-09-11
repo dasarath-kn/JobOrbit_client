@@ -29,6 +29,8 @@ const Post = () => {
   const [selectedPostid, setSelectedpostid] = useState('')
   const [postHandle, setPostHandle] = useState<boolean>(false)
   const [savedPostData, setSavedPostData] = useState<post[]>([])
+  const [page,setPage]=useState<number>(0)
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate()
   const dispatch = useDispatch()
   useEffect(() => {
@@ -46,7 +48,7 @@ const Post = () => {
     }
     const posts = async () => {
       try {
-        let response = await getPosts()
+        let response = await getPosts(page)
         if (response?.data) {
 
           setPostdata(response?.data.posts.map((post: post) => ({ ...post, currentIndex: 0 })));
@@ -78,7 +80,7 @@ const Post = () => {
     posts()
     savedPost()
 
-  }, [like, updated])
+  }, [like, updated,page])
 
   const goToSlide = (postId: string, index: number) => {
     setPostdata(prevData =>
@@ -188,6 +190,22 @@ const Post = () => {
     setLikdUsers(!likedUsers)
 
   }
+  const handleScroll = () => {
+    console.log("working");
+    
+    if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || isLoading) {
+      return;
+    }
+    
+    setPage((prevPage) => prevPage + 1); 
+    
+  };
+  useEffect(()=>{
+    window.addEventListener("scroll",handleScroll)
+    return ()=>window.removeEventListener("scroll",handleScroll)
+  },[isLoading])
+  console.log(page,"pageCount");
+  
   return (
     <div className='flex lg:justify-center flex-row lg:m-9 min-h-screen'>
       <div className='lg:ml-14 sm:ml-0 mt-20 rounded-xl flex flex-col  justify-center s  h-1/2 border-300 lg:w-2/3 sm:w-full    '>
@@ -217,7 +235,7 @@ const Post = () => {
                     <img src={val.company_id.img_url} className='w-11 h-11 rounded-full' alt='Company Logo' /> :
 
                     <img src='/imgadd.jpg' className='w-11 h-11' alt='Company Logo' />}
-                  <p>{val.company_id.companyname}</p>
+                  <p onClick={()=>setIsLoading(!isLoading)}>{val.company_id.companyname}</p>
                 </div>
                 <div className="relative inline-block">
                   <IoMdMore onClick={() => handleMenu(val._id)} className="w-7 h-7 cursor-pointer" />

@@ -114,7 +114,7 @@ export const resetPassword = async (userdata: User) => {
 
 }
 
-export const editProfile = async (userdata: User) => {
+export const editProfile = async (userdata: FormData) => {
     try {
         const refreshtoken = localStorage.getItem('UserRefeshtoken')
 
@@ -171,15 +171,14 @@ export const getJobs = async (page: number, handleJobType: string, handleJobLoca
 };
 
 
-export const getPosts = async () => {
+export const getPosts = async (page:number) => {
     try {
         const token = localStorage.getItem('Usertoken')
         const refreshtoken = localStorage.getItem('UserRefeshtoken')
 
-        let response = await axiosInstance.get('/posts', { headers: { "Authorization": token, "refresh-token": refreshtoken } })
+        let response = await axiosInstance.get(`/posts?page=${page}`, { headers: { "Authorization": token, "refresh-token": refreshtoken } })
         return response
     } catch (error: any) {
-
         handleTokenError(error, "User")
     }
 }
@@ -495,6 +494,16 @@ export const removeExperience = async(data:string)=>{
        const response = await axiosInstance.delete(`/removeexperience?field=${data}`,{headers:{"Authorization":token}}) 
         return response 
     } catch (error: any) {
+        handleTokenError(error, "User")
+
+    }
+}
+
+export const addRewards = async(rewardData:FormData)=>{
+    try {
+        const response = await axiosInstance.patch('/rewards',rewardData,{headers:{"Authorization":token}})
+        return response
+    }catch (error: any) {
         handleTokenError(error, "User")
 
     }

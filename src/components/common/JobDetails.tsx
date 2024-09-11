@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { RootState } from '../../Redux/Store';
 import { useSelector } from 'react-redux';
 import { User } from '../../Interface/UserInterface';
+import Timeline from './Timeline';
 
 const JobDetails = () => {
   const [job, setJob] = useState<jobdata>();
@@ -179,6 +180,7 @@ const JobDetails = () => {
       <p className="inline-block animate-scrollRightToLeft text-lg font-bold text-red-500">
       Please complete your profile details to proceed!      </p>
     </div>}
+  <div>  <Timeline/></div>
         <div className='w-full flex flex-col md:flex-row mt-3'>
           <div className='flex justify-center md:ml-40 mb-5 md:mb-0'>
             {job?.company_id.img_url ? (
@@ -205,7 +207,6 @@ const JobDetails = () => {
               </button>)) :
 
                 (<button
-                  // onClick={() => job?._id && handleJobapply(job._id,job.company_id._id as string)}
                   onClick={jobApplication}
                   className='bg-black rounded-full text-white w-24 h-12'
                 >

@@ -1,10 +1,10 @@
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../Redux/Store'
 import { experienceData, User } from '../../Interface/UserInterface'
 import { useFormik } from 'formik'
-import { addExperience, addSkills, appliedJobs, editProfile, getUserdata, removeExperience, removeSkill, subscribeduserdetails, uploadResume } from '../../Api/userApi'
+import { addExperience, addRewards, addSkills, appliedJobs, editProfile, getUserdata, removeExperience, removeSkill, subscribeduserdetails, uploadResume } from '../../Api/userApi'
 import { setUserdetails } from '../../Redux/UserSlice'
 import toast, { Toaster } from 'react-hot-toast'
 import { format } from 'date-fns'
@@ -14,7 +14,7 @@ import { subscriptedUser } from '../../Interface/AdminInterface'
 
 const Profile = () => {
   const [data, setData] = useState<User>()
-  const [imageFile, setImageFile] = useState<any>()
+  const [imageFile, setImageFile] = useState<string | File>()
   const [openmodal, setOpenmodal] = useState<boolean>(false)
   const dispatch = useDispatch()
   const [experiencemodal, setExperiencemodal] = useState<boolean>(false)
@@ -33,10 +33,10 @@ const Profile = () => {
   const [skillerror, setSkillerror] = useState('')
   const [uploaderror, setUploaderror] = useState('')
   const [rewardModal, setRewardModal] = useState<boolean>(false)
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [images, setImages] = useState<string[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string>();
+  const [image, setImage] = useState<string | File>();
   const [awardTittle, setAwardTittle] = useState<string>("")
-  const [issued, setIssued] = useState<string>("")
+  const [issuedBy, setIssuedBy] = useState<string>("")
   const [details, setDetails] = useState<string>("")
   const [awardTittleError, setAwardTittleError] = useState<string>("")
   const [issuedError, setIssuedError] = useState<string>("")
@@ -145,7 +145,7 @@ const Profile = () => {
           }
         }
 
-        let response = await editProfile(formDataToSend as any)
+        let response = await editProfile(formDataToSend)
         if (response?.data.success) {
           setButtonload(false)
 
@@ -168,17 +168,37 @@ const Profile = () => {
   }
   const validateForm = (): experienceData => {
     const errors: experienceData = {};
-    if (!experiencefield) errors.experiencefield = 'Experience Field is required';
-    if (!mode) errors.mode = 'Duration is required';
-    if (!startdate) errors.startdate = 'Joined Date is required';
-    if (mode === 'Past' && !enddate) {
-      errors.enddate = 'End Date is required';
-    } else if (mode === 'Past' && startdate && enddate && new Date(startdate) >= new Date(enddate)) {
-      errors.enddate = 'End Date should be greater than Start Date';
+      if (!experiencefield) errors.experiencefield = 'Experience Field is required';
+        if (!mode) errors.mode = 'Duration is required';
+      if (!startdate) {
+      errors.startdate = 'Joined Date is required';
+    } else {
+      const startDate = new Date(startdate);
+      const currentDate = new Date();
+      if (startDate > currentDate) {
+        errors.startdate = 'Start Date cannot be in the future';
+      }
+    }
+    if (mode === 'Past') {
+      if (!enddate) {
+        errors.enddate = 'End Date is required';
+      } else {
+        const endDate = new Date(enddate);
+        if (endDate > new Date()) {
+          errors.enddate = 'End Date cannot be in the future';
+        } else if (startdate) {
+          const startDate = new Date(startdate);
+          if (startDate >= endDate) {
+            errors.enddate = 'End Date should be greater than Start Date';
+          }
+        }
+      }
     }
     if (!responsibilities) errors.responsibilities = 'Responsibilities are required';
+  
     return errors;
   };
+  
   const handleExperience = async () => {
     const formErrors = validateForm();
     if (Object.keys(formErrors).length === 0) {
@@ -215,13 +235,12 @@ const Profile = () => {
 
     setSkills(skill)
   }
-  const submitSkills = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (skills.length == 0) {
+  const submitSkills = async () => {
+   const skillsValidation = textareaValue.trim() 
+    if (!skillsValidation) {
       setSkillerror("Enter your skills")
-      e.preventDefault()
       return
     }
-    e.preventDefault()
     try {
       if (data?.skills && data?.skills?.length > 0) {
         const percentage = Number(data?.percentage)
@@ -251,8 +270,6 @@ const Profile = () => {
     }
 
   }
-  console.log(data?.resume_url);
-
 
   // useEffect(() => {
   //   let timer = setTimeout(() => {
@@ -276,7 +293,7 @@ const Profile = () => {
   }
   const submitPdf = async () => {
 
-    if (resume?.size === 0) {
+    if (!resume) {
       setUploaderror("Upload your cv")
       return
     }
@@ -348,28 +365,82 @@ const Profile = () => {
 
     }
   }
-  const handleImageChange = (e: any) => {
-    const files: string[] = Array.from(e.target.files);
-    setImages(files);
-    const previews: string[] = files.map(file => URL.createObjectURL(file as any));
-    setImagePreviews(previews);
-  };
-  const handleRemoveImage = (index: number) => {
-    setImagePreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index)); // Adjust your images array accordingly
-  };
-  const handleAwards = (e: MouseEvent<HTMLButtonElement>) => {
-    if (!awardTittle) {
-      setAwardTittleError("Award title required")
-    }
-    if (!issued) {
-      setIssuedError("Issued by required")
-    }
-    if (!details) {
-      setDetailsError("Details required")
-    }
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
 
-  }
+    if (files && files[0]) {
+      const file = files[0];
+      setImage(file);
+      setImagePreviews(URL.createObjectURL(file));
+    }
+  };
+  const handleRemoveImage = () => {
+    setImagePreviews("")
+    setImage("")
+  };
+
+  const handleAwards = async () => {
+    try {
+      let isValid = true; 
+  
+
+      const trimmedAwardTittle = awardTittle.trim();
+      const trimmedIssuedBy = issuedBy.trim();
+      const trimmedDetails = details.trim();
+  
+ 
+      if (!trimmedAwardTittle) {
+        setAwardTittleError("Award title required");
+        isValid = false;
+      } else {
+        setAwardTittleError("");
+      }
+  
+      if (!trimmedIssuedBy) {
+        setIssuedError("Issued by required");
+        isValid = false;
+      } else {
+        setIssuedError("");
+      }
+  
+      if (!trimmedDetails) {
+        setDetailsError("Details required");
+        isValid = false;
+      } else {
+        setDetailsError("");
+      }
+  
+      if (!isValid) return;
+      const formData = new FormData();
+      formData.append("awardTittle", trimmedAwardTittle);
+      formData.append("issuedBy", trimmedIssuedBy);
+      formData.append("details", trimmedDetails);
+  
+      if (image) {
+        formData.append("image", image as File);
+      } else {
+
+        console.log("No image selected");
+      }
+  
+ 
+      setLoader(true);
+      const reward = await addRewards(formData);
+  
+
+      if (reward?.data.success) {
+        setRewardModal(!rewardModal);
+        setUpdated(!updated);
+        setImagePreviews(""); 
+      }
+
+      setLoader(false);
+    } catch (error) {
+      console.error(error);
+      setLoader(false); 
+    }
+  };
+  
 
   return (
     <>
@@ -480,6 +551,35 @@ const Profile = () => {
                 </div>
               </div>
             </div>}
+            {userDatas.rewards && userDatas.rewards.length > 0 && (
+              <div className="m-6">
+                <div className="space-y-3">
+                  <p className="text-2xl font-semibold">Honours & Rewards</p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {userDatas.rewards.map((val, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col space-y-2 p-4 border border-gray-200 rounded-lg shadow-lg"
+                    >
+                      <img
+                        src={val.img_url}
+                        alt={val.awardTittle}
+                        className="w-full h-48 object-cover rounded-lg"
+                      />
+
+                      <ul className="space-y-1">
+                        <li className="text-lg font-bold">{val.awardTittle}</li>
+                        <li className="text-gray-600">{val.issuedBy}</li>
+                        <li className="text-gray-500 text-sm">{val.details}</li>
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {data?.experience && data.experience.length >= 0 && <div>
               <div className='space-y-3'>
                 <p className='text-2xl font-semibold lg:ml-4'> Experience</p>
@@ -555,7 +655,7 @@ const Profile = () => {
                   <div>
                     <button
                       type='button'
-                      onClick={(e) => submitSkills(e as any)}
+                      onClick={ submitSkills}
                       className='disabled bg-black text-white w-16 h-9'
                     >
                       Add
@@ -590,49 +690,12 @@ const Profile = () => {
                 <p className='text-2xl font-semibold'>Experience</p>
                 <button className='font-medium text-gray-400 ' onClick={() => setExperiencemodal(!experiencemodal)}>Add experience</button>
               </div>
-              {/* <div className=' grid lg:grid-cols-2 sm:grid-rows-1 sm:gap-x-0 lg:gap-x-4 h-auto' >
-                {data?.experience && data?.experience.length > 0 ? data.experience.map((val) => {
-                  const startDate = format(new Date(val.start_date), 'MMMM dd, yyyy');
-                  const endDate = val.mode === "Present" ? "Present" : format(new Date(val.end_date), 'MMMM dd, yyyy');
-                  return (
-                    <div className='rounded-3xl border-9 h-auto bg-gray-100 mt-9 p-5'>
-                      <div className='flex justify-end space-x-3'>
-                        <button
-                          className='text-red-600 text-xl  px-3 py-1 rounded-full hover:border-2 transition'
-                          onClick={() => deleteExperience(val.experiencefield)}
-                        >
-                          &times;
-                        </button>
-                      </div>
-                      <div className='flex flex-col space-y-6'>
-                        <p className='text-2xl font-semibold text-center md:text-left break-words'>
-                          {val.experiencefield}
-                        </p>
-                        <div className='space-y-4'>
-                          <p className='text-xl font-normal'>Start Date: {startDate}</p>
-                          <p className='text-xl font-normal'>End Date: {endDate}</p>
-                        </div>
-                        <div>
-                          <p className='text-xl font-medium'>Responsibilities:</p>
-                          <p className='break-words'>{val.responsibilities}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                  );
-                }) : (
-                  <div>
-                    <p className='text-red-500 font-medium'>Add your experience and increase 15% profile percentage</p>
-                  </div>
-                )}
-
-              </div> */}
 
             </div>
             <div className='m-6'>
               <div className='space-y-3 '>
                 <p className='text-2xl font-semibold'>Upload Honours & Rewards</p>
-                <button className='font-medium text-gray-400 ' onClick={()=>setRewardModal(!rewardModal)} >Add Rewards</button>
+                <button className='font-medium text-gray-400 ' onClick={() => setRewardModal(!rewardModal)} >Add Rewards</button>
 
               </div>
 
@@ -849,14 +912,15 @@ const Profile = () => {
 
 
       </>)}
-      {rewardModal && <div id="crud-modal" aria-hidden="true" className="bg-black bg-opacity-60 flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+      {rewardModal && 
+      <div id="crud-modal" aria-hidden="true" className="bg-black bg-opacity-60 flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div className="relative p-4 w-full max-w-md max-h-full">
           <div className="relative bg-white rounded-lg shadow">
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-lg font-semibold dark:text-black">
                 Honours & Awards
               </h3>
-              <button onClick={() => setRewardModal(!rewardModal)} type="button" className="text-gray-400 bg-transparent hover:bg-black hover:text-white rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="crud-modal">
+              <button onClick={() =>{ setRewardModal(!rewardModal),setLoader(false)}} type="button" className="text-gray-400 bg-transparent hover:bg-black hover:text-white rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="crud-modal">
                 <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                 </svg>
@@ -872,7 +936,7 @@ const Profile = () => {
                 </div>
                 <div className="col-span-2">
                   <label className="block mb-2 text-sm font-medium text-black">Issued By</label>
-                  <textarea onChange={(e) => { setIssued(e.target.value), setIssuedError("") }} name="issuedby" id="issuedby" className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter issued by" />
+                  <textarea onChange={(e) => { setIssuedBy(e.target.value), setIssuedError("") }} name="issuedby" id="issuedby" className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter issued by" />
                   {issuedError && <p className="text-red-500 text-sm">{issuedError}</p>}
 
                 </div>
@@ -884,22 +948,22 @@ const Profile = () => {
                 </div>
                 <div className="col-span-2">
                   <label className="block mb-2 text-sm font-medium text-black">Upload Images</label>
-                  <input type="file" accept="image/*" name="images" id="images" multiple onChange={handleImageChange} className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <input type="file" accept="image/*" name="images" id="images" onChange={handleImageChange} className="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-black dark:focus:ring-primary-500 dark:focus:border-primary-500" />
                 </div>
               </div>
               <div className="grid gap-4 mb-4 grid-cols-2">
-                {imagePreviews.map((preview, index) => (
-                  <div key={index} className="relative col-span-1">
-                    <img src={preview} alt={`preview ${index}`} className="w-full h-auto rounded-lg" />
-                    <button type="button" onClick={() => handleRemoveImage(index)} className="absolute top-0 right-0 m-1 text-white bg-red-600 hover:bg-red-800 rounded-full p-1">
+                {imagePreviews &&
+                  <div className="relative col-span-1">
+                    <img src={imagePreviews} alt={`preview`} className="w-full h-auto rounded-lg" />
+                    <button type="button" onClick={ handleRemoveImage} className="absolute top-0 right-0 m-1 text-white bg-red-600 hover:bg-red-800 rounded-full p-1">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                       </svg>
                     </button>
                   </div>
-                ))}
+                }
               </div>
-              <button disabled={loader} type="button" onClick={(e) => handleAwards(e)} className="text-white inline-flex items-center bg-black focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+              <button disabled={loader} type="button" onClick={handleAwards} className="text-white inline-flex items-center bg-black focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                 {loader && <svg aria-hidden="true" role="status" className="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB" />
                   <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor" />

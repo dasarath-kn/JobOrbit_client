@@ -21,7 +21,8 @@ const initialState: User = {
     online:'',
     experience: [],
     connections:[],
-    companies:[]
+    companies:[],
+    rewards:[]
 
 }
 
@@ -52,6 +53,7 @@ const UserSlice = createSlice({
             state.connections =action.payload.connections
             state.companies =action.payload.companies
             state.online =action.payload.online
+            state.rewards =action.payload.rewards
         },
         logoutUser: (state) => {            
             state._id = "",
@@ -75,6 +77,7 @@ const UserSlice = createSlice({
                 state.connections=[]
                 state.companies=[]
                 state.online=""
+                state.rewards=[]
 
 
         }
