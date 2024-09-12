@@ -297,7 +297,7 @@ export const posts =async(token:string)=>{
                 const response = await axiosInstance.get(`/messages?_id=${id}`, { headers: { "Authorization": token } })
                 return response
             } catch (error: any) {
-                handleTokenError(error, "User")
+                handleTokenError(error, "Company")
         
             }
         }
@@ -308,7 +308,16 @@ export const posts =async(token:string)=>{
                 const response = await axiosInstance.patch('/company/listjob',data,{headers:{"Authorization":token}})
                 return response
             } catch (error: any) {
-                handleTokenError(error, "User")
+                handleTokenError(error, "Company")
+        
+            }
+        }
+        export const shareDocument = async (messageData: FormData) => {
+            try {
+                const response = await axiosInstance.post('/company/sharedocument', messageData, { headers: { "Authorization": token } })
+                return response
+            } catch (error: any) {
+                handleTokenError(error, "Company")
         
             }
         }

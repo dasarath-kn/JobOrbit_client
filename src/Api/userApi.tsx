@@ -150,7 +150,7 @@ export const addSkills = async (skills: [], percentage: number) => {
     }
 
 }
-export const getJobs = async (page: number, handleJobType: string, handleJobLocation: string, handleDate: string,userId:string) => {
+export const getJobs = async (page: number, handleJobType: string, handleJobLocation: string, handleDate: string, userId: string) => {
     try {
         let response = await axiosInstance.get(`/jobs`, {
             params: {
@@ -158,7 +158,7 @@ export const getJobs = async (page: number, handleJobType: string, handleJobLoca
                 type: handleJobType,
                 location: handleJobLocation,
                 date: handleDate,
-                user_id:userId
+                user_id: userId
             },
             headers: {
                 "Authorization": token
@@ -171,7 +171,7 @@ export const getJobs = async (page: number, handleJobType: string, handleJobLoca
 };
 
 
-export const getPosts = async (page:number) => {
+export const getPosts = async (page: number) => {
     try {
         const token = localStorage.getItem('Usertoken')
         const refreshtoken = localStorage.getItem('UserRefeshtoken')
@@ -195,13 +195,13 @@ export const likeunlike = async (post_id: string, status: string, token: string)
 
     }
 }
-export const savePost = async (_id: string, message: string,company_id:string) => {
-    const post_id = { post_id: _id,message:message,company_id:company_id }
+export const savePost = async (_id: string, message: string, company_id: string) => {
+    const post_id = { post_id: _id, message: message, company_id: company_id }
     try {
         let response = await axiosInstance.post('/savepost', post_id, {
             headers: {
                 "Authorization": token
-                
+
             }
         })
         return response
@@ -214,7 +214,7 @@ export const savePost = async (_id: string, message: string,company_id:string) =
 }
 export const getSavedpost = async () => {
     try {
-        let response = await axiosInstance.get('/getsavedpost',{headers:{"Authorization":token}})
+        let response = await axiosInstance.get('/getsavedpost', { headers: { "Authorization": token } })
         return response
     } catch (error: any) {
         handleTokenError(error, "User")
@@ -281,9 +281,9 @@ export const uploadResume = async (Data: User) => {
     }
 }
 
-export const jobApply = async (job_id: string,company_id:string,resume_url:string) => {
+export const jobApply = async (job_id: string, company_id: string, resume_url: string) => {
     try {
-        const data ={job_id:job_id,company_id:company_id,resume_url:resume_url}
+        const data = { job_id: job_id, company_id: company_id, resume_url: resume_url }
         let response = await axiosInstance.patch('/jobapply', data, { headers: { 'Authorization': token } })
         return response
     } catch (error: any) {
@@ -303,9 +303,9 @@ export const getSubscriptionplans = async () => {
     }
 }
 
-export const subscriptionPayment = async (id: string,expiry_date:number) => {
+export const subscriptionPayment = async (id: string, expiry_date: number) => {
     try {
-        const data ={plan_id:id,expiry_date:expiry_date}
+        const data = { plan_id: id, expiry_date: expiry_date }
         let response = await axiosInstance.post('/paysubscriptionplan', data, { headers: { "Authorization": token } })
 
         return response
@@ -336,7 +336,7 @@ export const reportPost = async (reportPostData: postreport) => {
     }
 }
 
-export const appliedJobs = async (page:number) => {
+export const appliedJobs = async (page: number) => {
     try {
 
         const response = await axiosInstance.get(`/appliedjobs?page=${page}`, { headers: { "Authorization": token } })
@@ -436,31 +436,9 @@ export const connectCompany = async (connectionData: connection) => {
     }
 }
 
-export const connections =async()=>{
+export const connections = async () => {
     try {
-        const response = await axiosInstance.get('/connection',{headers:{"Authorization":token}})
-        return response
-    }catch (error: any) {
-        handleTokenError(error, "User")
-
-    }
-}
-
-export const manageConnection =async(connectionData:connectionData)=>{
-    try {
-        const response = await axiosInstance.patch('/manageconnection',connectionData,{headers:{"Authorization":token}})
-        return response
-        
-    } catch (error: any) {
-        handleTokenError(error, "User")
-
-    }
-}
-
-export const inbox = async(id:string,role:string)=>{
-    try {
-        const data ={reciever_id:id,role:role}
-        const response = await axiosInstance.post('/inbox',data,{headers:{"Authorization":token}})
+        const response = await axiosInstance.get('/connection', { headers: { "Authorization": token } })
         return response
     } catch (error: any) {
         handleTokenError(error, "User")
@@ -468,42 +446,73 @@ export const inbox = async(id:string,role:string)=>{
     }
 }
 
-export const conversation = async(role:string)=>{
+export const manageConnection = async (connectionData: connectionData) => {
     try {
-        const response = await axiosInstance.get(`/conversation?role=${role}`,{headers:{"Authorization":token}})
+        const response = await axiosInstance.patch('/manageconnection', connectionData, { headers: { "Authorization": token } })
         return response
-        
+
     } catch (error: any) {
         handleTokenError(error, "User")
 
     }
 }
 
-export const removeSkill = async(skill:string)=>{
+export const inbox = async (id: string, role: string) => {
     try {
-        
-        const response = await axiosInstance.delete(`/removeskill?skill=${skill}` ,{headers:{"Authorization":token}})
+        const data = { reciever_id: id, role: role }
+        const response = await axiosInstance.post('/inbox', data, { headers: { "Authorization": token } })
         return response
     } catch (error: any) {
         handleTokenError(error, "User")
 
     }
 }
-export const removeExperience = async(data:string)=>{
+
+export const conversation = async (role: string) => {
     try {
-       const response = await axiosInstance.delete(`/removeexperience?field=${data}`,{headers:{"Authorization":token}}) 
-        return response 
+        const response = await axiosInstance.get(`/conversation?role=${role}`, { headers: { "Authorization": token } })
+        return response
+
     } catch (error: any) {
         handleTokenError(error, "User")
 
     }
 }
 
-export const addRewards = async(rewardData:FormData)=>{
+export const removeSkill = async (skill: string) => {
     try {
-        const response = await axiosInstance.patch('/rewards',rewardData,{headers:{"Authorization":token}})
+
+        const response = await axiosInstance.delete(`/removeskill?skill=${skill}`, { headers: { "Authorization": token } })
         return response
-    }catch (error: any) {
+    } catch (error: any) {
+        handleTokenError(error, "User")
+
+    }
+}
+export const removeExperience = async (data: string) => {
+    try {
+        const response = await axiosInstance.delete(`/removeexperience?field=${data}`, { headers: { "Authorization": token } })
+        return response
+    } catch (error: any) {
+        handleTokenError(error, "User")
+
+    }
+}
+
+export const addRewards = async (rewardData: FormData) => {
+    try {
+        const response = await axiosInstance.patch('/rewards', rewardData, { headers: { "Authorization": token } })
+        return response
+    } catch (error: any) {
+        handleTokenError(error, "User")
+
+    }
+}
+export const shareDocument = async (messageData: FormData) => {
+    try {
+        const response = await axiosInstance.post('/sharedocument', messageData, { headers: { "Authorization": token } })
+        return response
+    } catch (error: any) {
         handleTokenError(error, "User")
 
     }

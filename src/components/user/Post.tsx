@@ -30,7 +30,8 @@ const Post = () => {
   const [postHandle, setPostHandle] = useState<boolean>(false)
   const [savedPostData, setSavedPostData] = useState<post[]>([])
   const [page,setPage]=useState<number>(0)
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pageCount,setPageCount]=useState<number>(0)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   useEffect(() => {
@@ -47,18 +48,29 @@ const Post = () => {
       }
     }
     const posts = async () => {
+      setIsLoading(true);
+
       try {
         let response = await getPosts(page)
         if (response?.data) {
-
-          setPostdata(response?.data.posts.map((post: post) => ({ ...post, currentIndex: 0 })));
-
+          setPageCount(response.data.count)
+          setPostdata((prevPosts) => {
+            const existingPostIds = new Set(prevPosts.map((post) => post._id));
+                      const newPosts = response?.data.posts.filter((post: post) => !existingPostIds.has(post._id));
+                      return [
+              ...prevPosts,
+              ...newPosts.map((post: post) => ({ ...post, currentIndex: 0 }))
+            ];
+          });
+          
         }
 
 
       } catch (error) {
         console.error(error);
 
+      }finally {
+        setIsLoading(false);
       }
     }
 
@@ -81,6 +93,8 @@ const Post = () => {
     savedPost()
 
   }, [like, updated,page])
+  console.log(postdata,"ppppp");
+  
 
   const goToSlide = (postId: string, index: number) => {
     setPostdata(prevData =>
@@ -197,14 +211,16 @@ const Post = () => {
       return;
     }
     
+   if(page< pageCount){
     setPage((prevPage) => prevPage + 1); 
+   }
     
   };
   useEffect(()=>{
     window.addEventListener("scroll",handleScroll)
     return ()=>window.removeEventListener("scroll",handleScroll)
   },[isLoading])
-  console.log(page,"pageCount");
+  console.log(page);
   
   return (
     <div className='flex lg:justify-center flex-row lg:m-9 min-h-screen'>
@@ -417,6 +433,8 @@ const Post = () => {
                 <p className="text-black font-semibold text-2xl text-center mt-4">No Posts Found</p>
               </div>
             </div>
+            {isLoading && <div>Loading...</div>}
+
           </>}
         </> : <>
           {saved.length > 0  ? saved.map((val, index) => (

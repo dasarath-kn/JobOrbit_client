@@ -129,6 +129,8 @@ export interface reviews {
     message:string,
     timeStamp:string,
     type?: 'sent' | 'received';
+    url:string
+    field:string
 
 }
 export interface conversationData {

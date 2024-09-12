@@ -1,31 +1,66 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { conversationData, message, User } from '../../Interface/UserInterface';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../Redux/Store';
 import socket from '../../Config/Socket';
 import { Company } from '../../Interface/CompanyInterface';
 import { FaPlus } from 'react-icons/fa';
-import { conversation, getcompanymessages } from '../../Api/companyApi';
+import { conversation, getcompanymessages, shareDocument } from '../../Api/companyApi';
 
 const Inbox = () => {
   const companyDatas: Company = useSelector((state: RootState) => state.company);
   const [selectedUser, setSelectedUser] = useState<User>();
   const [details, setDetails] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('');
-  const  companyData = useSelector((state: RootState) => state.company);
+  const companyData = useSelector((state: RootState) => state.company);
   const [messages, setMessages] = useState<message[]>([]);
   const [add, setAdd] = useState<boolean>(false)
   const [sendlink, setSendlink] = useState<boolean>(false)
-  const [link,setLink]=useState<string>('')
-  const [search,setSearch]=useState<string>('')
-  const [companyConversation,setCompanyConversation]=useState<conversationData[]>()
+  const [link, setLink] = useState<string>('')
+  const [search, setSearch] = useState<string>('')
+  const [companyConversation, setCompanyConversation] = useState<conversationData[]>()
   const [searchConversation, setsearchConversation] = useState<conversationData[]>([])
-
+  const [image, setImage] = useState<string | File>()
+  const [pdf, setPdf] = useState<string | File>()
+  const [imagePreview, setImagePreview] = useState<string>()
+  const [pdfPreview, setPdfPreview] = useState<string | undefined>()
+  const [updated, setUpdated] = useState<boolean>(false)
   const handleSelectedUser = (data: User) => {
     setMessages([]);
     setSelectedUser(data);
     setDetails(true)
 
+  };
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef1 = useRef<HTMLInputElement>(null);
+
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  const handleButtonClickpdf = () => {
+    if (fileInputRef1.current) {
+      fileInputRef1.current.click();
+    }
+  };
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImage(file)
+      setImagePreview(URL.createObjectURL(file))
+    }
+  };
+  const handlePdfChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setPdf(file)
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setPdfPreview(event.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   useEffect(() => {
@@ -44,7 +79,7 @@ const Inbox = () => {
     }) => {
       const timeStamp = Date.now();
       const data = { sender_id, reciever_id, message, timeStamp };
-      setMessages((prevMessages:any) => [...prevMessages, data]);
+      setMessages((prevMessages: any) => [...prevMessages, data]);
     };
 
     socket.on('private_message', handleMessage);
@@ -53,13 +88,13 @@ const Inbox = () => {
       socket.off('private_message', handleMessage);
     };
   }, [companyData, socket]);
-  useEffect(()=>{
+  useEffect(() => {
     const conversationData = async () => {
       try {
         let response = await conversation()
         if (response?.data.success) {
           setCompanyConversation(response?.data.conversationData)
-         setsearchConversation(response?.data.conversationData)
+          setsearchConversation(response?.data.conversationData)
 
         }
       } catch (error) {
@@ -68,7 +103,7 @@ const Inbox = () => {
       }
     }
     conversationData()
-  },[message])
+  }, [message])
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -90,33 +125,67 @@ const Inbox = () => {
         console.error(error);
       }
     };
-   
-      fetchMessages();
-    
-  }, [selectedUser,socket]);
 
+    fetchMessages();
 
-  const handleMessageSend = (id: string,mes:string) => {
-    let data ={}
-    if(mes=="message"){
-    data= {
-      message: message,
-      sender_id: companyData._id,
-      reciever_id: id,
-      timeStamp: Date.now(),
-    };
-  }else{
-     data = {
-      message: link,
-      sender_id: companyData._id,
-      reciever_id: id,
-      timeStamp: Date.now(),
-    };
+  }, [selectedUser, socket, updated]);
+  const handleDocument = async (reciever_id: string) => {
+    try {
+      const formData = new FormData()
+      if (image) {
+        formData.append("reciever_id", reciever_id)
+        formData.append("image", image as File)
+        formData.append("field", "image")
+        const document = await shareDocument(formData)
+        if (document?.data.success) {
+          const data = { reciever_id: reciever_id }
+          socket.emit("document", data)
+          setImagePreview("")
+          setImage("")
+          setUpdated(!updated)
+
+        }
+
+      } else {
+        formData.append("reciever_id", reciever_id)
+        formData.append("image", pdf as File)
+        formData.append("field", "pdf")
+        const document = await shareDocument(formData)
+        if (document?.data.success) {
+          setPdfPreview("")
+          setPdf("")
+          setUpdated(!updated)
+
+        }
+
+      }
+    } catch (error) {
+      console.error(error);
+
+    }
   }
+
+  const handleMessageSend = (id: string, mes: string) => {
+    let data = {}
+    if (mes == "message") {
+      data = {
+        message: message,
+        sender_id: companyData._id,
+        reciever_id: id,
+        timeStamp: Date.now(),
+      };
+    } else {
+      data = {
+        message: link,
+        sender_id: companyData._id,
+        reciever_id: id,
+        timeStamp: Date.now(),
+      };
+    }
 
     setMessage('');
     setLink('')
-    setMessages((prevMessages:any) => [...prevMessages, { ...data, type: 'sent' }]);
+    setMessages((prevMessages: any) => [...prevMessages, { ...data, type: 'sent' }]);
     socket.emit('private_message', data);
   };
 
@@ -132,10 +201,10 @@ const Inbox = () => {
     const jitsiURL = `https://meet.jit.si/${roomName}`;
     window.open(jitsiURL, '_blank');
   }
-  
+
   useEffect(() => {
     const searchUser = () => {
-      const data = companyConversation?.filter((val) => {        
+      const data = companyConversation?.filter((val) => {
         return val.sender_id.firstname?.toLowerCase().startsWith(search.toLowerCase())
       })
 
@@ -156,48 +225,48 @@ const Inbox = () => {
   return (
     <div className='flex justify-center min-h-screen'>
       <div className='flex justify-center  lg:w-4/5  w-full md:w-4/5 h-auto sm:m-0 md:m-9 lg:m-9'>
-      <div className='w-full  flex flex-row  h-5/6 rounded-xl'>
-      <div className='p-3 lg:w-96 w-36 shadow-2xl rounded-xl  border-gray-200  space-y-3'>
-      <p className='text-2xl font-semibold text-center'>Inbox</p>
+        <div className='w-full  flex flex-row  h-5/6 rounded-xl'>
+          <div className='p-3 lg:w-96 w-36 shadow-2xl rounded-xl  border-gray-200  space-y-3'>
+            <p className='text-2xl font-semibold text-center'>Inbox</p>
             <div className='flex justify-center'>
-              <input 
+              <input
                 className='border-2 border-gray-200  w-4/5 h-11'
-                onChange={(e) => handleSearch(e)}  type='text'
+                onChange={(e) => handleSearch(e)} type='text'
                 placeholder='Search'
               />
             </div>
             <div className='w-full h-20 flex flex-col items-center'>
               {companyConversation && companyConversation.map((values) => {
-                
-                  return (
-                    <div
-                      onClick={() => handleSelectedUser(values.sender_id)}
-                      className='shadow-md w-full cursor-pointer h-full mt-2 flex items-center'
-                      key={values._id}
-                    >
-                      <ul className='flex flex-row space-x-6 p-9'>
-                        <li>
-                          {values.sender_id?.img_url ? (
-                            <img
-                              src={values.sender_id.img_url}
-                              className='w-14 h-9 rounded-full'
-                              alt=''
-                            />
-                          ) : (
-                            <img
-                              src='/user06.png'
-                              className='w-14 h-9 rounded-full'
-                              alt=''
-                            />
-                          )}
-                        </li>
-                        <li className='flex justify-between sm:flex-row flex-col items-center w-full'>
+
+                return (
+                  <div
+                    onClick={() => handleSelectedUser(values.sender_id)}
+                    className='shadow-md w-full cursor-pointer h-full mt-2 flex items-center'
+                    key={values._id}
+                  >
+                    <ul className='flex flex-row space-x-6 p-9'>
+                  { !details &&   <li>
+                        {values.sender_id?.img_url ? (
+                          <img
+                            src={values.sender_id.img_url}
+                            className='w-14 h-9 rounded-full'
+                            alt=''
+                          />
+                        ) : (
+                          <img
+                            src='/user06.png'
+                            className='w-14 h-9 rounded-full'
+                            alt=''
+                          />
+                        )}
+                      </li>}
+                      <li className='flex justify-between sm:flex-row flex-col items-center w-full'>
                         <div className='flex flex-col'>
                           <p className='font-semibold text-base'>{values?.sender_id.firstname}</p>
                           <p className='text-sm text-gray-600 truncate max-w-xs'>{values.message}</p>
                         </div>
 
-                      {values.time &&  <div className='text-gray-500 text-xs ml-auto'>
+                        {values.time && <div className='text-gray-500 text-xs ml-auto'>
                           {new Date(values.time).toLocaleTimeString('en-US', {
                             hour: '2-digit',
                             minute: '2-digit',
@@ -205,9 +274,9 @@ const Inbox = () => {
                           }).toLowerCase().replace(':', '.')}
                         </div>}
                       </li>                      </ul>
-                    </div>
-                  );
-                
+                  </div>
+                );
+
               })}
             </div>
           </div>
@@ -215,8 +284,8 @@ const Inbox = () => {
             {selectedUser ? (
               <>
                 <div className='h-full w-full flex flex-col'>
-                <div className='w-full h-24 border-gray-400/50 border-b-2'>
-                <div className='w-full h-13 flex items-center mt-9'>
+                  <div className='w-full h-24 border-gray-400/50 border-b-2'>
+                    <div className='w-full h-13 flex items-center mt-9'>
                       <ul className='flex flex-row space-x-8 pl-6 font-medium'>
                         <li>
                           {selectedUser.img_url ? (
@@ -245,15 +314,50 @@ const Inbox = () => {
                     {sortedMessages.map((val, index) => (
                       <div
                         key={index}
-                        className={`w-full h-16 flex items-center ${
-                          val.type === 'sent' ? 'justify-end' : 'justify-start'
-                        }`}
+                        className={`w-full flex flex-col items-${val.type === 'sent' ? 'end' : 'start'} my-4`}
                       >
-                         {val.message.startsWith("http") ? (
-                          <div className="bg-blue-100 p-4 rounded-lg flex flex-col items-center space-y-2">
-                            <p>
-                              Join the Meeting
-                            </p>
+                        {val.field == "image" && val.url && (
+                          <div className="my-2">
+                            <img
+                              src={val.url}
+                              alt="media"
+                              className="w-48 h-auto rounded-lg shadow-md"
+                            />
+                          </div>
+                        )}
+                        {val.field === "pdf" && val.url && (
+                          <div className="my-2">
+                            <div
+                              onClick={() => window.open(val.url, '_blank')}  // Open the PDF in a new tab on click
+                              className="flex items-center justify-center w-24 h-24 bg-gray-100 rounded-lg shadow-md hover:bg-gray-200 cursor-pointer"
+                            >                              <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-12 h-12 text-gray-600"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"
+                                />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M14 2v6h6"
+                                />
+                              </svg>
+                              <span className="text-center text-gray-600">PDF</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {val.message && val.message.startsWith("http") ? (
+                          <div className="bg-blue-100 p-4 rounded-lg flex flex-col items-center space-y-2 w-48">
+                            <p>Join the Meeting</p>
                             <a href={val.message} target="_blank" rel="noopener noreferrer" className="w-full">
                               <button className="w-full bg-blue-500 text-white rounded-lg py-2">
                                 Join Now
@@ -261,18 +365,80 @@ const Inbox = () => {
                             </a>
                           </div>
                         ) : (
-                          <p className={`p-2 rounded-lg ${val.type === 'sent' ? 'bg-blue-200' : 'bg-gray-200'}`}>
+                          <p
+                            className={`p-2 rounded-lg max-w-xs ${val.type === 'sent' ? 'bg-blue-200 text-right' : 'bg-gray-200 text-left'
+                              }`}
+                          >
                             {val.message}
                           </p>
                         )}
-                        <p className='pl-6 text-gray-500 text-sm'>
+                        <p className={`text-gray-500 text-sm mt-1 ${val.type === 'sent' ? 'text-right' : 'text-left'}`}>
                           {formatTime(val.timeStamp)}
                         </p>
                       </div>
+
                     ))}
                   </div>
                   <div className='w-full   lg:p-4 p-0'>
                     <div className='flex items-center'>
+                      {pdfPreview && (
+                        <div className="relative mb-4 w-24">
+                          <iframe
+                            src={pdfPreview}
+                            title="PDF Preview"
+                            className="w-32 h-48 rounded-lg"
+                            frameBorder="0"
+                          ></iframe>
+                          <button
+                            type="button"
+                            onClick={() => { setPdfPreview("") }}
+                            className="absolute top-0 right-0 m-1 text-white bg-red-600 hover:bg-red-800 rounded-full p-1"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M6 18L18 6M6 6l12 12"
+                              ></path>
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+
+                      {imagePreview && <div className="relative mb-4 w-24">
+                        <img
+                          src={imagePreview}
+                          alt="preview"
+                          className="w-32 h-auto rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => { setImagePreview(""), setImage("") }}
+                          className="absolute top-0 right-0 m-1 text-white bg-red-600 hover:bg-red-800 rounded-full p-1"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M6 18L18 6M6 6l12 12"
+                            ></path>
+                          </svg>
+                        </button>
+                      </div>}
                       <input
                         value={message}
                         className='flex-grow border-2 sm:w-20 w-full border-gray-300 rounded-lg p-2'
@@ -282,7 +448,7 @@ const Inbox = () => {
                         type='text'
                         placeholder='Type your message...'
                       />
-                       <div className="relative">
+                      <div className="relative">
                         <FaPlus onClick={() => setAdd(!add)} className='ml-2 cursor-pointer' />
                         {add && (
                           <div className="absolute bottom-full mb-8 right-0 w-48 z-50 bg-white border border-gray-200 rounded-lg shadow-lg">
@@ -299,16 +465,55 @@ const Inbox = () => {
                             >
                               Send Link
                             </button>
+                            <div>
+                              <button
+                                type="button"
+                                onClick={handleButtonClick}
+                                className="relative inline-flex items-center w-full px-4 py-4 text-sm font-medium border-b border-gray-200 hover:bg-gray-100 text-black"
+                              >
+                                Send Image
+                              </button>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                ref={fileInputRef}
+                                style={{ display: 'none' }}
+                                onChange={handleFileChange}
+                              />
+                            </div>
+                            <div>
+                              <button
+                                type="button"
+                                onClick={handleButtonClickpdf}
 
+                                className="relative inline-flex items-center w-full px-4 py-4 text-sm font-medium border-b border-gray-200 hover:bg-gray-100 text-black"
+                              >
+                                Send Resume
+                              </button>
+                              <input
+                                type="file"
+                                accept=".pdf"
+                                ref={fileInputRef1}
+                                style={{ display: 'none' }}
+                                onChange={handlePdfChange}
+                              />
+                            </div>
                           </div>
+
                         )}
                       </div>
-                     <button
-                        onClick={() => handleMessageSend(selectedUser._id as string,"message")}
+                      {image || pdf ? <button
+
+                        onClick={() => { handleDocument(selectedUser._id as string), setAdd(false) }}
+                        className="ml-4 bg-black text-white p-2 rounded-lg"
+                      >
+                        Send
+                      </button> : <button
+                        onClick={() => handleMessageSend(selectedUser._id as string, "message")}
                         className='ml-4 bg-black text-white p-2 rounded-lg'
                       >
                         Send
-                      </button>
+                      </button>}
                     </div>
                   </div>
                 </div>
@@ -391,14 +596,14 @@ const Inbox = () => {
                 </button>
               </div>
               <div className="p-4 md:p-5">
-                  <input  onChange={(e) => {
-                          setLink(e.target.value);
-                        }} value={link} type="text" placeholder="send link" className="w-full h-11 border-2 rounded-full text-center" />
-                  <button
-                    onClick={() => {handleMessageSend(selectedUser?._id as string,"link"),setSendlink(!sendlink)}}
+                <input onChange={(e) => {
+                  setLink(e.target.value);
+                }} value={link} type="text" placeholder="send link" className="w-full h-11 border-2 rounded-full text-center" />
+                {<button
+                  onClick={() => { handleMessageSend(selectedUser?._id as string, "link"), setSendlink(!sendlink) }}
 
-                  className="w-full bg-black h-11 mt-4 text-white rounded-full">Submit</button>
-                
+                  className="w-full bg-black h-11 mt-4 text-white rounded-full">Submit</button>}
+
               </div>
             </div>
           </div>
