@@ -56,7 +56,7 @@ const ViewUserprofile = () => {
             {userdata?.img_url ? (
               <img src={userdata?.img_url} className='ml-4 mt-4 rounded-3xl' alt="Default Image" />
             ) : (
-              <img src='../public/user06.png' className='lg:p-9  sm:p-0 lg:mt-9 sm:mt-0' alt="User Image" />
+              <img src='/user06.png' className='lg:p-9  sm:p-0 lg:mt-9 sm:mt-0' alt="User Image" />
             )}
           </div>
 

@@ -183,11 +183,20 @@ export const getPosts = async (page: number) => {
     }
 }
 
-export const likeunlike = async (post_id: string, status: string, token: string) => {
+export const likeunlike = async (post_id: string, status: string,company_id:string) => {
     try {
-        const refreshtoken = localStorage.getItem('UserRefeshtoken')
+        const data ={post_id:post_id,status:status,company_id:company_id}
+        let response = await axiosInstance.post('/likeunlike', data, { headers: { "Authorization": token } })
+        return response
+    } catch (error: any) {
+        handleTokenError(error, "User")
 
-        let response = await axiosInstance.patch(`/likeunlike?post_id=${post_id}&status=${status}`, {}, { headers: { "Authorization": token, "refresh-token": refreshtoken } })
+
+    }
+}
+export const likedPosts =async()=>{
+    try {
+       const response = await axiosInstance.get('/likedposts',{headers:{"Authorization":token}}) 
         return response
     } catch (error: any) {
         handleTokenError(error, "User")

@@ -1,8 +1,8 @@
 import  { useEffect, useState } from 'react'
 import { FaBookmark, FaHeart, FaRegBookmark, FaRegComment, FaRegHeart } from 'react-icons/fa'
-import { getComments, getPosts, getSavedpost, getUserdata, likeunlike, postComment, reportPost, savePost } from '../../Api/userApi'
+import { getComments, getPosts, getSavedpost, getUserdata, likedPosts, likeunlike, postComment, reportPost, savePost } from '../../Api/userApi'
 import { post } from '../../Interface/CompanyInterface'
-import { comment,  savedPost, User } from '../../Interface/UserInterface'
+import { comment,  likedPost,  savedPost, User } from '../../Interface/UserInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../Redux/Store'
 import toast, { Toaster } from 'react-hot-toast'
@@ -32,6 +32,7 @@ const Post = () => {
   const [page,setPage]=useState<number>(0)
   const [isLoading, setIsLoading] = useState(false);
   const [pageCount,setPageCount]=useState<number>(0)
+  const [likedPostData,setLikedPostData]=useState<likedPost[]>()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   useEffect(() => {
@@ -87,13 +88,29 @@ const Post = () => {
 
       }
     }
+    const fetchLikedPosts = async()=>{
+      try {
+        const response = await likedPosts()
+        if(response?.data.success){
+          console.log(response.data.likedPosts,"dddsddsds");
+          
+          setLikedPostData(response.data.likedPosts)
+        }
+      } catch (error) {
+        console.error(error);
+        
+      }
+    }
 
     userData()
     posts()
     savedPost()
+    fetchLikedPosts()
 
   }, [like, updated,page])
-  console.log(postdata,"ppppp");
+  // console.log(postdata,"ppppp");
+  // console.log(likedPostData);
+  
   
 
   const goToSlide = (postId: string, index: number) => {
@@ -110,11 +127,18 @@ const Post = () => {
       )
     );
   };
-  const handleLike = async (id: string, status: string) => {
-    let token = localStorage.getItem('Usertoken')
-    let response = await likeunlike(id, status, token as string)
-    if (response?.data.success) {
+  const handleLike = async (id: string, status: string,company_id:string) => {
+    try {
+    let response = await likeunlike(id, status,company_id)
+    if (response?.data) {
       setLike(!like)
+      setUpdated(!updated)
+      toast.success(response?.data.message)
+
+    }
+    } catch (error) {
+      console.error(error);
+
     }
 
   }
@@ -205,7 +229,6 @@ const Post = () => {
 
   }
   const handleScroll = () => {
-    console.log("working");
     
     if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || isLoading) {
       return;
@@ -220,7 +243,6 @@ const Post = () => {
     window.addEventListener("scroll",handleScroll)
     return ()=>window.removeEventListener("scroll",handleScroll)
   },[isLoading])
-  console.log(page);
   
   return (
     <div className='flex lg:justify-center flex-row lg:m-9 min-h-screen'>
@@ -243,8 +265,13 @@ const Post = () => {
         </div>
 
         {!postHandle ? <>
-          {postdata.length > 0  ? postdata.map((val) => (
-            <div key={val._id} className='m-11 lg:w-4/5  h-fit shadow-lg p-9 '>
+          {postdata.length > 0  ? postdata.map((val) => {
+          const isLiked = likedPostData && likedPostData.some((likeObj:likedPost) => likeObj.post_id ===val._id)
+         console.log(isLiked);
+         
+          return (
+           
+           <div key={val._id} className='m-11 lg:w-4/5  h-fit shadow-lg p-9 '>
               <div className='flex flex-row justify-between items-center p-3 '>
                 <div className='flex items-center space-x-3'>
                   {val.company_id.img_url ?
@@ -402,10 +429,10 @@ const Post = () => {
                 </div>
               </div>
               <div className='m-6 flex flex-row space-x-12'>
-                {val.like.some((likeObj) => likeObj._id === userDatas._id) ? (
-                  <FaHeart onClick={() => handleLike(val._id, "Unlike")} className='w-7 h-9 text-red-500' />
+                {isLiked ? (
+                  <FaHeart onClick={() => handleLike(val._id, "Unlike",val.company_id._id as string)} className='w-7 h-9 text-red-500' />
                 ) : (
-                  <FaRegHeart onClick={() => handleLike(val._id, "Like")} className='w-7 h-9' />
+                  <FaRegHeart onClick={() => handleLike(val._id, "Like",val.company_id._id as string)} className='w-7 h-9' />
                 )}
 
                 <FaRegComment data-modal-target="crypto-modal" data-modal-toggle="crypto-modal" onClick={() => handleInbox(val)} className='w-7 h-9' />
@@ -426,7 +453,7 @@ const Post = () => {
               </div>
               <p onClick={() => handleLikedUsers(val.like)} className='font-medium ml-6'>{val.like.length} like</p>
             </div>
-          )) : <>
+          )}) : <>
             <div className="flex w-full min-h-screen justify-center  mt-11">
               <div className="w-full h-96 flex flex-col justify-center items-center ">
                 <img src="/nopost.png" className="w-96" alt="No Posts" />
@@ -437,7 +464,10 @@ const Post = () => {
 
           </>}
         </> : <>
-          {saved.length > 0  ? saved.map((val, index) => (
+          {saved.length > 0  ? saved.map((val, index) => {
+                      const isLiked = likedPostData && likedPostData.some((likeObj:likedPost) => likeObj.post_id ===val.post_id._id)
+
+            return(
             <div key={val._id} className='m-11 w-4/5 h-fit shadow-lg p-9 '>
               <div className='flex flex-row justify-between items-center p-3'>
                 <div className='flex items-center space-x-3'>
@@ -597,10 +627,11 @@ const Post = () => {
                 </div>
               </div>
               <div className='m-6 flex flex-row space-x-12'>
-                {val.post_id.like.map((likeObj) => likeObj._id === userDatas._id) ? (
-                  <FaHeart onClick={() => handleLike(val._id, "Unlike")} className='w-7 h-9 text-red-500' />
+                {
+                isLiked? (
+                  <FaHeart onClick={() => handleLike(val._id, "Unlike",val.company_id._id as string)} className='w-7 h-9 text-red-500' />
                 ) : (
-                  <FaRegHeart onClick={() => handleLike(val._id, "Like")} className='w-7 h-9' />
+                  <FaRegHeart onClick={() => handleLike(val._id, "Like",val.company_id._id as string)} className='w-7 h-9' />
                 )}
 
                 <FaRegComment data-modal-target="crypto-modal" data-modal-toggle="crypto-modal" onClick={() => handleInbox(val.post_id)} className='w-7 h-9' />
@@ -621,7 +652,7 @@ const Post = () => {
               </div>
               <p onClick={() => handleLikedUsers(val.post_id.like)} className='font-medium ml-6'>{val.post_id.like.length} like</p>
             </div>
-          )) : <>
+          )}) : <>
             <div className="flex w-full min-h-screen justify-center  mt-11">
   <div className="w-full h-96 flex flex-col justify-center items-center ">
     <img src="/nopost.png" className="w-96" alt="No Posts" />

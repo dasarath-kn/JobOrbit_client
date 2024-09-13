@@ -55,6 +55,11 @@ export interface User{
     rewards?:rewards[]
 
 }
+export interface likedPost{
+    user_id:string,
+    company_id:string,
+    post_id:string
+}
 export interface rewards{
     awardTittle:string,
     issuedBy:string,

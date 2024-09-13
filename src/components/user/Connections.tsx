@@ -222,7 +222,7 @@ const Connections = () => {
                                 <div className='ml-4'>
                                     <p
                                         onClick={() => navigate('/userprofile', { state: { id: val._id } })}
-                                        className='font-semibold text-xl'>
+                                        className='font-semibold text-xl cursor-pointer'>
                                         {val.firstname}
                                     </p>
                                     <p className='text-gray-700'>{val.field}</p>

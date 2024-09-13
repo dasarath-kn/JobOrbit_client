@@ -70,18 +70,19 @@ const ViewCompanyProfile = () => {
   };
   
   const userExists = reviewData?.some((values:reviews) => {return values.user_id?._id === userDatas._id});
-
+  console.log(reviewData,"eeee");
+  
   
   return (
     <>
       <div className='w-auto h-auto flex mb-11  flex-col justify-center sm:justify-center sm:w-auto items-center  '>
-        <div className='bg-black text-white flex flex-row s:w-auto lg:w-3/4 1/2 h-auto mt-20 rounded-2xl  '>
+        <div className='bg-black text-white pb-4 flex flex-row s:w-auto lg:w-3/4 1/2 h-auto mt-20 rounded-2xl  '>
           <div className='lg:w-1/4 h-auto  lg:content-center sm:w-1/2 sm:h-1/2  md:content-center'>
 
             {data?.img_url ? (
-              <img src={data?.img_url} className='ml-4 mt-4' alt="Default Image" />
+              <img src={data?.img_url} className='ml-4 mt-11' alt="Default Image" />
             ) : (
-              <img src='../public/imgadd.jpg' className='ml-4 mt-4 items-center' alt="User Image" />
+              <img src='/imgadd.jpg' className='ml-4 mt-4 items-center' alt="User Image" />
             )}          </div>
           <div className='border-7 ml-28 '>
             <ul className='space-y-6 '>

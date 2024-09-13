@@ -1,8 +1,8 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { schedulejobs } from '../../Api/companyApi'
 import jobShedule from '../../Interface/CompanyInterface'
-import  { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import { format } from 'date-fns'
 const ScheduledApplicants = () => {
     const location = useLocation()
@@ -100,6 +100,23 @@ const ScheduledApplicants = () => {
 
                 </div>
 
+                {scheduled && scheduled.length > 0 && <div className="flex flex-col items-center mt-24">
+                    <span className="text-sm text-gray-700 dark:text-gray-400">
+                        Showing <span className="font-semibold text-gray-900">{1}</span> of <span className="font-semibold text-gray-900">{1}</span> Entries
+                    </span>
+                    <div className="inline-flex mt-2 xs:mt-0">
+                        <button
+                            className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900"
+                        >
+                            Prev
+                        </button>
+                        <button
+                            className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900"
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>}
 
             </div>
         </>
