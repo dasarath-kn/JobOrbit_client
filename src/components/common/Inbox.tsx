@@ -516,6 +516,7 @@ const Inbox = () => {
 
                   </div>
                   <div className='w-full lg:p-4 p-0'>
+                    <div className="flex items-center sm:w-1/2 space-x-2">
                     {pdfPreview && (
                       <div className="relative mb-4 w-24">
                         <iframe
@@ -574,7 +575,6 @@ const Inbox = () => {
                         </svg>
                       </button>
                     </div>}
-                    <div className="flex items-center space-x-2">
                       <input
                         value={message}
                         className="flex-grow border-2 border-gray-300 rounded-lg p-2"

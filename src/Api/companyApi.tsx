@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import axiosInstance from "../Config/AxiosInstance";
-import jobShedule, { Company, CompanyLogin, jobdata, post, replyData } from "../Interface/CompanyInterface";
+import  { Company, CompanyLogin, jobdata, post, replyData, scheduled } from "../Interface/CompanyInterface";
 import GoogleAuth from "../Interface/GoogleauthToken";
 import handleTokenError from "./errorHandling";
 const token =localStorage.getItem('Companytoken')
@@ -198,7 +198,7 @@ export const posts =async(token:string)=>{
         
     }
 
-    export const saveScheduledjob =async(scheduleData:jobShedule)=>{
+    export const saveScheduledjob =async(scheduleData:scheduled)=>{
         try {
             const response = await axiosInstance.post('/company/schedulejob',scheduleData,{headers:{"Authorization":token}})
             return response 

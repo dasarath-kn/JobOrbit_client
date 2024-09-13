@@ -82,4 +82,13 @@ interface jobShedule{
   message:string,
   scheduled_time:Date
 }
+export interface scheduled{
+  date: string,
+  time:string,
+  message:string,
+  user_id:string|undefined,
+  job_id:string,
+  company_id?:string
+
+}
 export default jobShedule

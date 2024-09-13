@@ -40,3 +40,13 @@ const JobvalidationSchema = Yup.object({
 
 
 export default JobvalidationSchema
+
+const today = new Date().toISOString().split('T')[0];
+
+export const scheduledValidation = Yup.object({
+  date: Yup.date()
+    .min(today, 'Date cannot be in the past')
+    .required('Date is required'),
+  time: Yup.string().required('Time is required'),
+  message: Yup.string().required('Message is required')
+});
