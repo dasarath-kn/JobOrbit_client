@@ -1,7 +1,7 @@
 import {Suspense,lazy} from 'react'
 import { Routes,Route } from 'react-router-dom'
 const Homepage =lazy(()=> import( '../pages/user/LandingPage'));
-const SignIn = lazy(()=> import( '../components/common/SignIn'));
+const SignIn = lazy(()=> import( '../components/common/Sig'));
 const SignUp = lazy(()=> import( '../components/company/SignUp'));
 const Otp =lazy(()=> import('../components/common/Otp'));
 import Loading from '../components/common/Loadings'
