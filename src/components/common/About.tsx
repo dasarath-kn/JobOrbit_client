@@ -1,69 +1,129 @@
+import { Users, Shield, Layout, Rocket, Building2, Search } from 'lucide-react';
 
 const About = () => {
   return (
-    <>
-<div className="w-full min-h-screen relative">
-  <div className="w-full">
-    <div className="relative">
-      <img src="/about.jpg" className="w-full h-96 blur-sm" alt="About" />
-      <div className="absolute inset-0 flex flex-col justify-center items-center p-4 mt-11">
-        <p className="text-5xl font-semibold text-center text-white mb-4">Our Mission</p>
-        <p className="text-lg font-medium text-center text-white max-w-3xl">
-          "At JobOrbit, our mission is to revolutionize the job search experience by seamlessly connecting talented individuals with thriving opportunities across the globe. We are committed to creating a dynamic platform that empowers job seekers to discover their dream careers and enables employers to find the perfect fit for their teams. Through innovation, transparency, and a focus on user success, we aim to make JobOrbit the orbit where talent and opportunity meet."
+    <div className="min-h-screen bg-white">
+      <div className="relative h-[500px] overflow-hidden">
+        <img 
+          src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&auto=format&fit=crop&q=80&w=2940"
+          className="w-full h-full object-cover filter brightness-[0.3]"
+          alt="Team collaboration"
+        />
+        <div className="absolute inset-0 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center">
+            Our Mission
+          </h1>
+          <p className="text-lg md:text-xl text-white max-w-3xl text-center leading-relaxed">
+            At JobOrbit, our mission is to revolutionize the job search experience by seamlessly connecting talented individuals with thriving opportunities across the globe. We are committed to creating a dynamic platform that empowers job seekers to discover their dream careers and enables employers to find the perfect fit for their teams.
+          </p>
+        </div>
+      </div>
+
+      <div className="py-20 px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-black mb-4">
+          Why Choose JobOrbit
+        </h2>
+        <p className="text-gray-600 text-center max-w-2xl mx-auto mb-16">
+          Discover how we're transforming the job search experience with innovative features and a commitment to your success.
         </p>
+
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="group bg-white p-8 rounded-2xl transition-all duration-300 hover:shadow-2xl border border-gray-100">
+            <div className="mb-6">
+              <Search className="w-12 h-12 text-black group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <h3 className="text-xl font-bold text-black mb-4">
+              Find Jobs Tailored to Your Skills
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              Our advanced search algorithm matches you with opportunities that align perfectly with your unique skills and experience. Find your ideal job faster and more efficiently.
+            </p>
+          </div>
+
+          <div className="group bg-white p-8 rounded-2xl transition-all duration-300 hover:shadow-2xl border border-gray-100">
+            <div className="mb-6">
+              <Rocket className="w-12 h-12 text-black group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <h3 className="text-xl font-bold text-black mb-4">
+              Stay Updated on Opportunities
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              Get real-time notifications for new jobs and application updates. Stay ahead of the competition with instant alerts for positions matching your criteria.
+            </p>
+          </div>
+
+          <div className="group bg-white p-8 rounded-2xl transition-all duration-300 hover:shadow-2xl border border-gray-100">
+            <div className="mb-6">
+              <Shield className="w-12 h-12 text-black group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <h3 className="text-xl font-bold text-black mb-4">
+              Your Data is Safe with Us
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              We prioritize your privacy with robust security measures. Your personal information and job search activities are protected with industry-leading encryption.
+            </p>
+          </div>
+
+          <div className="group bg-white p-8 rounded-2xl transition-all duration-300 hover:shadow-2xl border border-gray-100">
+            <div className="mb-6">
+              <Layout className="w-12 h-12 text-black group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <h3 className="text-xl font-bold text-black mb-4">
+              Easy to Navigate and Use
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              Our user-friendly interface makes job hunting simple and stress-free. Access everything you need with our clean, intuitive layout on any device.
+            </p>
+          </div>
+
+          <div className="group bg-white p-8 rounded-2xl transition-all duration-300 hover:shadow-2xl border border-gray-100">
+            <div className="mb-6">
+              <Building2 className="w-12 h-12 text-black group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <h3 className="text-xl font-bold text-black mb-4">
+              From Startups to Enterprises
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              Find opportunities across all company sizes and industries. Whether you're targeting startups or global enterprises, we've got the right opportunities for you.
+            </p>
+          </div>
+
+          <div className="group bg-white p-8 rounded-2xl transition-all duration-300 hover:shadow-2xl border border-gray-100">
+            <div className="mb-6">
+              <Users className="w-12 h-12 text-black group-hover:scale-110 transition-transform duration-300" />
+            </div>
+            <h3 className="text-xl font-bold text-black mb-4">
+              Global Talent Network
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              Connect with a diverse community of professionals and employers worldwide. Expand your horizons and discover opportunities across borders.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div>
+            <div className="text-4xl font-bold mb-2 text-black">1M+</div>
+            <div className="text-gray-600">Active Users</div>
+          </div>
+          <div>
+            <div className="text-4xl font-bold mb-2 text-black">50K+</div>
+            <div className="text-gray-600">Companies</div>
+          </div>
+          <div>
+            <div className="text-4xl font-bold mb-2 text-black">100K+</div>
+            <div className="text-gray-600">Jobs Posted</div>
+          </div>
+          <div>
+            <div className="text-4xl font-bold mb-2 text-black">90%</div>
+            <div className="text-gray-600">Success Rate</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  );
+};
 
-  <div className="w-full py-20">
-    <h2 className="text-4xl font-semibold text-center text-gray-800 mb-12">Why Choose JobOrbit</h2>
-    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
-      
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h3 className="text-2xl font-bold text-gray-800 mb-4">Find Jobs Tailored to Your Skills</h3>
-        <p className="text-gray-600">
-          JobOrbit’s advanced search algorithm is designed to match you with opportunities that align perfectly with your unique skills, experience, and career aspirations. Whether you're a seasoned professional or just starting out, our intuitive search filters allow you to narrow down job listings based on industry, location, salary range, and more. Say goodbye to endless scrolling—JobOrbit helps you find your ideal job faster and more efficiently.
-        </p>
-      </div>
-
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h3 className="text-2xl font-bold text-gray-800 mb-4">Stay Updated on Job Applications and New Opportunities</h3>
-        <p className="text-gray-600">
-          Never miss an opportunity with JobOrbit's real-time notifications. As soon as a new job that matches your criteria is posted or an employer shows interest in your application, you’ll be the first to know. Our platform ensures you stay informed every step of the way, giving you a competitive edge in the job market. From interview requests to new job postings, JobOrbit keeps you connected and up-to-date.
-        </p>
-      </div>
-
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h3 className="text-2xl font-bold text-gray-800 mb-4">Your Data is Safe with Us</h3>
-        <p className="text-gray-600">
-          At JobOrbit, we take your privacy and data security seriously. Our platform is built with robust security measures to ensure that your personal information and job search activities are protected at all times. You can search, apply, and communicate with potential employers with confidence, knowing that your data is encrypted and securely stored. We adhere to the highest standards of data protection so you can focus on what matters most—your career.
-        </p>
-      </div>
-
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h3 className="text-2xl font-bold text-gray-800 mb-4">Easy to Navigate and Use</h3>
-        <p className="text-gray-600">
-          Job hunting can be stressful, but JobOrbit’s user-friendly interface makes the process simple and stress-free. Our platform is designed with the user in mind, featuring a clean, intuitive layout that’s easy to navigate whether you're browsing jobs on your desktop or mobile device. Quickly access job listings, save your favorite positions, and track your applications with ease. At JobOrbit, we believe that finding your next job should be as smooth as possible.
-        </p>
-      </div>
-
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h3 className="text-2xl font-bold text-gray-800 mb-4">From Startups to Enterprises</h3>
-        <p className="text-gray-600">
-          JobOrbit offers a diverse range of job opportunities, catering to every stage of your career. Whether you’re looking to join an innovative startup, contribute to a growing mid-sized company, or make your mark at a global enterprise, we’ve got you covered. Our platform connects job seekers with employers across various industries and regions, ensuring that you can find the right fit no matter where your ambitions take you.
-        </p>
-      </div>
-      
-    </div>
-  </div>
-</div>
-
-
-
-
-    
-    </>
-  )
-}
-
-export default About
+export default About;

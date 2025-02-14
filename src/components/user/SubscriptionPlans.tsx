@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { subscriptedUser, subscription } from '../../Interface/AdminInterface';
 import { getSubscriptionplans, subscribeduserdetails, subscriptionPayment } from '../../Api/userApi';
 import { loadStripe } from '@stripe/stripe-js';
+import { Check, Sparkles } from 'lucide-react';
 
 
 const SubscriptionPlans = () => {
@@ -62,70 +63,106 @@ const SubscriptionPlans = () => {
     }, 2000)
     return () => clearTimeout(timer)
   }, [])
-  return (
-<div className='min-h-screen flex flex-col items-center mb-4  bg-gray-50'>
-  <div className='w-full'>
-    <div className='w-full mt-14 '>
-      <p className='text-center font-bold text-3xl'>Choose Your Subscription Plan</p>
-    </div>
-    <div className='w-full flex justify-center items-center lg:mt-14'>
-      <div className='grid  w-11/12 lg:w-4/5 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-10 mt-10 items-center justify-center'>
-        {plans && plans.length > 0 ? plans.map((val) => {
-          return !skelton ? (
-            <div
-              key={val._id}
-              className="hover:shadow-xl w-full sm:w-3/4 md:w-11/12 lg:w-3/4 transition duration-300 ease-in-out transform hover:scale-105 bg-white border-2 flex flex-col items-center rounded-2xl h-96"
-            >
-              <ul className="space-y-6 font-bold text-xl text-center mt-9 text-black">
-                <li className="font-extrabold text-3xl text-gray-800">{val.subscriptiontype}</li>
-                <li className="text-gray-600">${val.price}</li>
-                <li>{val.month} Months</li>
-                <li>Apply daily {val.limit} jobs</li>
-                {subscribeduser?.plan_id._id === val._id && subscribeduser?.payment_status ? (
-                  <button
-                    disabled
-                    className="bg-yellow-400 text-white rounded-3xl w-32 h-11"
-                  >
-                    Subscribed
-                  </button>
-                ) : (
-                  <button
-                    disabled={!!subscribeduser?.plan_id._id}
-                    onClick={() => handleSubscription(val._id, val.month as number)}
-                    className={`${
-                      !!subscribeduser?.plan_id._id ? 'bg-gray-300 text-gray-500' : 'bg-black text-white'
-                    } rounded-3xl w-32 h-11 transition duration-300 ease-in-out hover:bg-gray-800`}
-                  >
-                    Buy now
-                  </button>
-                )}
-              </ul>
-            </div>
-          ) : (
-            <div className="w-full h-96 border-2 flex flex-col items-center rounded-2xl bg-gray-100">
-              <div className="animate-pulse flex flex-col items-center space-y-8 mt-9 w-full h-full">
-                <div className="h-10 bg-slate-200 rounded w-3/4"></div>
-                <div className="h-8 bg-slate-200 rounded w-1/2"></div>
-                <div className="h-8 bg-slate-200 rounded w-1/3"></div>
-                <div className="h-8 bg-slate-200 rounded w-2/3"></div>
-                <div className="h-11 bg-slate-200 rounded-3xl w-32"></div>
-              </div>
-            </div>
-          )
-        }) : (
-          <div className="flex w-full min-h-screen justify-center">
-            <div className="w-1/2 h-96 flex flex-col justify-center items-center">
-              <p className="text-black font-semibold text-2xl text-center">No Subscription Plan Found</p>
-            </div>
-          </div>
-        )}
+
+return (
+  <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto">
+      <div className="text-center">
+        <h1 className="text-4xl font-extrabold text-black sm:text-5xl md:text-6xl">
+          Choose Your Plan
+        </h1>
+        <p className="mt-3 max-w-md mx-auto text-base text-gray-600 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+          Select the perfect subscription plan tailored to your needs
+        </p>
       </div>
+
+      <div className="mt-16 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-x-8">
+        {plans.map((plan) => (
+          <div
+            key={plan._id}
+            className="relative rounded-2xl border-2 border-gray-100 overflow-hidden transform transition-all duration-300 hover:scale-105 bg-white hover:shadow-2xl"
+          >
+            {skelton ? (
+              <div className="p-8 h-full">
+                <div className="animate-pulse space-y-6">
+                  <div className="h-8 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                  <div className="h-12 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                  <div className="space-y-3">
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                  </div>
+                  <div className="h-12 bg-gray-200 rounded-full w-2/3 mx-auto"></div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-8">
+                {plan.subscriptiontype === 'Pro' && (
+                  <div className="absolute top-0 right-0 mt-4 mr-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-black text-white">
+                      <Sparkles className="w-4 h-4 mr-1" />
+                      Popular
+                    </span>
+                  </div>
+                )}
+                <div className="text-center">
+                  <h3 className="text-xl font-semibold text-black">{plan.subscriptiontype}</h3>
+                  <div className="mt-4 flex justify-center">
+                    <span className="px-3 text-5xl font-extrabold text-black">${plan.price}</span>
+                    <span className="text-xl font-medium text-gray-600 self-end mb-1">/mo</span>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-600">{plan.month} month subscription</p>
+                </div>
+                <ul className="mt-8 space-y-4">
+                  <li className="flex items-center">
+                    <Check className="h-5 w-5 text-black" />
+                    <span className="ml-3 text-gray-800">Up to {plan.limit} job applications daily</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-5 w-5 text-black" />
+                    <span className="ml-3 text-gray-800">Priority support</span>
+                  </li>
+                  <li className="flex items-center">
+                    <Check className="h-5 w-5 text-black" />
+                    <span className="ml-3 text-gray-800">Advanced analytics</span>
+                  </li>
+                </ul>
+                <div className="mt-8">
+                  <button
+                    onClick={() => handleSubscription(plan._id, plan.month as number)}
+                    disabled={!!subscribeduser?.plan_id._id}
+                    className={`w-full rounded-full py-3 px-6 text-center text-white text-lg font-semibold transition-all duration-200 ${
+                      subscribeduser?.plan_id._id === plan._id && subscribeduser?.payment_status
+                        ? 'bg-green-500 cursor-default'
+                        : subscribeduser?.plan_id._id
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-black hover:bg-gray-900'
+                    }`}
+                  >
+                    {subscribeduser?.plan_id._id === plan._id && subscribeduser?.payment_status
+                      ? 'Current Plan'
+                      : subscribeduser?.plan_id._id
+                      ? 'Unavailable'
+                      : 'Get Started'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {plans.length === 0 && (
+        <div className="flex justify-center items-center mt-16">
+          <div className="text-center">
+            <h3 className="text-2xl font-semibold text-black">No Subscription Plans Available</h3>
+            <p className="mt-2 text-gray-600">Please check back later for available plans.</p>
+          </div>
+        </div>
+      )}
     </div>
   </div>
-</div>
-
-
-  );
+);
 }
 
 export default SubscriptionPlans;

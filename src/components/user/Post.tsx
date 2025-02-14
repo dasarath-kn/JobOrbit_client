@@ -1,8 +1,8 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaBookmark, FaHeart, FaRegBookmark, FaRegComment, FaRegHeart } from 'react-icons/fa'
 import { getComments, getPosts, getSavedpost, getUserdata, likedPosts, likeunlike, postComment, reportPost, savePost } from '../../Api/userApi'
-import { post } from '../../Interface/CompanyInterface'
-import { comment,  likedPost,  savedPost, User } from '../../Interface/UserInterface'
+import { Company, post } from '../../Interface/CompanyInterface'
+import { comment, likedPost, savedPost, User } from '../../Interface/UserInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../Redux/Store'
 import toast, { Toaster } from 'react-hot-toast'
@@ -13,14 +13,12 @@ import { useNavigate } from 'react-router-dom'
 const Post = () => {
   const [postdata, setPostdata] = useState<post[]>([])
   const userDatas: User = useSelector((state: RootState) => state.user)
-  const [like, setLike] = useState<boolean>(false)
   const [saved, setSaved] = useState<savedPost[]>([])
   const [openmodal, setOpenmodal] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [selectedvalues, setSelectedvalues] = useState<post>()
   const [comments, setComments] = useState<comment[]>()
   const [sentcomment, setSentcomment] = useState<boolean>()
-  const [updated, setUpdated] = useState<boolean>(false)
   const [menu, setMenu] = useState<boolean>(false)
   const [likedUsers, setLikdUsers] = useState<boolean>(false)
   const [likedUserdata, setLikedUserdata] = useState<User[]>([])
@@ -29,10 +27,10 @@ const Post = () => {
   const [selectedPostid, setSelectedpostid] = useState('')
   const [postHandle, setPostHandle] = useState<boolean>(false)
   const [savedPostData, setSavedPostData] = useState<post[]>([])
-  const [page,setPage]=useState<number>(0)
+  const [page, setPage] = useState<number>(0)
   const [isLoading, setIsLoading] = useState(false);
-  const [pageCount,setPageCount]=useState<number>(0)
-  const [likedPostData,setLikedPostData]=useState<likedPost[]>()
+  const [pageCount, setPageCount] = useState<number>(0)
+  const [likedPostData, setLikedPostData] = useState<likedPost[]>()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   useEffect(() => {
@@ -57,20 +55,20 @@ const Post = () => {
           setPageCount(response.data.count)
           setPostdata((prevPosts) => {
             const existingPostIds = new Set(prevPosts.map((post) => post._id));
-                      const newPosts = response?.data.posts.filter((post: post) => !existingPostIds.has(post._id));
-                      return [
+            const newPosts = response?.data.posts.filter((post: post) => !existingPostIds.has(post._id));
+            return [
               ...prevPosts,
               ...newPosts.map((post: post) => ({ ...post, currentIndex: 0 }))
             ];
           });
-          
+
         }
 
 
       } catch (error) {
         console.error(error);
 
-      }finally {
+      } finally {
         setIsLoading(false);
       }
     }
@@ -88,17 +86,16 @@ const Post = () => {
 
       }
     }
-    const fetchLikedPosts = async()=>{
+    const fetchLikedPosts = async () => {
       try {
         const response = await likedPosts()
-        if(response?.data.success){
-          console.log(response.data.likedPosts,"dddsddsds");
-          
+        if (response?.data.success) {
+
           setLikedPostData(response.data.likedPosts)
         }
       } catch (error) {
         console.error(error);
-        
+
       }
     }
 
@@ -107,11 +104,10 @@ const Post = () => {
     savedPost()
     fetchLikedPosts()
 
-  }, [like, updated,page])
-  // console.log(postdata,"ppppp");
-  // console.log(likedPostData);
-  
-  
+  }, [page])
+
+
+
 
   const goToSlide = (postId: string, index: number) => {
     setPostdata(prevData =>
@@ -127,27 +123,73 @@ const Post = () => {
       )
     );
   };
-  const handleLike = async (id: string, status: string,company_id:string) => {
+  const handleLike = async (id: string, status: string, company_id: string) => {
     try {
-    let response = await likeunlike(id, status,company_id)
-    if (response?.data) {
-      setLike(!like)
-      setUpdated(!updated)
-      toast.success(response?.data.message)
+      if (status == "Like") {
+        let response = await likeunlike(id, status, company_id);
+        if (response?.data) {
+          
+          const data ={id:"",post_id:id,company_id:company_id,user_id:userDatas._id}
+          setLikedPostData((prev:any) => [...prev, data]);
+                    const updatedPostData = postdata.map((val) => {
+            if (val._id === id) {
+              return { ...val, like: [...val.like,userDatas._id] };
+            }
+            return val;
+          });
+          
+          setPostdata(updatedPostData as any);
+          toast.success(response?.data.message);
+        }
+      }
+      else {
+        let response = await likeunlike(id, status, company_id)
+        if (response?.data) {
+          setLikedPostData((prev = []) =>
+            prev.filter((item) => item.post_id !== id || item.user_id !== userDatas._id)
+          );
+         
+          const updatedPostData = postdata.map((val) =>
+            val._id === id
+              ? { ...val, like: val.like.filter((userId) => userId !== userDatas._id) }
+              : val
+          );
+          setPostdata(updatedPostData);
 
-    }
+          toast.success(response?.data.message)
+
+        }
+      }
     } catch (error) {
       console.error(error);
 
     }
 
   }
-  const handleSavepost = async (post_id: string, message: string, company_id: string | undefined) => {
+  const handleSavepost = async (post_id: string, message: string, company_id: string | undefined,companyData:Company,postData:post) => {
     try {
+      if(message=="saved"){
       let response = await savePost(post_id, message, company_id as string)
+
       if (response?.data) {
-        setUpdated(!updated)
+        
+          const data ={company_id:companyData,post_id:postData,user_id:userDatas._id}
+        setSaved((prev:any)=>[...prev,data])
+        setSavedPostData((prev)=>[...prev,postData])
         toast.success(response?.data.message)
+      }}
+      else{
+        let response = await savePost(post_id, message, company_id as string)
+
+      if (response?.data) {
+        setSaved((prev = []) =>
+          prev.filter((val) => val.post_id._id !== post_id || val.user_id !== userDatas._id)
+        );
+        setSavedPostData((prev = []) =>
+          prev.filter((item) => item._id !== post_id) 
+        );
+        toast.success(response?.data.message)
+      } 
       }
     } catch (error) {
       console.error(error);
@@ -229,21 +271,21 @@ const Post = () => {
 
   }
   const handleScroll = () => {
-    
+
     if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || isLoading) {
       return;
     }
-    
-   if(page< pageCount){
-    setPage((prevPage) => prevPage + 1); 
-   }
-    
+
+    if (page < pageCount) {
+      setPage((prevPage) => prevPage + 1);
+    }
+
   };
-  useEffect(()=>{
-    window.addEventListener("scroll",handleScroll)
-    return ()=>window.removeEventListener("scroll",handleScroll)
-  },[isLoading])
-  
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [isLoading])
+
   return (
     <div className='flex lg:justify-center flex-row lg:m-9 min-h-screen'>
       <div className='lg:ml-14 sm:ml-0 mt-20 rounded-xl flex flex-col  justify-center s  h-1/2 border-300 lg:w-2/3 sm:w-full    '>
@@ -265,195 +307,195 @@ const Post = () => {
         </div>
 
         {!postHandle ? <>
-          {postdata.length > 0  ? postdata.map((val) => {
-          const isLiked = likedPostData && likedPostData.some((likeObj:likedPost) => likeObj.post_id ===val._id)
-         console.log(isLiked);
-         
-          return (
-           
-           <div key={val._id} className='m-11 lg:w-4/5  h-fit shadow-lg p-9 '>
-              <div className='flex flex-row justify-between items-center p-3 '>
-                <div className='flex items-center space-x-3'>
-                  {val.company_id.img_url ?
-                    <img src={val.company_id.img_url} className='w-11 h-11 rounded-full' alt='Company Logo' /> :
+          {postdata.length > 0 ? postdata.map((val) => {
+            const isLiked = likedPostData && likedPostData.some((likeObj: likedPost) => likeObj.post_id === val._id)
 
-                    <img src='/imgadd.jpg' className='w-11 h-11' alt='Company Logo' />}
-                  <p onClick={()=>setIsLoading(!isLoading)}>{val.company_id.companyname}</p>
-                </div>
-                <div className="relative inline-block">
-                  <IoMdMore onClick={() => handleMenu(val._id)} className="w-7 h-7 cursor-pointer" />
-                  {
-                    menu && (
-                      <div className="absolute right-0 w-48 z-50 bg-white border border-gray-200 rounded-lg  dark:text-white mt-2">
-                        <button data-modal-target="select-modal" data-modal-toggle="select-modal"
-                          type="button" onClick={handlemenu}
-                          className="relative inline-flex items-center w-full px-4 py-2 text-sm font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-100  focus:z-10 focus:ring-2 focus:ring-red-400 focus:text-black  text-black"
-                        >
-                          Report
-                        </button>
-                      </div>
-                    )
-                  }
-                  {reportModal &&
-                    <div
-                      id="select-modal"
-                      aria-hidden="false"
-                      className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
-                    >
-                      <div className="relative p-4 w-full max-w-md max-h-full">
-                        <div className="relative bg-white rounded-lg shadow">
-                          <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                              Report Post
-                            </h3>
-                            <button onClick={() => setReportModal(!reportModal)}
-                              type="button"
-                              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                              data-modal-toggle="select-modal"
-                            >
-                              <svg
-                                className="w-3 h-3"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 14 14"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                                />
-                              </svg>
-                              <span className="sr-only">Close modal</span>
-                            </button>
-                          </div>
-                          <div className="p-4 md:p-5">
+            return (
 
-                            <form >
-                              <ul className="space-y-4 mb-4">
-                                <li>
-                                  <input
-                                    type="radio"
-                                    id="Spam"
-                                    name="reportReason"
-                                    value="Spam"
-                                    className="text-black"
-                                    checked={selectedValue === 'Spam'}
-                                    onChange={handleChange}
-                                  />
-                                  <label className="text-black ml-2" htmlFor="Spam">
-                                    Spam
-                                  </label>
-                                </li>
-                                <li>
-                                  <input
-                                    type="radio"
-                                    id="Harassment or Bullying"
-                                    name="Harassment or Bullying"
-                                    value="Harassment or Bullying"
-                                    className="text-black"
-                                    checked={selectedValue === 'Harassment or Bullying'}
-                                    onChange={handleChange}
-                                  />
-                                  <label className="text-black ml-2" htmlFor="Harassment or Bullying">
-                                    Harassment or Bullying
-                                  </label>
-                                </li>
-                                <li>
-                                  <input
-                                    type="radio"
-                                    id="Misinformation"
-                                    name="Misinformation"
-                                    value="Misinformation"
-                                    className="text-black"
-                                    checked={selectedValue === 'Misinformation'}
-                                    onChange={handleChange}
-                                  />
-                                  <label className="text-black ml-2" htmlFor="Misinformation">
-                                    Misinformation
-                                  </label>
-                                </li>
-                                <li>
-                                  <input
-                                    type="radio"
-                                    id="Other"
-                                    name="Other"
-                                    value="Other"
-                                    className="text-black"
-                                    checked={selectedValue === 'Other'}
-                                    onChange={handleChange}
-                                  />
-                                  <label className="text-black ml-2" htmlFor="Other">
-                                    Other
-                                  </label>
-                                </li>
-                              </ul>
-                              <button
-                                onClick={handleReport}
+              <div key={val._id} className='m-11 lg:w-4/5  h-fit shadow-lg p-9 '>
+                <div className='flex flex-row justify-between items-center p-3 '>
+                  <div className='flex items-center space-x-3'>
+                    {val.company_id.img_url ?
+                      <img src={val.company_id.img_url} className='w-11 h-11 rounded-full' alt='Company Logo' /> :
+
+                      <img src='/imgadd.jpg' className='w-11 h-11' alt='Company Logo' />}
+                    <p onClick={() => setIsLoading(!isLoading)}>{val.company_id.companyname}</p>
+                  </div>
+                  <div className="relative inline-block">
+                    <IoMdMore onClick={() => handleMenu(val._id)} className="w-7 h-7 cursor-pointer" />
+                    {
+                      menu && (
+                        <div className="absolute right-0 w-48 z-50 bg-white border border-gray-200 rounded-lg  dark:text-white mt-2">
+                          <button data-modal-target="select-modal" data-modal-toggle="select-modal"
+                            type="button" onClick={handlemenu}
+                            className="relative inline-flex items-center w-full px-4 py-2 text-sm font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-100  focus:z-10 focus:ring-2 focus:ring-red-400 focus:text-black  text-black"
+                          >
+                            Report
+                          </button>
+                        </div>
+                      )
+                    }
+                    {reportModal &&
+                      <div
+                        id="select-modal"
+                        aria-hidden="false"
+                        className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                      >
+                        <div className="relative p-4 w-full max-w-md max-h-full">
+                          <div className="relative bg-white rounded-lg shadow">
+                            <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
+                                Report Post
+                              </h3>
+                              <button onClick={() => setReportModal(!reportModal)}
                                 type="button"
-                                className="text-white inline-flex w-full justify-center bg-black hover:bg-gray-800 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                data-modal-toggle="select-modal"
                               >
-                                Submit
+                                <svg
+                                  className="w-3 h-3"
+                                  aria-hidden="true"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 14 14"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                                  />
+                                </svg>
+                                <span className="sr-only">Close modal</span>
                               </button>
-                            </form>
+                            </div>
+                            <div className="p-4 md:p-5">
+
+                              <form >
+                                <ul className="space-y-4 mb-4">
+                                  <li>
+                                    <input
+                                      type="radio"
+                                      id="Spam"
+                                      name="reportReason"
+                                      value="Spam"
+                                      className="text-black"
+                                      checked={selectedValue === 'Spam'}
+                                      onChange={handleChange}
+                                    />
+                                    <label className="text-black ml-2" htmlFor="Spam">
+                                      Spam
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <input
+                                      type="radio"
+                                      id="Harassment or Bullying"
+                                      name="Harassment or Bullying"
+                                      value="Harassment or Bullying"
+                                      className="text-black"
+                                      checked={selectedValue === 'Harassment or Bullying'}
+                                      onChange={handleChange}
+                                    />
+                                    <label className="text-black ml-2" htmlFor="Harassment or Bullying">
+                                      Harassment or Bullying
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <input
+                                      type="radio"
+                                      id="Misinformation"
+                                      name="Misinformation"
+                                      value="Misinformation"
+                                      className="text-black"
+                                      checked={selectedValue === 'Misinformation'}
+                                      onChange={handleChange}
+                                    />
+                                    <label className="text-black ml-2" htmlFor="Misinformation">
+                                      Misinformation
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <input
+                                      type="radio"
+                                      id="Other"
+                                      name="Other"
+                                      value="Other"
+                                      className="text-black"
+                                      checked={selectedValue === 'Other'}
+                                      onChange={handleChange}
+                                    />
+                                    <label className="text-black ml-2" htmlFor="Other">
+                                      Other
+                                    </label>
+                                  </li>
+                                </ul>
+                                <button
+                                  onClick={handleReport}
+                                  type="button"
+                                  className="text-white inline-flex w-full justify-center bg-black hover:bg-gray-800 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                                >
+                                  Submit
+                                </button>
+                              </form>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                  }
+                    }
+                  </div>
                 </div>
-              </div>
-              <p className='p-9 font-medium'>{val.description}</p>
-              <div className="relative w-full max-w-4xl mx-auto">
-                <div className="overflow-hidden relative w-full h-96">
-                  {val.images.map((slide: string, index: number) => (
-                    <img
-                      key={index}
-                      src={slide}
-                      alt={`Slide ${index + 1}`}
-                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === val.currentIndex ? 'opacity-100' : 'opacity-0'}`}
-                    />
-                  ))}
+                <p className='p-9 font-medium'>{val.description}</p>
+                <div className="relative w-full max-w-4xl mx-auto">
+                  <div className="overflow-hidden relative w-full h-96">
+                    {val.images.map((slide: string, index: number) => (
+                      <img
+                        key={index}
+                        src={slide}
+                        alt={`Slide ${index + 1}`}
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === val.currentIndex ? 'opacity-100' : 'opacity-0'}`}
+                      />
+                    ))}
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 flex justify-center mb-4">
+                    {val.images.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => goToSlide(val._id, index)}
+                        className={`w-4 h-4 mx-1 rounded-full ${index === val.currentIndex ? 'bg-black' : 'bg-gray-300'}`}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 flex justify-center mb-4">
-                  {val.images.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => goToSlide(val._id, index)}
-                      className={`w-4 h-4 mx-1 rounded-full ${index === val.currentIndex ? 'bg-black' : 'bg-gray-300'}`}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className='m-6 flex flex-row space-x-12'>
-                {isLiked ? (
-                  <FaHeart onClick={() => handleLike(val._id, "Unlike",val.company_id._id as string)} className='w-7 h-9 text-red-500' />
-                ) : (
-                  <FaRegHeart onClick={() => handleLike(val._id, "Like",val.company_id._id as string)} className='w-7 h-9' />
-                )}
-
-                <FaRegComment data-modal-target="crypto-modal" data-modal-toggle="crypto-modal" onClick={() => handleInbox(val)} className='w-7 h-9' />
-                <div className=' flex justify-center'>
-                  {saved.some((values) => values.post_id._id === val._id) ? (
-                    <FaBookmark
-                      onClick={() => handleSavepost(val._id, "removed", val.company_id._id)}
-                      className='w-6 h-7 mt-1 text-black'
-                    />
+                <div className='m-6 flex flex-row space-x-12'>
+                  {isLiked ? (
+                    <FaHeart onClick={() => handleLike(val._id, "Unlike", val.company_id._id as string)} className='w-7 h-9 text-red-500' />
                   ) : (
-                    <FaRegBookmark
-                      onClick={() => handleSavepost(val._id, "saved", val.company_id._id)}
-                      className='w-6 h-7 mt-1'
-                    />
+                    <FaRegHeart onClick={() => handleLike(val._id, "Like", val.company_id._id as string)} className='w-7 h-9' />
                   )}
-                </div>
 
+                  <FaRegComment data-modal-target="crypto-modal" data-modal-toggle="crypto-modal" onClick={() => handleInbox(val)} className='w-7 h-9' />
+                  <div className=' flex justify-center'>
+                    {saved.some((values) => values.post_id._id === val._id) ? (
+                      <FaBookmark
+                        onClick={() => handleSavepost(val._id, "removed", val.company_id._id,val.company_id,val)}
+                        className='w-6 h-7 mt-1 text-black'
+                      />
+                    ) : (
+                      <FaRegBookmark
+                        onClick={() => handleSavepost(val._id, "saved", val.company_id._id,val.company_id,val)}
+                        className='w-6 h-7 mt-1'
+                      />
+                    )}
+                  </div>
+
+                </div>
+                <p onClick={() => handleLikedUsers(val.like)} className='font-medium ml-6'>{val.like.length} like</p>
               </div>
-              <p onClick={() => handleLikedUsers(val.like)} className='font-medium ml-6'>{val.like.length} like</p>
-            </div>
-          )}) : <>
+            )
+          }) : <>
             <div className="flex w-full min-h-screen justify-center  mt-11">
               <div className="w-full h-96 flex flex-col justify-center items-center ">
                 <img src="/nopost.png" className="w-96" alt="No Posts" />
@@ -464,202 +506,203 @@ const Post = () => {
 
           </>}
         </> : <>
-          {saved.length > 0  ? saved.map((val, index) => {
-                      const isLiked = likedPostData && likedPostData.some((likeObj:likedPost) => likeObj.post_id ===val.post_id._id)
+          {saved.length > 0 ? saved.map((val, index) => {
+            const isLiked = likedPostData && likedPostData.some((likeObj: likedPost) => likeObj.post_id === val.post_id._id)
 
-            return(
-            <div key={val._id} className='m-11 w-4/5 h-fit shadow-lg p-9 '>
-              <div className='flex flex-row justify-between items-center p-3'>
-                <div className='flex items-center space-x-3'>
-                  {val.company_id.img_url ?
-                    <img src={val.company_id.img_url} className='w-11 h-11 rounded-full' alt='Company Logo' /> :
+            return (
+              <div key={val._id} className='m-11 w-4/5 h-fit shadow-lg p-9 '>
+                <div className='flex flex-row justify-between items-center p-3'>
+                  <div className='flex items-center space-x-3'>
+                    {val.company_id.img_url ?
+                      <img src={val.company_id.img_url} className='w-11 h-11 rounded-full' alt='Company Logo' /> :
 
-                    <img src='/imgadd.jpg' className='w-11 h-11' alt='Company Logo' />}
-                  <p>{val.company_id.companyname}</p>
-                </div>
-                <div className="relative inline-block">
-                  <IoMdMore onClick={() => handleMenu(val.post_id._id)} className="w-7 h-7 cursor-pointer" />
-                  {
-                    menu && (
-                      <div className="absolute right-0 w-48 z-50 bg-white border border-gray-200 rounded-lg  dark:text-white mt-2">
-                        <button data-modal-target="select-modal" data-modal-toggle="select-modal"
-                          type="button" onClick={handlemenu}
-                          className="relative inline-flex items-center w-full px-4 py-2 text-sm font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-100  focus:z-10 focus:ring-2 focus:ring-red-400 focus:text-black  text-black"
-                        >
-                          Report
-                        </button>
-                      </div>
-                    )
-                  }
-                  {reportModal &&
-                    <div
-                      id="select-modal"
-                      aria-hidden="false"
-                      className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
-                    >
-                      <div className="relative p-4 w-full max-w-md max-h-full">
-                        <div className="relative bg-white rounded-lg shadow">
-                          <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                              Report Post
-                            </h3>
-                            <button onClick={() => setReportModal(!reportModal)}
-                              type="button"
-                              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                              data-modal-toggle="select-modal"
-                            >
-                              <svg
-                                className="w-3 h-3"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 14 14"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                                />
-                              </svg>
-                              <span className="sr-only">Close modal</span>
-                            </button>
-                          </div>
-                          <div className="p-4 md:p-5">
-
-                            <form >
-                              <ul className="space-y-4 mb-4">
-                                <li>
-                                  <input
-                                    type="radio"
-                                    id="Spam"
-                                    name="reportReason"
-                                    value="Spam"
-                                    className="text-black"
-                                    checked={selectedValue === 'Spam'}
-                                    onChange={handleChange}
-                                  />
-                                  <label className="text-black ml-2" htmlFor="Spam">
-                                    Spam
-                                  </label>
-                                </li>
-                                <li>
-                                  <input
-                                    type="radio"
-                                    id="Harassment or Bullying"
-                                    name="Harassment or Bullying"
-                                    value="Harassment or Bullying"
-                                    className="text-black"
-                                    checked={selectedValue === 'Harassment or Bullying'}
-                                    onChange={handleChange}
-                                  />
-                                  <label className="text-black ml-2" htmlFor="Harassment or Bullying">
-                                    Harassment or Bullying
-                                  </label>
-                                </li>
-                                <li>
-                                  <input
-                                    type="radio"
-                                    id="Misinformation"
-                                    name="Misinformation"
-                                    value="Misinformation"
-                                    className="text-black"
-                                    checked={selectedValue === 'Misinformation'}
-                                    onChange={handleChange}
-                                  />
-                                  <label className="text-black ml-2" htmlFor="Misinformation">
-                                    Misinformation
-                                  </label>
-                                </li>
-                                <li>
-                                  <input
-                                    type="radio"
-                                    id="Other"
-                                    name="Other"
-                                    value="Other"
-                                    className="text-black"
-                                    checked={selectedValue === 'Other'}
-                                    onChange={handleChange}
-                                  />
-                                  <label className="text-black ml-2" htmlFor="Other">
-                                    Other
-                                  </label>
-                                </li>
-                              </ul>
-                              <button
-                                onClick={handleReport}
+                      <img src='/imgadd.jpg' className='w-11 h-11' alt='Company Logo' />}
+                    <p>{val.company_id.companyname}</p>
+                  </div>
+                  <div className="relative inline-block">
+                    <IoMdMore onClick={() => handleMenu(val.post_id._id)} className="w-7 h-7 cursor-pointer" />
+                    {
+                      menu && (
+                        <div className="absolute right-0 w-48 z-50 bg-white border border-gray-200 rounded-lg  dark:text-white mt-2">
+                          <button data-modal-target="select-modal" data-modal-toggle="select-modal"
+                            type="button" onClick={handlemenu}
+                            className="relative inline-flex items-center w-full px-4 py-2 text-sm font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-100  focus:z-10 focus:ring-2 focus:ring-red-400 focus:text-black  text-black"
+                          >
+                            Report
+                          </button>
+                        </div>
+                      )
+                    }
+                    {reportModal &&
+                      <div
+                        id="select-modal"
+                        aria-hidden="false"
+                        className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                      >
+                        <div className="relative p-4 w-full max-w-md max-h-full">
+                          <div className="relative bg-white rounded-lg shadow">
+                            <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
+                                Report Post
+                              </h3>
+                              <button onClick={() => setReportModal(!reportModal)}
                                 type="button"
-                                className="text-white inline-flex w-full justify-center bg-black hover:bg-gray-800 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                data-modal-toggle="select-modal"
                               >
-                                Submit
+                                <svg
+                                  className="w-3 h-3"
+                                  aria-hidden="true"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 14 14"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                                  />
+                                </svg>
+                                <span className="sr-only">Close modal</span>
                               </button>
-                            </form>
+                            </div>
+                            <div className="p-4 md:p-5">
+
+                              <form >
+                                <ul className="space-y-4 mb-4">
+                                  <li>
+                                    <input
+                                      type="radio"
+                                      id="Spam"
+                                      name="reportReason"
+                                      value="Spam"
+                                      className="text-black"
+                                      checked={selectedValue === 'Spam'}
+                                      onChange={handleChange}
+                                    />
+                                    <label className="text-black ml-2" htmlFor="Spam">
+                                      Spam
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <input
+                                      type="radio"
+                                      id="Harassment or Bullying"
+                                      name="Harassment or Bullying"
+                                      value="Harassment or Bullying"
+                                      className="text-black"
+                                      checked={selectedValue === 'Harassment or Bullying'}
+                                      onChange={handleChange}
+                                    />
+                                    <label className="text-black ml-2" htmlFor="Harassment or Bullying">
+                                      Harassment or Bullying
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <input
+                                      type="radio"
+                                      id="Misinformation"
+                                      name="Misinformation"
+                                      value="Misinformation"
+                                      className="text-black"
+                                      checked={selectedValue === 'Misinformation'}
+                                      onChange={handleChange}
+                                    />
+                                    <label className="text-black ml-2" htmlFor="Misinformation">
+                                      Misinformation
+                                    </label>
+                                  </li>
+                                  <li>
+                                    <input
+                                      type="radio"
+                                      id="Other"
+                                      name="Other"
+                                      value="Other"
+                                      className="text-black"
+                                      checked={selectedValue === 'Other'}
+                                      onChange={handleChange}
+                                    />
+                                    <label className="text-black ml-2" htmlFor="Other">
+                                      Other
+                                    </label>
+                                  </li>
+                                </ul>
+                                <button
+                                  onClick={handleReport}
+                                  type="button"
+                                  className="text-white inline-flex w-full justify-center bg-black hover:bg-gray-800 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                                >
+                                  Submit
+                                </button>
+                              </form>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                  }
+                    }
+                  </div>
                 </div>
+                <p className='p-9 font-medium'>{val.post_id.description}</p>
+                <div className="relative w-full max-w-4xl mx-auto">
+                  <div className="overflow-hidden relative w-full h-96">
+                    {savedPostData[index].images.map((slide: string, indexs: number) => (
+
+                      <img
+                        key={indexs}
+                        src={slide}
+                        alt={`Slide ${indexs + 1}`}
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${indexs === savedPostData[index].currentIndex ? 'opacity-100' : 'opacity-0'}`}
+                      />
+                    ))}
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 flex justify-center mb-4">
+                    {savedPostData[index].images.map((_, ind) => (
+                      <button
+                        key={ind}
+                        onClick={() => goToSlidesaved(savedPostData[index]?._id, ind)}
+                        className={`w-4 h-4 mx-1 rounded-full ${ind === savedPostData[index].currentIndex ? 'bg-black' : 'bg-gray-300'}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className='m-6 flex flex-row space-x-12'>
+                  {
+                    isLiked ? (
+                      <FaHeart onClick={() => handleLike(val._id, "Unlike", val.company_id._id as string)} className='w-7 h-9 text-red-500' />
+                    ) : (
+                      <FaRegHeart onClick={() => handleLike(val._id, "Like", val.company_id._id as string)} className='w-7 h-9' />
+                    )}
+
+                  <FaRegComment data-modal-target="crypto-modal" data-modal-toggle="crypto-modal" onClick={() => handleInbox(val.post_id)} className='w-7 h-9' />
+                  <div className=' flex justify-center'>
+                    {saved.map((values) => values.post_id._id === val._id) ? (
+                      <FaBookmark
+                        onClick={() => handleSavepost(val.post_id._id, "removed", val.company_id._id,val.company_id,val.post_id)}
+                        className='w-6 h-7 mt-1 text-black'
+                      />
+                    ) : (
+                      <FaRegBookmark
+                        onClick={() => handleSavepost(val.post_id._id, "saved", val.company_id._id,val.company_id,val.post_id)}
+                        className='w-6 h-7 mt-1'
+                      />
+                    )}
+                  </div>
+
+                </div>
+                <p onClick={() => handleLikedUsers(val.post_id.like)} className='font-medium ml-6'>{val.post_id.like.length} like</p>
               </div>
-              <p className='p-9 font-medium'>{val.post_id.description}</p>
-              <div className="relative w-full max-w-4xl mx-auto">
-                <div className="overflow-hidden relative w-full h-96">
-                  {savedPostData[index].images.map((slide: string, indexs: number) => (
-
-                    <img
-                      key={indexs}
-                      src={slide}
-                      alt={`Slide ${indexs + 1}`}
-                      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${indexs === savedPostData[index].currentIndex ? 'opacity-100' : 'opacity-0'}`}
-                    />
-                  ))}
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 flex justify-center mb-4">
-                  {savedPostData[index].images.map((_, ind) => (
-                    <button
-                      key={ind}
-                      onClick={() => goToSlidesaved(savedPostData[index]?._id, ind)}
-                      className={`w-4 h-4 mx-1 rounded-full ${ind === savedPostData[index].currentIndex ? 'bg-black' : 'bg-gray-300'}`}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className='m-6 flex flex-row space-x-12'>
-                {
-                isLiked? (
-                  <FaHeart onClick={() => handleLike(val._id, "Unlike",val.company_id._id as string)} className='w-7 h-9 text-red-500' />
-                ) : (
-                  <FaRegHeart onClick={() => handleLike(val._id, "Like",val.company_id._id as string)} className='w-7 h-9' />
-                )}
-
-                <FaRegComment data-modal-target="crypto-modal" data-modal-toggle="crypto-modal" onClick={() => handleInbox(val.post_id)} className='w-7 h-9' />
-                <div className=' flex justify-center'>
-                  {saved.map((values) => values.post_id._id === val._id) ? (
-                    <FaBookmark
-                      onClick={() => handleSavepost(val.post_id._id, "removed", val.company_id._id)}
-                      className='w-6 h-7 mt-1 text-black'
-                    />
-                  ) : (
-                    <FaRegBookmark
-                      onClick={() => handleSavepost(val.post_id._id, "saved", val.company_id._id)}
-                      className='w-6 h-7 mt-1'
-                    />
-                  )}
-                </div>
-
-              </div>
-              <p onClick={() => handleLikedUsers(val.post_id.like)} className='font-medium ml-6'>{val.post_id.like.length} like</p>
-            </div>
-          )}) : <>
+            )
+          }) : <>
             <div className="flex w-full min-h-screen justify-center  mt-11">
-  <div className="w-full h-96 flex flex-col justify-center items-center ">
-    <img src="/nopost.png" className="w-96" alt="No Posts" />
-    <p className="text-black font-semibold text-2xl text-center mt-4">No Saved Post</p>
-  </div>
-</div>
-</>}
+              <div className="w-full h-96 flex flex-col justify-center items-center ">
+                <img src="/nopost.png" className="w-96" alt="No Posts" />
+                <p className="text-black font-semibold text-2xl text-center mt-4">No Saved Post</p>
+              </div>
+            </div>
+          </>}
         </>}
       </div>
       <Toaster
